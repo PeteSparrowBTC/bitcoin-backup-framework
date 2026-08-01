@@ -3,7 +3,7 @@
 A framework for securing a Bitcoin seed phrase, its passphrase, and the digital
 accounts around them — written for someone who currently has **no strategy at
 all**. It is tool-agnostic in its principles, and uses the
-[SLIP-39 + age backup tool](https://github.com/PeteSparrowBTC/Seed-Phrase-Storage-SLIP39)
+[SLIP-39 + age backup tool](https://github.com/PeteSparrowBTC/slip39-backup)
 plus the Bitwarden password manager as the worked example.
 
 > **The one-sentence version:** everything digital hangs off a small physical
@@ -83,7 +83,7 @@ Before placing anything, list what exists. For a typical self-custody setup:
 | 8 | Email account credentials | revocable | no | vault (cycle broken by #6 — see §6) |
 
 Note what this table achieves: **row 1 never exists in storable form.** The
-[SLIP-39 + age tool](https://github.com/PeteSparrowBTC/Seed-Phrase-Storage-SLIP39)
+[SLIP-39 + age tool](https://github.com/PeteSparrowBTC/slip39-backup)
 encrypts the seed, passphrase, descriptor, and notes into `payload.age` using
 a random 32-byte key `k`, and SLIP-39 splits only `k`. The security boundary
 is *possession of threshold-many shares AND the `payload.age` file* — no
@@ -154,7 +154,7 @@ Do these in order; each phase depends on the previous one.
 ### Phase B — back up the seed (one Tails session)
 
 6. Download the tool's AppImage and verify its checksum (see the tool's
-   [TAILS_INSTRUCTIONS.md](https://github.com/PeteSparrowBTC/Seed-Phrase-Storage-SLIP39/blob/main/TAILS_INSTRUCTIONS.md)).
+   [TAILS_INSTRUCTIONS.md](https://github.com/PeteSparrowBTC/slip39-backup/blob/main/TAILS_INSTRUCTIONS.md)).
 7. Boot Tails **offline**, run the tool, Owner mode: enter seed words,
    optional BIP-39 passphrase, and — **do not skip this** — the wallet
    descriptor. For multisig, the descriptor is as recovery-critical as the
@@ -176,7 +176,7 @@ Do these in order; each phase depends on the previous one.
 
 10. Write the **heir letter** (stored with each Recovery Sheet copy): what
     exists, where the shares are, that the tool lives at its
-    [GitHub repository](https://github.com/PeteSparrowBTC/Seed-Phrase-Storage-SLIP39) /
+    [GitHub repository](https://github.com/PeteSparrowBTC/slip39-backup) /
     on the Layer 2 USB, and the literal steps: *"gather any 3 share zips +
     the file `payload.age` from Bitwarden (use Emergency Access) or the USB
     stick; boot the included AppImage; use Recoverer mode."* Write for the
