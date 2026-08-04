@@ -83,7 +83,7 @@ against these.
    and the problem starts over) or is not (then it is strictly worse than
    paper: silently copyable and readable by any finder). Paper is readable
    with eyes: no password, no electricity, no surviving software, no flash
-   memory quietly fading in a drawer. That property is what lets it sit at
+   memory fading in a drawer. That property is what lets it sit at
    the *root* of the graph.
 3. **Nothing online is sufficient to spend.** A full compromise of any one
    online account or device (password manager included) must yield, at
@@ -140,7 +140,7 @@ It is a secret-*splitting* scheme, not a container: it encodes one short
 binary secret (16 or 32 bytes in every interoperable implementation, room
 for the seed's own entropy and nothing else), and it has no defined place
 for a BIP-39 passphrase, a wallet descriptor, cosigner details, or notes.
-Split the seed raw and every one of those still needs a home, which quietly
+Split the seed raw and every one of those still needs a home, which
 recreates the original storage problem for pieces that are just as
 recovery-critical. This is not a flaw in SLIP-39 (splitting a small secret
 is what the standard is for); it is a mismatch that appears when SLIP-39
@@ -424,7 +424,7 @@ version of what you can do alone; they cover a disjoint set:
 3. **Duress resistance.** A quorum that physically requires another human
    (or a bank's opening hours) cannot be extracted from you at gunpoint in
    your living room.
-4. **Someone knows it exists.** The quiet failure of solo systems is being
+4. **Someone knows it exists.** The silent failure of solo systems is being
    perfect and invisible: the fireproof pouch that gets sold with the
    house. One person who merely knows *that* a system exists (not its
    contents) prevents this.
