@@ -135,6 +135,20 @@ fewer reveal nothing. A **wallet descriptor** is the small text that tells
 wallet software how your wallet derives its addresses. **`payload.age`** is
 one encrypted file produced by the backup tool.
 
+Why not simply split the seed words themselves with SLIP-39 and skip the
+encryption layer? Because **SLIP-39 alone cannot hold your whole backup**.
+It is a secret-*splitting* scheme, not a container: it encodes one short
+binary secret (16 or 32 bytes in every interoperable implementation — room
+for the seed's own entropy and nothing else), and it has no defined place
+for a BIP-39 passphrase, a wallet descriptor, cosigner details, or notes.
+Split the seed raw and every one of those still needs a home, which quietly
+recreates the original storage problem for pieces that are just as
+recovery-critical. This is not a flaw in SLIP-39 — it is what the standard
+is for — it is a mismatch when SLIP-39 alone is treated as a complete
+backup. The two-layer design resolves it: the small SLIP-39 secret is spent
+on a random key `k`, and the payload — which can be any size — travels
+encrypted under it.
+
 Note what this table achieves: **row 1 never exists in storable form.** The
 [SLIP-39 + age tool](https://github.com/PeteSparrowBTC/slip39-backup)
 encrypts the seed, passphrase, descriptor, and notes into `payload.age` using
@@ -301,6 +315,14 @@ system is useful from Phase A onward.
   Phones add a correlated failure — the device holding your 2FA recovery is
   usually the 2FA device itself. Digital copies are welcome as
   *supplements*, never as the root.
+- **Raw SLIP-39 on the seed words alone.** Splitting the bare seed (as some
+  hardware wallets offer) feels complete but is not: the SLIP-39 secret
+  carries the seed's entropy and nothing else (§3). If your wallet has a
+  BIP-39 passphrase, the shares recover a seed that opens the *wrong*
+  wallet — an empty one — and the passphrase that opens the right one was
+  never in the backup. The passphrase and descriptor end up unprotected,
+  co-located with shares, or nowhere. Split a key, encrypt the whole
+  payload under it, and the problem disappears.
 - **Splitting the master password with SLIP-39.** Tempting symmetry, wrong
   tool: the master password is a *revocable* secret whose dominant risk is
   forgetting, and SLIP-39 wants a small binary secret, not text. A plaintext
