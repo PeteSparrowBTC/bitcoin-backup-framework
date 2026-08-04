@@ -1,9 +1,9 @@
-# From Zero to a Complete Backup Strategy — Solo Edition
+# From Zero to a Complete Backup Strategy: Solo Edition
 
 If you have been meaning to take real custody of your bitcoin for a year or
 two and keep postponing it, this document is for you. It is a complete
 framework for securing a Bitcoin seed phrase, its passphrase, and the digital
-accounts around them — whether you are starting from nothing or already have
+accounts around them, whether you are starting from nothing or already have
 a strategy you have never pressure-tested (the rules in §2 and the failure
 matrix in §9 work just as well as an audit of an existing setup). It is
 written for someone who wants to **trust no one** and does not want to become
@@ -11,12 +11,11 @@ a security expert to get this right. If you already use a password manager
 and two-factor authentication, you are equipped for everything below.
 
 **This is not an inheritance plan.** It is built for one living individual,
-and it trusts no one — which has an honest price: **by default, if you die,
-your bitcoin is lost.** Phase C leaves your estate a thread to pull (a plan
-in a bank box your executor can eventually reach), and §10 shows how to
-upgrade when you are ready to involve people — but real inheritance planning
-requires people and legal instruments, and this document will not pretend
-otherwise.
+and it trusts no one. That has a price: **by default, if you die, your
+bitcoin is lost.** Phase C leaves your estate a thread to pull (a plan in a
+bank box your executor can eventually reach), and §10 shows how to upgrade
+when you are ready to involve people. Real inheritance planning requires
+people and legal instruments.
 
 Every step works with zero trusted parties; involving other people is an
 optional upgrade layered on at the end (§10), never a prerequisite. The
@@ -29,11 +28,11 @@ plus the Bitwarden password manager.
 > spend your bitcoin, and nothing single is ever *necessary* to recover it.
 
 **About this document.** It is an open collaboration between a human,
-**Pete Sparrow**, and an AI, **Claude** (Anthropic's Fable model) — the
-framework emerged from a long working conversation between the two, and we
-state that plainly rather than hide it. Before settling on the design, we
+**Pete Sparrow**, and an AI, **Claude** (Anthropic's Fable model). The
+framework emerged from a long working conversation between the two.
+Before settling on the design, we
 reviewed the established books, papers, protocols, and sites on self-custody
-and inheritance planning — and where the literature pushed back on our
+and inheritance planning, and where the literature pushed back on our
 choices, we changed them. §12 lists each source and what it contributed or
 challenged.
 
@@ -46,7 +45,7 @@ Every secret you hold can fail in exactly two directions:
 | Failure direction | Example | Who wins |
 |---|---|---|
 | **Theft** (someone else gets it) | burglar finds seed words in a drawer; malware reads your unlocked vault | the attacker |
-| **Loss** (nobody gets it — including you) | house fire; forgotten password; you die and nobody can decode your system | entropy |
+| **Loss** (nobody gets it, including you) | house fire; forgotten password; you die and nobody can decode your system | entropy |
 
 Most people defend hard against theft and then lose everything to loss.
 **Loss is the more common failure.** A good framework defends both directions
@@ -54,14 +53,14 @@ at once, and every design decision below is justified against one or the other.
 
 Secrets also differ in *kind*, and the kind dictates the protection:
 
-- **Bearer secrets** — whoever holds it owns the asset, irrevocably.
+- **Bearer secrets**: whoever holds it owns the asset, irrevocably.
   A BIP-39 seed (the 12/24 words behind your wallet) is the canonical
   example. There is no "reset password" for a drained wallet. These justify
   heavy machinery: threshold splitting, geographic distribution, metal
   storage.
-- **Revocable secrets** — a leak is bad but survivable; you can rotate it.
+- **Revocable secrets**: a leak is bad but survivable; you can rotate it.
   A password-manager master password (with 2FA on the account) is revocable.
-  These deserve *simple, recoverable* backups — the enemy is forgetting, not
+  These deserve *simple, recoverable* backups; the enemy is forgetting, not
   finding.
 
 Applying bearer-grade machinery to revocable secrets makes them harder to
@@ -73,61 +72,61 @@ secrets is how coins get stolen. Match the protection to the kind.
 Eight rules generate the whole framework. When in doubt, check a decision
 against these.
 
-1. **Acyclic dependencies** — no loops in "what unlocks what." No secret may
+1. **Acyclic dependencies**: no loops in "what unlocks what." No secret may
    be stored *only* inside something it unlocks. (Master password inside the
    vault: loop. Email password only in a vault whose login requires email
    verification: loop.) Draw the graph; it must terminate in…
 2. **A physical root of trust (Layer 0).** Paper in guarded locations. This
-   layer depends on *nothing digital* — no device, no account, no company
+   layer depends on *nothing digital*: no device, no account, no company
    staying in business. Why paper and not a USB stick or a hardened phone?
    Because anything digital either is encrypted (then its key needs a home,
    and the problem starts over) or is not (then it is strictly worse than
-   paper — silently copyable and readable by any finder). Paper is readable
+   paper: silently copyable and readable by any finder). Paper is readable
    with eyes: no password, no electricity, no surviving software, no flash
    memory quietly fading in a drawer. That property is what lets it sit at
    the *root* of the graph.
 3. **Nothing online is sufficient to spend.** A full compromise of any one
-   online account or device — password manager included — must yield, at
+   online account or device (password manager included) must yield, at
    worst, encrypted files and privacy leaks, never spendable keys.
 4. **Nothing single is necessary to recover.** No single location, device,
    memory, or company may be a single point of failure. Redundancy for
    availability; thresholds for confidentiality.
 5. **Ciphertext is cheap; keys are precious.** Encrypted blobs
-   (`payload.age`, encrypted vault exports) may be replicated freely —
+   (`payload.age`, encrypted vault exports) may be replicated freely:
    USB sticks, cloud, an email to yourself. The *keys* to them live only in
    Layer 0 (and your head). Guard few things hard rather than many things
    weakly.
 6. **An untested backup is a hypothesis.** Until you have executed the
    recovery end-to-end from the written instructions alone, you do not have a
-   backup — you have a plan. Drill it (section 8). In a solo system this
+   backup, only a plan. Drill it (section 8). In a solo system this
    matters double: you are the only error-detection there is.
 7. **Trust is additive, never foundational.** The system must be fully
    functional with zero trusted parties. Every grant of trust is a later,
-   revocable enhancement (§10) — and never distribute artifacts of an
-   undrilled system, because superseded shares plus a superseded
-   `payload.age` remain a working backup forever.
+   revocable enhancement (§10). Never distribute artifacts of an undrilled
+   system: superseded shares plus a superseded `payload.age` remain a
+   working backup forever.
 8. **Secrets are reconstructed only in the clean room.** The one moment your
    seed exists in one place is recovery. Do it only in the same offline,
    leave-no-trace environment used to create the backup (Tails Linux on a
-   spare computer) — never on a daily-use machine. This rule exists because
+   spare computer), never on a daily-use machine. This rule exists because
    the published criticism of share-based backups (§12) is precisely that
    the reconstruction moment is where malware wins; a clean room removes
    that moment from the reach of malware entirely.
 
-## 3. Inventory — the secrets you actually hold
+## 3. Inventory: the secrets you actually hold
 
 Before placing anything, list what exists. For a typical self-custody setup:
 
 | # | Secret | Kind | Sufficient to spend BTC? | Where it will live |
 |---|---|---|---|---|
-| 1 | BIP-39 seed words (+ optional BIP-39 passphrase) | bearer | yes | **only inside `payload.age`** — never stored raw |
+| 1 | BIP-39 seed words (+ optional BIP-39 passphrase) | bearer | yes | **only inside `payload.age`**, never stored raw |
 | 2 | SLIP-39 shares (protecting random key `k`) | bearer (threshold) | only threshold-many **+** `payload.age` | Layer 0: separate locations you alone control |
 | 3 | `payload.age` (encrypted wallet payload) | ciphertext | no (useless without `k`) | replicated: vault attachment + offline copies |
 | 4 | Wallet descriptor / xpubs | recovery-critical metadata | no (privacy leak only) | inside `payload.age`; copy in vault |
 | 5 | Password-manager master password | revocable | no | your head + Layer 0 sheet |
 | 6 | Password-manager 2FA recovery code | revocable | no | Layer 0 sheet |
 | 7 | Vault-export password | revocable | no | Layer 0 sheet |
-| 8 | Email account credentials | revocable | no | vault (cycle broken by #6 — see §6) |
+| 8 | Email account credentials | revocable | no | vault (cycle broken by #6, see §6) |
 
 Jargon, once: **SLIP-39 shares** are word lists produced by splitting a
 secret so that any 2 of 3 (your choice of threshold) can rebuild it and
@@ -138,30 +137,30 @@ one encrypted file produced by the backup tool.
 Why not simply split the seed words themselves with SLIP-39 and skip the
 encryption layer? Because **SLIP-39 alone cannot hold your whole backup**.
 It is a secret-*splitting* scheme, not a container: it encodes one short
-binary secret (16 or 32 bytes in every interoperable implementation — room
+binary secret (16 or 32 bytes in every interoperable implementation, room
 for the seed's own entropy and nothing else), and it has no defined place
 for a BIP-39 passphrase, a wallet descriptor, cosigner details, or notes.
 Split the seed raw and every one of those still needs a home, which quietly
 recreates the original storage problem for pieces that are just as
-recovery-critical. This is not a flaw in SLIP-39 — it is what the standard
-is for — it is a mismatch when SLIP-39 alone is treated as a complete
-backup. The two-layer design resolves it: the small SLIP-39 secret is spent
-on a random key `k`, and the payload — which can be any size — travels
-encrypted under it.
+recovery-critical. This is not a flaw in SLIP-39 (splitting a small secret
+is what the standard is for); it is a mismatch that appears when SLIP-39
+alone is treated as a complete backup. The two-layer design resolves it:
+the small SLIP-39 secret is spent on a random key `k`, and the payload,
+which can be any size, travels encrypted under it.
 
 Note what this table achieves: **row 1 never exists in storable form.** The
 [SLIP-39 + age tool](https://github.com/PeteSparrowBTC/slip39-backup)
 encrypts the seed, passphrase, descriptor, and notes into `payload.age` using
 a random 32-byte key `k`, and SLIP-39 splits only `k`. The security boundary
-is *possession of threshold-many shares AND the `payload.age` file* — no
+is *possession of threshold-many shares AND the `payload.age` file*: no
 single artifact anywhere is sufficient. This is also what makes the solo
 version workable: even someone who found **every** share would hold only
 `k`, never the wallet, without `payload.age`.
 
-## 4. The architecture — three layers
+## 4. The architecture: three layers
 
 ```
- LAYER 0 — PHYSICAL ROOT OF TRUST (depends on nothing, held only by you)
+ LAYER 0 - PHYSICAL ROOT OF TRUST (depends on nothing, held only by you)
  ┌───────────────────────────────────────────────────────────────┐
  │  SLIP-39 share zips/mnemonics     Recovery Sheet (×2 copies)  │
  │  2-of-3, three locations you      • PM master password        │
@@ -171,7 +170,7 @@ version workable: even someone who found **every** share would hold only
  └───────────────┬───────────────────────────┬───────────────────┘
                  │ threshold of shares → k   │ unlocks the account
                  ▼                           ▼
- LAYER 1 — PASSWORD MANAGER (online, zero-knowledge)
+ LAYER 1 - PASSWORD MANAGER (online, zero-knowledge)
  ┌───────────────────────────────────────────────────────────────┐
  │  payload.age (attachment)  ← ciphertext only; k is NOT here   │
  │  verification-record.txt, descriptor copy, all daily logins,  │
@@ -179,7 +178,7 @@ version workable: even someone who found **every** share would hold only
  └───────────────┬───────────────────────────────────────────────┘
                  │ encrypted export + payload.age, refreshed together
                  ▼
- LAYER 2 — OFFLINE REPLICAS (cheap, promiscuous)
+ LAYER 2 - OFFLINE REPLICAS (cheap, promiscuous)
  ┌───────────────────────────────────────────────────────────────┐
  │  USB stick(s): encrypted vault export + payload.age copy      │
  │  (bank box / home pouch; ciphertext everywhere is fine)       │
@@ -189,7 +188,7 @@ version workable: even someone who found **every** share would hold only
 No home safe is assumed anywhere. The home copy lives in a **fireproof
 document pouch** (sold for passports, roughly the price of a restaurant
 dinner) among your other papers; the guarded anchor is a **bank
-safe-deposit box** — for most people the cheapest "location you alone
+safe-deposit box**, for most people the cheapest "location you alone
 control but your estate can eventually reach."
 
 Check the design against the rules:
@@ -203,43 +202,43 @@ Check the design against the rules:
   copy. Rule 4 holds.
 - **Recovery Sheet stolen**: the finder can enter the vault → you rotate
   everything in it; still no coins (rule 3 already held). Bad day, not a
-  catastrophe — and why the sheet lives somewhere you would *notice* was
+  catastrophe, and why the sheet lives somewhere you would *notice* was
   opened.
 
-## 5. Setup from zero — the ordered checklist
+## 5. Setup from zero: the ordered checklist
 
 Do these in order; each phase depends on the previous one. None of them
-requires more than an afternoon, and the phases can be weeks apart — the
+requires more than an afternoon, and the phases can be weeks apart. The
 system is useful from Phase A onward.
 
-### Phase A — establish the digital root (an afternoon)
+### Phase A: establish the digital root (an afternoon)
 
 1. Create a Bitwarden account (or equivalent zero-knowledge manager) with a
-   strong master password you can *type daily* — a 4–5 word random
+   strong master password you can *type daily*: a 4-5 word random
    passphrase. Daily typing is your memorization mechanism.
-2. Enable TOTP 2FA. **Print the 2FA recovery code immediately** — this is the
+2. Enable TOTP 2FA. **Print the 2FA recovery code immediately**; this is the
    most commonly skipped step and the most common lockout cause.
 3. Choose a separate vault-export password.
 4. Write the **Recovery Sheet**: master password, 2FA recovery code, export
    password, and one paragraph telling a future reader (including future
    *you*) what this sheet is. Make **two copies**, sealed with a signature
    across the flap: one in the bank box, one in the home fireproof pouch.
-5. Set up **Emergency Access** (Bitwarden Premium) with a **2–4 week waiting
-   period**. Yes, even in a solo framework — this is not "giving someone
-   access now." The contact holds nothing usable today: they can only file a
+5. Set up **Emergency Access** (Bitwarden Premium) with a **2-4 week waiting
+   period**. Yes, even in a solo framework: this is not "giving someone
+   access now." The contact holds nothing usable today. They can only file a
    request, you are notified, and access happens only if you fail to veto
-   for the whole waiting period — which is precisely the mechanism working
+   for the whole waiting period, which is precisely the mechanism working
    when you are in a hospital bed. It is revocable in one click, unilaterally.
    Scope check: it reaches your *vault* (someone can manage your accounts
-   and bills), never your coins — `payload.age` without shares is noise. If
+   and bills), never your coins; `payload.age` without shares is noise. If
    no candidate exists yet, skip and note it as an open item (§10).
 
-### Phase B — back up the seed (one offline session)
+### Phase B: back up the seed (one offline session)
 
 6. Download the tool's AppImage and verify its checksum (see the tool's
    [TAILS_INSTRUCTIONS.md](https://github.com/PeteSparrowBTC/slip39-backup/blob/main/TAILS_INSTRUCTIONS.md)).
 7. Boot Tails **offline**, run the tool, Owner mode: enter seed words,
-   optional BIP-39 passphrase, and — **do not skip this** — the wallet
+   optional BIP-39 passphrase, and (**do not skip this**) the wallet
    descriptor. For multisig, the descriptor is as recovery-critical as the
    seeds. For a solo setup, set the group shape to **2-of-3** (the tool
    defaults to 3-of-5, which assumes five homes; three locations you alone
@@ -251,44 +250,44 @@ system is useful from Phase A onward.
      with `verification-record.txt`.
    - **`payload.age` → Layer 2 USB stick(s)** as well. Bitwarden's export
      does **not** include attachments (§6), and shares alone cannot recover
-     without it — replicate it generously; it is ciphertext.
+     without it. Replicate it generously; it is ciphertext.
    - Delete `output.zip`. It is a distribution package, not a keepsake.
 9. Before funding the wallet seriously: **dry-run recovery** in Recoverer
    mode with threshold-many shares + `payload.age`, and check the
    verification record. Rules 6 and 8: the dry run happens on Tails too.
 
-### Phase C — the access plan, without trusting anyone (an evening)
+### Phase C: the access plan, without trusting anyone (an evening)
 
 10. Write the **access plan** and put it **in the bank box**. This is more
-    than a note about the coins — it is the document that answers the fear
+    than a note about the coins; it is the document that answers the fear
     every parent holding bitcoin has: *"if I'm gone, my family has no idea
     what a seed phrase is."* It contains:
     - **An inventory**: this wallet, but also exchange accounts, other
-      digital assets, and where the password vault is — everything a
+      digital assets, and where the password vault is: everything a
       survivor would otherwise never find.
     - **The recovery steps, written for a smart but non-technical reader**
       (your spouse, your kids' guardian): *"gather any 2 of the 3 share
       envelopes (locations listed below) + the file `payload.age` from
       Bitwarden (via Emergency Access) or the USB stick in this box; start
       the included AppImage on the offline computer; use Recoverer mode;
-      take this to a professional if you get stuck — the envelopes alone
+      take this to a professional if you get stuck; the envelopes alone
       are worthless to a thief, so showing them to a helper is safe."*
     - **Who can help**, in what order: a named tech-comfortable friend, a
-      lawyer, a reputable recovery service — so the reader is never alone
+      lawyer, a reputable recovery service, so the reader is never alone
       with a puzzle.
     - **A date, and a promise to re-date it.** Update it on life events:
       move, new wallet, marriage or divorce, a location change. A stale
       access plan fails exactly when it is needed.
-11. This grants **nothing while you live** — nobody knows the plan exists.
+11. This grants **nothing while you live**; nobody knows the plan exists.
     But a bank box is reachable by your estate's executor through the legal
     process that settles an estate (probate, in many jurisdictions), so the
     plan upgrades "if I die, the coins are gone" to "my estate has a real
     chance." Be clear-eyed about what this is: **a thread for your survivors
-    to pull, not an inheritance plan** — it depends on a diligent executor
+    to pull, not an inheritance plan**; it depends on a diligent executor
     finding and following it. Make sure your will mentions **that the box
-    exists** — a breadcrumb, never a secret: see the will trap in §6.
+    exists**: a breadcrumb, never a secret (see the will trap in §6).
 
-### Phase D — make it a system, not an event (recurring)
+### Phase D: make it a system, not an event (recurring)
 
 12. Quarterly (or after significant vault changes): refresh the encrypted
     vault export + `payload.age` copy on the Layer 2 USB, *together*.
@@ -299,8 +298,8 @@ system is useful from Phase A onward.
 
 - **Keys or seeds in the will.** In most jurisdictions a will becomes a
   **public record** when the estate is settled. Anything written in it is
-  published. The will gets one breadcrumb — "there is a safe-deposit box at
-  [bank]" — and never a password, seed word, share, or instruction. The
+  published. The will gets one breadcrumb ("there is a safe-deposit box at
+  [bank]") and never a password, seed word, share, or instruction. The
   access plan lives *in* the box; the will only points at the box.
 - **Bitwarden exports exclude attachments.** Your vault export does *not*
   contain `payload.age`. Back the file up separately (Phase B step 8) or the
@@ -308,18 +307,18 @@ system is useful from Phase A onward.
 - **The email ↔ vault cycle.** Without 2FA, Bitwarden's new-device login
   wants an email verification code; if your email password lives only in the
   vault, a fresh machine deadlocks. TOTP 2FA + the printed recovery code
-  breaks the cycle — that alone justifies step 2.
+  breaks the cycle; that alone justifies step 2.
 - **A digital Layer 0.** A USB stick, a Tails persistent volume, or a
   hardened phone cannot sit at the root: encrypted, the key needs a home and
   the problem starts over; unencrypted, it is worse than paper (rule 2).
-  Phones add a correlated failure — the device holding your 2FA recovery is
+  Phones add a correlated failure: the device holding your 2FA recovery is
   usually the 2FA device itself. Digital copies are welcome as
   *supplements*, never as the root.
 - **Raw SLIP-39 on the seed words alone.** Splitting the bare seed (as some
   hardware wallets offer) feels complete but is not: the SLIP-39 secret
   carries the seed's entropy and nothing else (§3). If your wallet has a
   BIP-39 passphrase, the shares recover a seed that opens the *wrong*
-  wallet — an empty one — and the passphrase that opens the right one was
+  wallet (an empty one), and the passphrase that opens the right one was
   never in the backup. The passphrase and descriptor end up unprotected,
   co-located with shares, or nowhere. Split a key, encrypt the whole
   payload under it, and the problem disappears.
@@ -330,7 +329,7 @@ system is useful from Phase A onward.
   Save the threshold machinery for the bearer secret.
 - **Descriptor amnesia.** Multisig funds behind a lost descriptor can be
   unrecoverable even with every seed in hand. The descriptor belongs inside
-  `payload.age` *and* anywhere else convenient — it is not spend-sufficient.
+  `payload.age` *and* anywhere else convenient; it is not spend-sufficient.
 - **Storing the raw seed "just in case" somewhere digital.** The entire
   design collapses if a plaintext copy of row 1 exists in a photo, note, or
   cloud drive. It exists only inside `payload.age`. Ever.
@@ -346,10 +345,10 @@ system is useful from Phase A onward.
 
 For 2-of-3, pick three homes such that:
 
-- **No two share a disaster domain** — not all in one building or flood
+- **No two share a disaster domain**: not all in one building or flood
   plain. Home + a bank box across town + an office is a workable minimum;
   a second bank in another city is better.
-- **Each is guarded or tamper-evident** — you want to *know* if a location
+- **Each is guarded or tamper-evident**: you want to *know* if a location
   was emptied, even though a single share reveals nothing.
 - **You can reach two of the three within your recovery-time tolerance.**
   Days of latency is fine (and mild duress protection: nobody can force you
@@ -360,7 +359,7 @@ For 2-of-3, pick three homes such that:
   least the box holding the access plan must have this property.
 - **The home share faces fire, not burglars.** A fireproof pouch is the
   minimum; for durability beyond paper, stamped **metal share plates** are
-  the upgrade — independent stress tests (fire, crush, corrosion) of
+  the upgrade. Independent stress tests (fire, crush, corrosion) of
   commercial products exist (§12), and the bank-box copies can stay paper.
 - Convenient default: home fireproof pouch, bank deposit box (anchor:
   access plan + Recovery Sheet + share), locked drawer or small box at your
@@ -368,20 +367,20 @@ For 2-of-3, pick three homes such that:
 
 ## 8. The annual drill
 
-Once a year, prove the chain from paper alone — offline Tails is the venue
+Once a year, prove the chain from paper alone; offline Tails is the venue
 (rule 8):
 
-1. Take the home Recovery Sheet copy and a Layer 2 USB. Pretend all your
+1. Take the home Recovery Sheet copy and a Layer 2 USB. Assume all your
    devices are gone and your memory is blank.
 2. On a clean machine, log into Bitwarden using only the sheet (password +
    2FA recovery code path).
 3. Open the vault export with the export password; confirm it is current.
 4. Retrieve `payload.age` (from vault attachment *and* confirm the USB copy
    matches).
-5. Gather 2 of the 3 shares (rotate which two each year — this audits the
+5. Gather 2 of the 3 shares (rotate which two each year; this audits the
    locations too) and run Recoverer mode on Tails; verify against
    `verification-record.txt`.
-6. Read the access plan as if you were the person executing it — ideally
+6. Read the access plan as if you were the person executing it, ideally
    the least technical person who might have to. Fix everything that made
    you hesitate. (When you eventually involve someone, §10, the real test
    is *them* executing it while you watch silently.)
@@ -390,7 +389,7 @@ Once a year, prove the chain from paper alone — offline Tails is the venue
 Fifteen minutes of drill per year is the difference between a backup and a
 belief.
 
-## 9. Failure-mode matrix — what saves you
+## 9. Failure-mode matrix: what saves you
 
 | Scenario | What saves you |
 |---|---|
@@ -401,67 +400,67 @@ belief.
 | Vault fully compromised (malware, phishing) | rule 3: attacker holds ciphertext + logins → rotate; coins untouched |
 | Malware on the machine you recover with | rule 8: you never recover on an online machine, so this scenario is designed out |
 | Recovery Sheet stolen | rotate master password, export password, re-secure; coins untouched |
-| One share location destroyed | threshold margin; re-split to a fresh 2-of-3 promptly — you are now at zero margin |
-| **Two share locations destroyed at once** | **nothing — this is 2-of-3's honest limit; geographic separation is what makes it unlikely, and §10 is what fixes it properly** |
+| One share location destroyed | threshold margin; re-split to a fresh 2-of-3 promptly, you are now at zero margin |
+| **Two share locations destroyed at once** | **nothing. This is the limit of 2-of-3; geographic separation is what makes it unlikely, and §10 is what fixes it properly** |
 | A share is found by a stranger | reveals nothing alone (and even all shares yield only `k` without `payload.age`); re-split at leisure |
-| `payload.age` lost everywhere | **unrecoverable — this is the artifact to replicate generously (rule 5)** |
-| You are incapacitated | Emergency Access (vault: bills, email, accounts) after the waiting period; **coins wait** — no solo mechanism covers them (§10) |
-| You die | **by default: the coins are lost** — this framework is not an inheritance plan. The access plan in the bank box gives your estate a chance (a diligent executor, the will breadcrumb, the legal process); §10 is the real fix |
-| You die and no will mentions the box | nothing — the thread was never tied to anything |
+| `payload.age` lost everywhere | **unrecoverable. This is the artifact to replicate generously (rule 5)** |
+| You are incapacitated | Emergency Access (vault: bills, email, accounts) after the waiting period; **coins wait**, no solo mechanism covers them (§10) |
+| You die | **by default: the coins are lost.** This framework is not an inheritance plan. The access plan in the bank box gives your estate a chance (a diligent executor, the will breadcrumb, the legal process); §10 is the real fix |
+| You die and no will mentions the box | nothing; the thread was never tied to anything |
 
-## 10. Involving others later — the upgrade path
+## 10. Involving others later: the upgrade path
 
 The solo framework is complete but has a known coverage boundary: every
 scenario where **you are the failed component**. Others are not a nicer
-version of what you can do alone — they cover a disjoint set:
+version of what you can do alone; they cover a disjoint set:
 
 1. **Incapacity, for the coins.** Emergency Access covers the vault while
    you are alive-but-unable; nothing solo authorizes anyone to act on the
    wallet. Only a pre-designated person can.
-2. **A robust death path.** The-legal-process-plus-plan works, but it is
-   slow and assumes a diligent executor. A person who already knows the
-   system exists turns "archaeologically recoverable" into "actually
-   recovered."
+2. **A robust death path.** The legal process plus the access plan works,
+   but it is slow and assumes a diligent executor. A person who already
+   knows the system exists turns "archaeologically recoverable" into
+   "actually recovered."
 3. **Duress resistance.** A quorum that physically requires another human
    (or a bank's opening hours) cannot be extracted from you at gunpoint in
    your living room.
 4. **Someone knows it exists.** The quiet failure of solo systems is being
-   perfect and invisible — the fireproof pouch that gets sold with the
+   perfect and invisible: the fireproof pouch that gets sold with the
    house. One person who merely knows *that* a system exists (not its
    contents) prevents this.
 
 Note the pattern: everything on this list is about scenarios where you are
-compromised — which is exactly why the grants feel uncomfortable, and exactly
+compromised, which is exactly why the grants feel uncomfortable, and exactly
 why they cannot be self-provided. The discomfort and the irreplaceability are
 the same property.
 
-When you have the right person — the test is someone you would hand your
-unlocked phone — the upgrade is incremental, and nothing already built gets
+When you have the right person (the test: someone you would hand your
+unlocked phone), the upgrade is incremental, and nothing already built gets
 redone:
 
 - **Name them in Emergency Access** if you skipped step 5, or shorten the
   waiting period you chose.
 - **Sign the legal instruments.** A durable power of attorney (the document
-  that lets a named person act for you if you cannot — names and forms vary
+  that lets a named person act for you if you cannot; names and forms vary
   by country) is the legal complement to Emergency Access: the technical
   switch covers your vault, the legal one covers everything a vault does
   not. The inheritance-planning literature (§12) treats this as the
   foundation, not an extra. Keys and seeds still never appear in any legal
-  document — those become public.
+  document; those become public.
 - **Give them a sealed envelope.** Full Recovery Sheet if the trust is
   there. If not, use the **split variant**: their envelope holds only the
-  2FA recovery code + export password — useless alone, but it completes the
+  2FA recovery code + export password. Useless alone, but it completes the
   chain when combined with the estate-reachable bank box. (Cost: the master
-  password then exists in only one physical copy plus your memory — a
+  password then exists in only one physical copy plus your memory, a
   conscious loss-resilience trade.)
 - **Re-split shares to 3-of-5** and hand one or two shares to holders in
   other cities. Tell them it is one useless-alone piece of a backup, so they
-  guard it without being able to spend — and without panic. Collect and
+  guard it without being able to spend, and without panic. Collect and
   destroy the superseded 2-of-3 artifacts (rule 7).
 - **Have them execute a dry run** of the access plan while you watch and
-  say nothing. That — not your own re-reading — is the real test of whether
+  say nothing. That, not your own re-reading, is the real test of whether
   the plan works without you (rule 6).
-- **Tell your executor the access plan exists.** Existence, not contents —
+- **Tell your executor the access plan exists.** Existence, not contents:
   minimal disclosure, zero access granted.
 - **For large holdings, graduate the wallet itself to multisig.** The
   security literature's strongest criticism of share-based backups (§12) is
@@ -470,8 +469,8 @@ redone:
   never assembles a complete secret anywhere. The two compose cleanly:
   **multisig protects the *use* of keys; this framework protects the
   *backup* of each key.** The backup tool already supports per-cosigner
-  seeds and stores the descriptor — which multisig makes truly
-  recovery-critical — inside `payload.age`.
+  seeds and stores the descriptor (which multisig makes truly
+  recovery-critical) inside `payload.age`.
 
 Each step is independently revocable and independently useful. Take them in
 any order, years apart, as trust arrives.
@@ -491,46 +490,46 @@ any order, years apart, as trust arrives.
   attempting it are *more* likely to lose funds than to gain security.
   Complexity is itself a risk axis; this framework spends its complexity
   budget only where a named failure mode demands it.
-- **No pretending solo covers everything.** Death (beyond a thread for your
-  estate), incapacity (for the coins), and duress are open items until §10 —
-  written down as open items, because an honest gap beats a false sense of
+- **No claim that solo covers everything.** Death (beyond a thread for your
+  estate), incapacity (for the coins), and duress are open items until §10,
+  written down as open items because a known gap beats a false sense of
   coverage.
 
 ## 12. What we read, and what each source changed
 
 This framework was not invented in a vacuum. We reviewed the established
-literature — books, protocols, published criticism, and curated research —
+literature (books, protocols, published criticism, and curated research)
 and adjusted the design where the evidence pushed back:
 
 - **Pamela Morgan, *Cryptoasset Inheritance Planning: A Simple Guide for
-  Owners*** (2018) — the standard work on the subject, by an attorney who
+  Owners*** (2018): the standard work on the subject, by an attorney who
   spent years teaching cryptoasset owners. It shaped Phase C: the heir note
   grew into a full **access plan** (inventory, helpers, dating and update
   triggers), the **keys-never-in-a-will** trap comes from her explanation
   that wills become public records, and the **have-the-reader-execute-the-
-  dry-run** test in §10 is her method. Her four audit criteria — a plan must
-  be *secure, usable, resilient, efficient* — are a good lens for §8.
+  dry-run** test in §10 is her method. Her four audit criteria (a plan must
+  be *secure, usable, resilient, efficient*) are a good lens for §8.
 - **Christopher Allen & Shannon Appelcline, *#SmartCustody*** (Blockchain
-  Commons, 2020; free, openly licensed) — a risk-modeling method built on
+  Commons, 2020; free, openly licensed): a risk-modeling method built on
   **27 personified adversaries** ("Death / Incapacitation," "Coercion,"
   "Key Fragility"…). Our failure-mode matrix (§9) is the compact version of
   their exercise; running your own setup through their full adversary list
   is the recommended graduation from this document.
-- **Glacier Protocol** (glacierprotocol.org) — the maximal end of
-  cold-storage rigor, and the cautionary tale behind §11: its own ecosystem
+- **Glacier Protocol** (glacierprotocol.org): the maximal end of
+  cold-storage rigor, and the cautionary tale behind §11. Its own ecosystem
   documents that the 93-page ceremony causes more loss than it prevents for
   non-experts. It validates the offline-Tails instinct while vindicating
   simplicity everywhere else.
 - **The published Shamir criticism** ("Shamir Secret Snakeoil," Bitcoin
-  Wiki; Casa and Jameson Lopp's writing) — the strongest argument *against*
-  a design like ours: share-based backups must reconstruct the secret in
-  one place. It produced **rule 8** (clean-room-only recovery), the honest
-  framing that reconstruction risk is mitigated rather than eliminated, and
-  the **multisig graduation path** in §10 (multisig protects use; this
-  framework protects backup — compose them).
-- **Jameson Lopp's security research** (lopp.net) — the field's best
+  Wiki; Casa and Jameson Lopp's writing): the strongest argument *against*
+  a design like ours, namely that share-based backups must reconstruct the
+  secret in one place. It produced **rule 8** (clean-room-only recovery),
+  the explicit framing that reconstruction risk is mitigated rather than
+  eliminated, and the **multisig graduation path** in §10 (multisig
+  protects use; this framework protects backup; compose them).
+- **Jameson Lopp's security research** (lopp.net): the field's best
   curated index, and the source of the **metal share plate** guidance in
-  §7: his independent stress tests (fire, crush, corrosion) of commercial
+  §7. His independent stress tests (fire, crush, corrosion) of commercial
   seed-storage products are the reference when paper stops being enough.
 
 Further reading, in the order we would hand them to a friend: Morgan's book
@@ -552,6 +551,6 @@ before trusting it with real value.
 
 ---
 
-*Written together by Pete Sparrow (human) and Claude Fable (AI, Anthropic) —
-the collaboration is stated openly because provenance matters in security
+*Written together by Pete Sparrow (human) and Claude Fable (AI, Anthropic).
+The collaboration is stated openly because provenance matters in security
 documents: you should know how the thing you are trusting was made.*
