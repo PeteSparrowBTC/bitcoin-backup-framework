@@ -3,10 +3,20 @@
 If you have been meaning to take real custody of your bitcoin for a year or
 two and keep postponing it, this document is for you. It is a complete
 framework for securing a Bitcoin seed phrase, its passphrase, and the digital
-accounts around them — written for someone who currently has **no strategy at
-all**, wants to **trust no one**, and does not want to become a security
-expert to get this right. If you already use a password manager and two-factor
-authentication, you are equipped for everything below.
+accounts around them — whether you are starting from nothing or already have
+a strategy you have never pressure-tested (the rules in §2 and the failure
+matrix in §9 work just as well as an audit of an existing setup). It is
+written for someone who wants to **trust no one** and does not want to become
+a security expert to get this right. If you already use a password manager
+and two-factor authentication, you are equipped for everything below.
+
+**This is not an inheritance plan.** It is built for one living individual,
+and it trusts no one — which has an honest price: **by default, if you die,
+your bitcoin is lost.** Phase C leaves your estate a thread to pull (a plan
+in a bank box your executor can eventually reach), and §10 shows how to
+upgrade when you are ready to involve people — but real inheritance planning
+requires people and legal instruments, and this document will not pretend
+otherwise.
 
 Every step works with zero trusted parties; involving other people is an
 optional upgrade layered on at the end (§10), never a prerequisite. The
@@ -258,9 +268,11 @@ system is useful from Phase A onward.
 11. This grants **nothing while you live** — nobody knows the plan exists.
     But a bank box is reachable by your estate's executor through the legal
     process that settles an estate (probate, in many jurisdictions), so the
-    plan converts "coins die with me" into "recoverable through the legal
-    process." Make sure your will mentions **that the box exists** — a
-    breadcrumb, never a secret: see the will trap in §6.
+    plan upgrades "if I die, the coins are gone" to "my estate has a real
+    chance." Be clear-eyed about what this is: **a thread for your survivors
+    to pull, not an inheritance plan** — it depends on a diligent executor
+    finding and following it. Make sure your will mentions **that the box
+    exists** — a breadcrumb, never a secret: see the will trap in §6.
 
 ### Phase D — make it a system, not an event (recurring)
 
@@ -372,8 +384,8 @@ belief.
 | A share is found by a stranger | reveals nothing alone (and even all shares yield only `k` without `payload.age`); re-split at leisure |
 | `payload.age` lost everywhere | **unrecoverable — this is the artifact to replicate generously (rule 5)** |
 | You are incapacitated | Emergency Access (vault: bills, email, accounts) after the waiting period; **coins wait** — no solo mechanism covers them (§10) |
-| You die | access plan in the bank box, reached through the estate process; Emergency Access speeds up the vault side |
-| You die and no will mentions the box | little — which is why Phase C step 11 is a step |
+| You die | **by default: the coins are lost** — this framework is not an inheritance plan. The access plan in the bank box gives your estate a chance (a diligent executor, the will breadcrumb, the legal process); §10 is the real fix |
+| You die and no will mentions the box | nothing — the thread was never tied to anything |
 
 ## 10. Involving others later — the upgrade path
 
@@ -457,9 +469,10 @@ any order, years apart, as trust arrives.
   attempting it are *more* likely to lose funds than to gain security.
   Complexity is itself a risk axis; this framework spends its complexity
   budget only where a named failure mode demands it.
-- **No pretending solo covers everything.** Incapacity (for the coins) and
-  duress are open items until §10 — written down as open items, because an
-  honest gap beats a false sense of coverage.
+- **No pretending solo covers everything.** Death (beyond a thread for your
+  estate), incapacity (for the coins), and duress are open items until §10 —
+  written down as open items, because an honest gap beats a false sense of
+  coverage.
 
 ## 12. What we read, and what each source changed
 
