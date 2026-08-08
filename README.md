@@ -311,6 +311,44 @@ alone is treated as a complete backup. The two-layer design resolves it:
 the small SLIP-39 secret is spent on a random key `k`, and the payload,
 which can be any size, travels encrypted under it.
 
+**Why not simply write the seed down?** A seed on paper, or stamped into metal,
+is the simplest backup there is, and it recovers in any wallet, forever, with no
+software. The case against it comes down to what each additional copy costs you.
+
+A plaintext seed is spend-sufficient by itself, so **every copy is a complete
+attack surface**. Redundancy and exposure move together: one copy risks loss, two
+copies mean an attacker needs to reach only one of two places, and a third makes
+that easier again. You are forced to trade loss-resistance against
+theft-resistance, and this framework refuses that trade because both failure
+directions matter ([§1](#1-what-you-are-protecting-and-the-two-ways-you-lose)).
+
+The encrypted design separates the two. A share reveals nothing and a payload
+without its key reveals nothing, so an attacker needs threshold-many shares
+**and** the payload: two different classes of artifact, normally kept in
+different places. Redundancy is then free of exposure, because what sets the
+attacker's task is the threshold, not the number of copies. Add a fourth share
+and you have made loss less likely without making theft easier. That is the
+property a plaintext backup cannot offer at any copy count.
+
+Two lesser advantages. A plaintext seed announces itself, since a list of
+twenty-four words is recognisable to anyone who has heard of bitcoin, which is
+what matters for the renovator, the house move, and the estate sale. And it
+holds only the seed, leaving the passphrase and descriptor to find homes of
+their own, which is the problem described just above.
+
+What plaintext genuinely wins is recovery. BIP-39 words can be typed into
+almost any wallet, by almost anyone, decades from now, while SLIP-39 plus age
+needs software that speaks both. That cost is real. It is paid down by both
+being published standards with several independent implementations, and by the
+manual recovery guide included in every bundle, which is exactly why that guide
+exists and why a printed copy belongs with your access plan.
+
+**Metal is a medium, not a scheme.** Durability, meaning paper burns and steel
+does not, is a separate question from confidentiality. Stamp SLIP-39 shares into
+metal and you get both properties at once
+([§8](#8-choosing-locations-you-alone-control)). What this framework avoids is
+not metal; it is a readable seed sitting in one place.
+
 Note what this table achieves: **row 1 never exists in storable form.** The
 [SLIP-39 + age tool](https://github.com/PeteSparrowBTC/slip39-backup)
 encrypts the seed, passphrase, descriptor, and notes into `payload.age` using
@@ -532,6 +570,10 @@ For 2-of-3, pick three homes such that:
   minimum; for durability beyond paper, stamped **metal share plates** are
   the upgrade. Independent stress tests (fire, crush, corrosion) of
   commercial products exist ([§13](#13-what-we-read-and-what-each-source-changed)), and the bank-box copies can stay paper.
+  Note what goes on the plate: a **SLIP-39 share**, never a plaintext seed.
+  Metal answers durability, not confidentiality, and stamping the seed itself
+  gives up the property the whole design is built on
+  ([§4](#4-inventory-the-secrets-you-actually-hold)).
 - Convenient default: home fireproof pouch, bank deposit box (anchor:
   access plan + Recovery Sheet + share), locked drawer or small box at your
   workplace / second bank.
