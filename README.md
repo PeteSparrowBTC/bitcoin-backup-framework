@@ -4,8 +4,8 @@ If you have been meaning to take real custody of your bitcoin for a year or
 two and keep postponing it, this document is for you. It is a complete
 framework for securing a Bitcoin seed phrase, its passphrase, and the digital
 accounts around them, whether you are starting from nothing or already have
-a strategy you have never pressure-tested (the rules in [§2](#2-the-rules) and the failure
-matrix in [§9](#9-failure-mode-matrix-what-saves-you) work just as well as an audit of an existing setup). It is
+a strategy you have never pressure-tested (the rules in [§3](#3-the-rules) and the failure
+matrix in [§10](#10-failure-mode-matrix-what-saves-you) work just as well as an audit of an existing setup). It is
 written for someone who wants to **trust no one** and does not want to become
 a security expert to get this right. If you already use a password manager
 and two-factor authentication, you are equipped for everything below.
@@ -14,12 +14,12 @@ and two-factor authentication, you are equipped for everything below.
 and it trusts no one. That has a price: **by default, if you die, your
 bitcoin is lost.** [Phase C](#phase-c-the-access-plan-without-trusting-anyone-an-evening)
 leaves your estate a thread to pull (a plan in a
-bank box your executor can eventually reach), and [§10](#10-involving-others-later-the-upgrade-path) shows how to upgrade
+bank box your executor can eventually reach), and [§11](#11-involving-others-later-the-upgrade-path) shows how to upgrade
 when you are ready to involve people. Real inheritance planning requires
 people and legal instruments.
 
 Every step works with zero trusted parties; involving other people is an
-optional upgrade layered on at the end ([§10](#10-involving-others-later-the-upgrade-path)), never a prerequisite. The
+optional upgrade layered on at the end ([§11](#11-involving-others-later-the-upgrade-path)), never a prerequisite. The
 principles are tool-agnostic; the worked example uses the
 [SLIP-39 + age backup tool](https://github.com/PeteSparrowBTC/slip39-backup)
 plus the Bitwarden password manager.
@@ -34,7 +34,7 @@ framework emerged from a long working conversation between the two.
 Before settling on the design, we
 reviewed the established books, papers, protocols, and sites on self-custody
 and inheritance planning, and where the literature pushed back on our
-choices, we changed them. [§12](#12-what-we-read-and-what-each-source-changed) lists each source and what it contributed or
+choices, we changed them. [§13](#13-what-we-read-and-what-each-source-changed) lists each source and what it contributed or
 challenged.
 
 ---
@@ -68,10 +68,172 @@ Applying bearer-grade machinery to revocable secrets makes them harder to
 recover for no real gain. Applying revocable-grade carelessness to bearer
 secrets is how coins get stolen. Match the protection to the kind.
 
-## 2. The rules
+## 2. Before you back it up: is the secret worth protecting?
 
-Eight rules generate the whole framework. When in doubt, check a decision
-against these.
+A backup preserves a secret exactly as strong as it was the moment it was
+created. It cannot add strength that was never there. Perfect discipline
+applied to a weak secret gives you a weakness that is faithfully copied,
+distributed across three locations, and drilled once a year.
+
+There is an asymmetry here worth stating before anything else. **You cannot
+look at a seed and tell whether it is random.** A seed built from 40 bits of
+entropy looks exactly like one built from 128: twenty-four ordinary words,
+valid checksum, imports fine everywhere. Randomness is a property of the
+process that produced the words, never of the words themselves, and no
+inspection, checksum or test transaction will reveal the difference. **A
+passphrase is the opposite.** You know how it was chosen, because you chose
+it, and that makes its weakness measurable. So the two halves of this section
+ask different questions: for the seed, was the process trustworthy; for the
+passphrase, is this particular string strong.
+
+### The seed: you can only audit the process
+
+Why this matters is not hypothetical. In July 2026 Coinkite disclosed that a
+build regression dating to March 2021 had stopped its hardware wallets from
+calling their hardware random number generator during seed creation, falling
+back to a weak software source with no visible sign. Seeds made on affected
+Mk2 and Mk3 devices carry roughly 40 bits of entropy instead of the intended
+128, and Mk4, Mk5 and Q seeds roughly 72. Attackers drained about 1,816 BTC
+from more than 5,200 addresses. Every one of those owners could have followed
+every rule in this document and still lost everything, because the defect was
+in the secret and not in its storage. Firmware updates corrected future seed
+generation and did nothing at all for seeds already made. No owner could have
+detected it by examining their words.
+
+Since the output tells you nothing, only the process is auditable:
+
+- **Supply your own randomness.** Every device worth using lets you mix in
+  dice. At least 50 fair, private, independent rolls get hashed directly into
+  the seed, bypassing the device generator. This is the only path that does
+  not require trusting a black box you cannot inspect, and it is exactly what
+  separated a non-event from a loss in July 2026.
+- **Know what verification does and does not prove.** Checking the wallet
+  fingerprint in independent software, confirming a receive address on a
+  second device, and sending a small test transaction all catch a swapped,
+  counterfeit or lying device. **None of them detect weak entropy**, because a
+  weak seed derives addresses perfectly correctly. Do them anyway; just do not
+  read a passing check as evidence of randomness.
+- **In multisig, diversify vendors.** A 2-of-3 built from two devices by the
+  same maker is not protected against that maker's defect: one flaw satisfies
+  the threshold alone. Different vendors for different cosigners is the point,
+  and it is the specific lesson of the Coldcard event.
+- **Rotate on disclosure, before you protect.** When a defect affecting your
+  device and firmware is announced, treat the seed as compromised and move the
+  coins before building backups around it. Rule 7 is why: superseded shares
+  plus a superseded `payload.age` stay a working backup forever, so
+  distributing first means travelling to every location later to destroy what
+  you left there.
+
+### The passphrase: strength you can actually assess
+
+BIP-39 turns your words and your passphrase into a wallet using
+PBKDF2-HMAC-SHA512 with **2,048 iterations**. That number is the entire work
+factor protecting the passphrase, and it is small. A password manager uses
+something like 600,000 iterations, or Argon2id, for the same job. Each BIP-39
+guess costs roughly 4,000 SHA-512 compressions, so one modern GPU tries on the
+order of a million candidates per second and a small rack tries hundreds of
+millions. Any passphrase a person invented and can recall unaided sits inside
+that range.
+
+**Why `Barcelona2019!` is not a good passphrase.** Three separate reasons, any
+one of which is enough:
+
+1. **It is a pattern, not a secret.** Capitalised word, four-digit year,
+   trailing punctuation is among the first rule sets a cracking tool applies
+   to a wordlist. The capital and the `!` contribute about two bits between
+   them, not the complexity their shape suggests.
+2. **It is biography.** If Barcelona and 2019 mean something to you, they mean
+   something to anyone who reads your social media. Targeted attacks begin by
+   building a wordlist from your life: cities, years, pets, children, teams,
+   streets.
+3. **It is small.** Well under 30 bits against a rule-based attacker, which at
+   the speeds above is seconds of work once the mnemonic is known.
+
+The instinct it satisfies, one capital and one number and one symbol, was
+built for 1990s login policies where an attacker got three tries before
+lockout. Offline cracking with your seed words in hand has no attempt limit.
+
+**What a good passphrase looks like:**
+
+- **Generated, never invented.** Dice or a password manager's generator.
+  Human choice is the vulnerability, and it is the one part of this you can
+  fully control.
+- **Sized to its job.** If you treat the passphrase as the thing that saves
+  you when the seed leaks, it must be as strong as the seed: about ten
+  diceware words, or twenty-plus random characters. If seed storage is sound
+  and the passphrase is a genuine second factor, five to six diceware words is
+  defensible.
+- **Written down, stored apart from the seed.** Memory-only is total loss with
+  no recovery path, and storing it beside the seed defeats its purpose. In
+  this framework it lives inside `payload.age` while the shares live
+  elsewhere, which separates them by construction.
+- **Plain ASCII, no leading or trailing spaces.** Wallets differ in unicode
+  normalisation, and a passphrase that recovers on one wallet but not another
+  is a live loss risk.
+- **Tested before funding.** There is no wrong-passphrase error. Every
+  passphrase is valid and opens a different, empty wallet. A typo does not
+  look like a typo; it looks like your coins are gone.
+
+### One seed, several passphrases
+
+Reusing one mnemonic with different passphrases, to run several wallets or,
+worse, to stand up several cosigners of one multisig, looks like it multiplies
+security. It does not. The risk vectors:
+
+1. **A single root.** The mnemonic is the common ancestor of every derived
+   wallet. Anything that exposes it, a weak generator, a photographed card, a
+   cloud sync, one burgled location, degrades all of them in the same instant.
+   Independent wallets fail one at a time; these fail together.
+2. **The searches are independent, so costs add rather than multiply.** Given
+   the mnemonic and one cosigner's public key, an attacker tests candidate
+   passphrases against that key alone. Ordinary use hands them those keys:
+   spending from a multisig publishes the cosigner public keys on chain, and
+   the descriptor sits in every backup and every watch-only wallet.
+3. **Multisig in form, single-sig in risk.** A quorum's value comes from its
+   keys being independent. Derive them from one seed and a single compromise,
+   plus a fast key-derivation function, reaches all of them.
+4. **The backup collapses too.** One `payload.age` then holds the seed and
+   every passphrase, so whoever opens it holds the whole quorum. The multisig
+   buys nothing at backup time.
+5. **Operational confusion.** Which passphrase belongs to which wallet, with
+   no error shown on a wrong entry, is a durable way to lose funds with no
+   attacker involved at all.
+
+**The specific case: same seed, 2-of-2, `Barcelona2019!` and `Cat2025`.**
+
+If the mnemonic never leaks, both wallets rest on the mnemonic, and the
+passphrases are not doing the work you imagine. If the mnemonic does leak,
+which is the exact scenario passphrases exist for, the attacker needs both
+keys, tests each passphrase separately against its own public key, and pays
+the *sum* of the two costs. Sums are dominated by their largest term.
+Generously calling `Barcelona2019!` 25 bits and `Cat2025` 20 bits, the pair is
+worth log2(2^25 + 2^20), or about 25 bits: **the 2-of-2 is worth roughly what
+its stronger passphrase is worth alone.** The second passphrase bought a
+rounding error, and 2^25 guesses is a few seconds of GPU time.
+
+Even in the attacker's worst case, where the public keys are somehow unknown
+and the search really is multiplicative, 45 bits is hours on rented hardware.
+
+What helps is what this section keeps returning to: two independently
+generated seeds, on devices from different vendors, each with its own
+generated passphrase if you want one. Then an attacker has to succeed twice,
+against unrelated roots, with no shortcut from one to the other.
+
+This section is a precondition check, not a hardware guide. Which device to
+buy, and how each handles dice entropy, changes faster than this document can
+track; [§13](#13-what-we-read-and-what-each-source-changed) lists sources that
+maintain that material properly.
+
+## 3. The rules
+
+One precondition and eight rules generate the whole framework. When in doubt,
+check a decision against these.
+
+**Rule 0, the precondition: a backup cannot be stronger than the secret it
+preserves.** Audit how the seed was generated and how strong the passphrase
+is before investing in protecting them
+([§2](#2-before-you-back-it-up-is-the-secret-worth-protecting)). Everything
+below assumes real entropy at the root.
 
 1. **Acyclic dependencies**: no loops in "what unlocks what." No secret may
    be stored *only* inside something it unlocks. (Master password inside the
@@ -99,22 +261,22 @@ against these.
    weakly.
 6. **An untested backup is a hypothesis.** Until you have executed the
    recovery end-to-end from the written instructions alone, you do not have a
-   backup, only a plan. Drill it ([section 8](#8-the-annual-drill)). In a solo system this
+   backup, only a plan. Drill it ([section 9](#9-the-annual-drill)). In a solo system this
    matters double: you are the only error-detection there is.
 7. **Trust is additive, never foundational.** The system must be fully
    functional with zero trusted parties. Every grant of trust is a later,
-   revocable enhancement ([§10](#10-involving-others-later-the-upgrade-path)). Never distribute artifacts of an undrilled
+   revocable enhancement ([§11](#11-involving-others-later-the-upgrade-path)). Never distribute artifacts of an undrilled
    system: superseded shares plus a superseded `payload.age` remain a
    working backup forever.
 8. **Secrets are reconstructed only in the clean room.** The one moment your
    seed exists in one place is recovery. Do it only in the same offline,
    leave-no-trace environment used to create the backup (Tails Linux on a
    spare computer), never on a daily-use machine. This rule exists because
-   the published criticism of share-based backups ([§12](#12-what-we-read-and-what-each-source-changed)) is precisely that
+   the published criticism of share-based backups ([§13](#13-what-we-read-and-what-each-source-changed)) is precisely that
    the reconstruction moment is where malware wins; a clean room removes
    that moment from the reach of malware entirely.
 
-## 3. Inventory: the secrets you actually hold
+## 4. Inventory: the secrets you actually hold
 
 Before placing anything, list what exists. For a typical self-custody setup:
 
@@ -127,7 +289,7 @@ Before placing anything, list what exists. For a typical self-custody setup:
 | 5 | Password-manager master password | revocable | no | your head + Layer 0 sheet |
 | 6 | Password-manager 2FA recovery code | revocable | no | Layer 0 sheet |
 | 7 | Vault-export password | revocable | no | Layer 0 sheet |
-| 8 | Email account credentials | revocable | no | vault (cycle broken by #6, see [§6](#6-known-traps-each-has-bitten-real-people)) |
+| 8 | Email account credentials | revocable | no | vault (cycle broken by #6, see [§7](#7-known-traps-each-has-bitten-real-people)) |
 
 Jargon, once: **SLIP-39 shares** are word lists produced by splitting a
 secret so that any 2 of 3 (your choice of threshold) can rebuild it and
@@ -158,7 +320,7 @@ single artifact anywhere is sufficient. This is also what makes the solo
 version workable: even someone who found **every** share would hold only
 `k`, never the wallet, without `payload.age`.
 
-## 4. The architecture: three layers
+## 5. The architecture: three layers
 
 ```
  LAYER 0 - PHYSICAL ROOT OF TRUST (depends on nothing, held only by you)
@@ -175,7 +337,7 @@ version workable: even someone who found **every** share would hold only
  ┌───────────────────────────────────────────────────────────────┐
  │  payload.age (attachment)  ← ciphertext only; k is NOT here   │
  │  verification-record.txt, descriptor copy, all daily logins,  │
- │  email credentials; Emergency Access dead-man switch (§5.5)   │
+ │  email credentials; Emergency Access dead-man switch (§6.5)   │
  └───────────────┬───────────────────────────────────────────────┘
                  │ encrypted export + payload.age, refreshed together
                  ▼
@@ -206,7 +368,7 @@ Check the design against the rules:
   catastrophe, and why the sheet lives somewhere you would *notice* was
   opened.
 
-## 5. Setup from zero: the ordered checklist
+## 6. Setup from zero: the ordered checklist
 
 Do these in order; each phase depends on the previous one. None of them
 requires more than an afternoon, and the phases can be weeks apart. The
@@ -233,7 +395,7 @@ onward.
    when you are in a hospital bed. It is revocable in one click, unilaterally.
    Scope check: it reaches your *vault* (someone can manage your accounts
    and bills), never your coins; `payload.age` without shares is noise. If
-   no candidate exists yet, skip and note it as an open item ([§10](#10-involving-others-later-the-upgrade-path)).
+   no candidate exists yet, skip and note it as an open item ([§11](#11-involving-others-later-the-upgrade-path)).
 
 ### Phase B: back up the seed (one offline session)
 
@@ -246,12 +408,12 @@ onward.
    defaults to 3-of-5, which assumes five homes; three locations you alone
    control is realistic, five rarely is).
 8. From the generated `output.zip`, immediately split the contents:
-   - **share zips → three self-controlled homes** ([§7](#7-choosing-locations-you-alone-control)): home pouch, bank
+   - **share zips → three self-controlled homes** ([§8](#8-choosing-locations-you-alone-control)): home pouch, bank
      box, one more (second bank's box, locked drawer at work).
    - **`payload.age` → Bitwarden attachment** in a dedicated entry, together
      with `verification-record.txt`.
    - **`payload.age` → Layer 2 USB stick(s)** as well. Bitwarden's export
-     does **not** include attachments ([§6](#6-known-traps-each-has-bitten-real-people)), and shares alone cannot recover
+     does **not** include attachments ([§7](#7-known-traps-each-has-bitten-real-people)), and shares alone cannot recover
      without it. Replicate it generously; it is ciphertext.
    - Delete `output.zip`. It is a distribution package, not a keepsake.
 9. Before funding the wallet seriously: **dry-run recovery** in Recoverer
@@ -287,16 +449,16 @@ onward.
     chance." Be clear-eyed about what this is: **a thread for your survivors
     to pull, not an inheritance plan**; it depends on a diligent executor
     finding and following it. Make sure your will mentions **that the box
-    exists**: a breadcrumb, never a secret (see the will trap in [§6](#6-known-traps-each-has-bitten-real-people)).
+    exists**: a breadcrumb, never a secret (see the will trap in [§7](#7-known-traps-each-has-bitten-real-people)).
 
 ### Phase D: make it a system, not an event (recurring)
 
 12. Quarterly (or after significant vault changes): refresh the encrypted
     vault export + `payload.age` copy on the Layer 2 USB, *together*.
-13. Annually: full recovery drill ([§8](#8-the-annual-drill)). Solo systems have no second pair of
+13. Annually: full recovery drill ([§9](#9-the-annual-drill)). Solo systems have no second pair of
     eyes; the drill is the only audit you get.
 
-## 6. Known traps (each has bitten real people)
+## 7. Known traps (each has bitten real people)
 
 - **Keys or seeds in the will.** In most jurisdictions a will becomes a
   **public record** when the estate is settled. Anything written in it is
@@ -319,12 +481,18 @@ onward.
   *supplements*, never as the root.
 - **Raw SLIP-39 on the seed words alone.** Splitting the bare seed (as some
   hardware wallets offer) feels complete but is not: the SLIP-39 secret
-  carries the seed's entropy and nothing else ([§3](#3-inventory-the-secrets-you-actually-hold)). If your wallet has a
+  carries the seed's entropy and nothing else ([§4](#4-inventory-the-secrets-you-actually-hold)). If your wallet has a
   BIP-39 passphrase, the shares recover a seed that opens the *wrong*
   wallet (an empty one), and the passphrase that opens the right one was
   never in the backup. The passphrase and descriptor end up unprotected,
   co-located with shares, or nowhere. Split a key, encrypt the whole
   payload under it, and the problem disappears.
+- **One seed, several passphrases, called multisig.** Deriving several
+  cosigners from a single mnemonic produces a quorum that fails as one unit,
+  and because each passphrase can be tested against its own public key the
+  search costs add instead of multiplying. A 2-of-2 built this way is worth
+  about what its stronger passphrase is worth alone
+  ([§2](#2-before-you-back-it-up-is-the-secret-worth-protecting)).
 - **Splitting the master password with SLIP-39.** Tempting symmetry, wrong
   tool: the master password is a *revocable* secret whose dominant risk is
   forgetting, and SLIP-39 wants a small binary secret, not text. A plaintext
@@ -344,7 +512,7 @@ onward.
   must chase down and destroy every superseded copy. Stabilize solo, drill
   once, then distribute (rule 7).
 
-## 7. Choosing locations you alone control
+## 8. Choosing locations you alone control
 
 For 2-of-3, pick three homes such that:
 
@@ -363,12 +531,12 @@ For 2-of-3, pick three homes such that:
 - **The home share faces fire, not burglars.** A fireproof pouch is the
   minimum; for durability beyond paper, stamped **metal share plates** are
   the upgrade. Independent stress tests (fire, crush, corrosion) of
-  commercial products exist ([§12](#12-what-we-read-and-what-each-source-changed)), and the bank-box copies can stay paper.
+  commercial products exist ([§13](#13-what-we-read-and-what-each-source-changed)), and the bank-box copies can stay paper.
 - Convenient default: home fireproof pouch, bank deposit box (anchor:
   access plan + Recovery Sheet + share), locked drawer or small box at your
   workplace / second bank.
 
-## 8. The annual drill
+## 9. The annual drill
 
 Once a year, prove the chain from paper alone; offline Tails is the venue
 (rule 8):
@@ -385,17 +553,18 @@ Once a year, prove the chain from paper alone; offline Tails is the venue
    `verification-record.txt`.
 6. Read the access plan as if you were the person executing it, ideally
    the least technical person who might have to. Fix everything that made
-   you hesitate. (When you eventually involve someone, [§10](#10-involving-others-later-the-upgrade-path), the real test
+   you hesitate. (When you eventually involve someone, [§11](#11-involving-others-later-the-upgrade-path), the real test
    is *them* executing it while you watch silently.)
 7. Reseal, redistribute, note the drill date on the sheet and the plan.
 
 Fifteen minutes of drill per year is the difference between a backup and a
 belief.
 
-## 9. Failure-mode matrix: what saves you
+## 10. Failure-mode matrix: what saves you
 
 | Scenario | What saves you |
 |---|---|
+| Your device's random number generator was defective | **nothing in this framework; a perfect backup preserves the flaw.** [§2](#2-before-you-back-it-up-is-the-secret-worth-protecting) is the only defence: your own dice entropy, vendor diversity in multisig, and rotation when a defect is disclosed |
 | Forgotten master password | Recovery Sheet (Layer 0) |
 | Lost phone / 2FA device | 2FA recovery code on the sheet |
 | House fire destroys home pouch + devices | bank-box sheet copy; 2-of-3 tolerates the lost share; cloud vault intact |
@@ -404,14 +573,14 @@ belief.
 | Malware on the machine you recover with | rule 8: you never recover on an online machine, so this scenario is designed out |
 | Recovery Sheet stolen | rotate master password, export password, re-secure; coins untouched |
 | One share location destroyed | threshold margin; re-split to a fresh 2-of-3 promptly, you are now at zero margin |
-| **Two share locations destroyed at once** | **nothing. This is the limit of 2-of-3; geographic separation is what makes it unlikely, and [§10](#10-involving-others-later-the-upgrade-path) is what fixes it properly** |
+| **Two share locations destroyed at once** | **nothing. This is the limit of 2-of-3; geographic separation is what makes it unlikely, and [§11](#11-involving-others-later-the-upgrade-path) is what fixes it properly** |
 | A share is found by a stranger | reveals nothing alone (and even all shares yield only `k` without `payload.age`); re-split at leisure |
 | `payload.age` lost everywhere | **unrecoverable. This is the artifact to replicate generously (rule 5)** |
-| You are incapacitated | Emergency Access (vault: bills, email, accounts) after the waiting period; **coins wait**, no solo mechanism covers them ([§10](#10-involving-others-later-the-upgrade-path)) |
-| You die | **by default: the coins are lost.** This framework is not an inheritance plan. The access plan in the bank box gives your estate a chance (a diligent executor, the will breadcrumb, the legal process); [§10](#10-involving-others-later-the-upgrade-path) is the real fix |
+| You are incapacitated | Emergency Access (vault: bills, email, accounts) after the waiting period; **coins wait**, no solo mechanism covers them ([§11](#11-involving-others-later-the-upgrade-path)) |
+| You die | **by default: the coins are lost.** This framework is not an inheritance plan. The access plan in the bank box gives your estate a chance (a diligent executor, the will breadcrumb, the legal process); [§11](#11-involving-others-later-the-upgrade-path) is the real fix |
 | You die and no will mentions the box | nothing; the thread was never tied to anything |
 
-## 10. Involving others later: the upgrade path
+## 11. Involving others later: the upgrade path
 
 The solo framework is complete but has a known coverage boundary: every
 scenario where **you are the failed component**. Others are not a nicer
@@ -447,7 +616,7 @@ redone:
   that lets a named person act for you if you cannot; names and forms vary
   by country) is the legal complement to Emergency Access: the technical
   switch covers your vault, the legal one covers everything a vault does
-  not. The inheritance-planning literature ([§12](#12-what-we-read-and-what-each-source-changed)) treats this as the
+  not. The inheritance-planning literature ([§13](#13-what-we-read-and-what-each-source-changed)) treats this as the
   foundation, not an extra. Keys and seeds still never appear in any legal
   document; those become public.
 - **Give them a sealed envelope.** Full Recovery Sheet if the trust is
@@ -466,7 +635,7 @@ redone:
 - **Tell your executor the access plan exists.** Existence, not contents:
   minimal disclosure, zero access granted.
 - **For large holdings, graduate the wallet itself to multisig.** The
-  security literature's strongest criticism of share-based backups ([§12](#12-what-we-read-and-what-each-source-changed)) is
+  security literature's strongest criticism of share-based backups ([§13](#13-what-we-read-and-what-each-source-changed)) is
   that shares must be recombined in one place to spend; a multisig wallet
   (e.g. 2-of-3 keys, each on its own hardware, each signing independently)
   never assembles a complete secret anywhere. The two compose cleanly:
@@ -478,7 +647,7 @@ redone:
 Each step is independently revocable and independently useful. Take them in
 any order, years apart, as trust arrives.
 
-## 11. What this framework deliberately does not do
+## 12. What this framework deliberately does not do
 
 - **No brain-only secrets besides the master password.** Memory is a single
   point of failure with a 100% eventual failure rate.
@@ -489,16 +658,16 @@ any order, years apart, as trust arrives.
   a zero-knowledge password manager for daily secrets. Every component is a
   standard your heirs' future tools will still speak.
 - **No maximal-security theater.** The most rigorous published cold-storage
-  protocol ([§12](#12-what-we-read-and-what-each-source-changed)) runs 93 pages and its own community notes that most people
+  protocol ([§13](#13-what-we-read-and-what-each-source-changed)) runs 93 pages and its own community notes that most people
   attempting it are *more* likely to lose funds than to gain security.
   Complexity is itself a risk axis; this framework spends its complexity
   budget only where a named failure mode demands it.
 - **No claim that solo covers everything.** Death (beyond a thread for your
-  estate), incapacity (for the coins), and duress are open items until [§10](#10-involving-others-later-the-upgrade-path),
+  estate), incapacity (for the coins), and duress are open items until [§11](#11-involving-others-later-the-upgrade-path),
   written down as open items because a known gap beats a false sense of
   coverage.
 
-## 12. What we read, and what each source changed
+## 13. What we read, and what each source changed
 
 This framework was not invented in a vacuum. We reviewed the established
 literature (books, protocols, published criticism, and curated research)
@@ -511,16 +680,16 @@ and adjusted the design where the evidence pushed back:
   grew into a full **access plan** (inventory, helpers, dating and update
   triggers), the **keys-never-in-a-will** trap comes from her explanation
   that wills become public records, and the **have-the-reader-execute-the-
-  dry-run** test in [§10](#10-involving-others-later-the-upgrade-path) is her method. Her four audit criteria (a plan must
-  be *secure, usable, resilient, efficient*) are a good lens for [§8](#8-the-annual-drill).
+  dry-run** test in [§11](#11-involving-others-later-the-upgrade-path) is her method. Her four audit criteria (a plan must
+  be *secure, usable, resilient, efficient*) are a good lens for [§9](#9-the-annual-drill).
 - **Christopher Allen & Shannon Appelcline, *#SmartCustody*** (Blockchain
   Commons, 2020; free, openly licensed): a risk-modeling method built on
   **27 personified adversaries** ("Death / Incapacitation," "Coercion,"
-  "Key Fragility"…). Our failure-mode matrix ([§9](#9-failure-mode-matrix-what-saves-you)) is the compact version of
+  "Key Fragility"…). Our failure-mode matrix ([§10](#10-failure-mode-matrix-what-saves-you)) is the compact version of
   their exercise; running your own setup through their full adversary list
   is the recommended graduation from this document.
 - **Glacier Protocol** (glacierprotocol.org): the maximal end of
-  cold-storage rigor, and the cautionary tale behind [§11](#11-what-this-framework-deliberately-does-not-do). Its own ecosystem
+  cold-storage rigor, and the cautionary tale behind [§12](#12-what-this-framework-deliberately-does-not-do). Its own ecosystem
   documents that the 93-page ceremony causes more loss than it prevents for
   non-experts. It validates the offline-Tails instinct while vindicating
   simplicity everywhere else.
@@ -529,12 +698,20 @@ and adjusted the design where the evidence pushed back:
   a design like ours, namely that share-based backups must reconstruct the
   secret in one place. It produced **rule 8** (clean-room-only recovery),
   the explicit framing that reconstruction risk is mitigated rather than
-  eliminated, and the **multisig graduation path** in [§10](#10-involving-others-later-the-upgrade-path) (multisig
+  eliminated, and the **multisig graduation path** in [§11](#11-involving-others-later-the-upgrade-path) (multisig
   protects use; this framework protects backup; compose them).
 - **Jameson Lopp's security research** (lopp.net): the field's best
   curated index, and the source of the **metal share plate** guidance in
-  [§7](#7-choosing-locations-you-alone-control). His independent stress tests (fire, crush, corrosion) of commercial
+  [§8](#8-choosing-locations-you-alone-control). His independent stress tests (fire, crush, corrosion) of commercial
   seed-storage products are the reference when paper stops being enough.
+- **The 2026 Coldcard entropy disclosure** (Coinkite's advisory; Wizardsardine's
+  technical analysis): a live demonstration that backup discipline cannot
+  rescue a secret that was weak at birth. It produced **rule 0** and
+  [§2](#2-before-you-back-it-up-is-the-secret-worth-protecting) in full: the
+  dice-entropy requirement, the vendor-diversity rule for multisig, the
+  distinction between verifying a device and verifying its randomness, and the
+  arithmetic showing that one seed with several passphrases adds far less than
+  it appears to.
 
 Further reading, in the order we would hand them to a friend: Morgan's book
 first (it is written for non-experts and covers the human side), then
