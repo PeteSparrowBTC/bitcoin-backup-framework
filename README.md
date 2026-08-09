@@ -16,7 +16,8 @@ bitcoin is lost.** [Phase C](#phase-c-the-access-plan-without-trusting-anyone-an
 leaves your estate a thread to pull (a plan in a
 bank box your executor can eventually reach), and [§11](#11-involving-others-later-the-upgrade-path) shows how to upgrade
 when you are ready to involve people. Real inheritance planning requires
-people and legal instruments.
+people and legal instruments; it is a chapter this guide intends to add, not a
+question it has closed.
 
 Every step works with zero trusted parties; involving other people is an
 optional upgrade layered on at the end ([§11](#11-involving-others-later-the-upgrade-path)), never a prerequisite. The
@@ -318,17 +319,20 @@ software. The case against it comes down to what each additional copy costs you.
 A plaintext seed is spend-sufficient by itself, so **every copy is a complete
 attack surface**. Redundancy and exposure move together: one copy risks loss, two
 copies mean an attacker needs to reach only one of two places, and a third makes
-that easier again. You are forced to trade loss-resistance against
-theft-resistance, and this framework refuses that trade because both failure
-directions matter ([§1](#1-what-you-are-protecting-and-the-two-ways-you-lose)).
+that easier again. You are trading loss-resistance against theft-resistance on
+fixed terms, and both failure directions matter
+([§1](#1-what-you-are-protecting-and-the-two-ways-you-lose)).
 
-The encrypted design separates the two. A share reveals nothing and a payload
-without its key reveals nothing, so an attacker needs threshold-many shares
-**and** the payload: two different classes of artifact, normally kept in
-different places. Redundancy is then free of exposure, because what sets the
-attacker's task is the threshold, not the number of copies. Add a fourth share
-and you have made loss less likely without making theft easier. That is the
-property a plaintext backup cannot offer at any copy count.
+The encrypted design does not abolish that trade; it puts a dial on it. A share
+reveals nothing and a payload without its key reveals nothing, so an attacker
+needs threshold-many shares **and** the payload: two different classes of
+artifact, normally kept in different places. Adding shares while the threshold
+stays put does still help an attacker, who needs the same number and now has more
+places to take them from. The difference is that the threshold moves too. Going
+from 2-of-3 to 3-of-5 survives two lost shares instead of one *and* demands three
+compromised locations instead of two: better in both directions at once, paid for
+in locations to set up and check rather than in security. A plaintext backup has
+no such dial, because its threshold is permanently one.
 
 Two lesser advantages. A plaintext seed announces itself, since a list of
 twenty-four words is recognisable to anyone who has heard of bitcoin, which is
