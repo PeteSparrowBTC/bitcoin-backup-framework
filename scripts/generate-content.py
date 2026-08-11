@@ -165,6 +165,25 @@ for section in sections:
         anchor_to_page[slugify(sub)] = (section["slug"], slugify(sub))
 
 
+def promote_headings(markdown: str) -> str:
+    """Lift every heading one level, for a section that has become its own page.
+
+    In README.md a section is "## 8. Storing the shares" with "### The object"
+    beneath it. On the site that "##" becomes the page title, so its children
+    are a level lower than their position warrants: the page's top-level
+    subsections are marked H3 with no H2 above them.
+
+    That is also why the right-hand contents had no indentation. It lists
+    headings by level, and a page whose headings are all H3 is a flat list
+    however it is rendered. Promoting makes the top-level subsections H2 and
+    anything beneath them H3, which is the hierarchy the panel indents.
+
+    Anchors are unaffected: they are derived from the heading text, not its
+    level, so every existing cross-reference still lands.
+    """
+    return re.sub(r"^(#{3,6}) ", lambda m: "#" * (len(m.group(1)) - 1) + " ", markdown, flags=re.M)
+
+
 def retarget(markdown: str, from_depth: int, current_slug: str = "") -> str:
     """Rewrite "](#anchor)" for a page at the given depth below the site root.
 
@@ -246,7 +265,7 @@ for section in sections:
     write(
         f"framework/{section['slug']}.md",
         front,
-        retarget(section["body"], from_depth=2, current_slug=section["slug"]),
+        promote_headings(retarget(section["body"], from_depth=2, current_slug=section["slug"])),
     )
 
 # The arithmetic explainer, as its own top-level page. It is referenced from

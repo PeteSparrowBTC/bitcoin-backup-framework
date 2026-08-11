@@ -591,7 +591,12 @@ onward.
 
 ## 8. Storing the shares: the object, and where it goes
 
-### The object
+### Making the card
+
+Everything up to the point where a physical object exists and the files are
+gone.
+
+#### The object
 
 The tool's output is a distribution package, not a backup. Each
 `share-K-of-N.zip` holds one SLIP-39 mnemonic (33 words), the same mnemonic
@@ -628,7 +633,7 @@ scanner software. So a card carrying both has a fast path and a fallback, and
 the fallback is the one that has to last. If you print only one of the two,
 print the words.
 
-### What is written on it
+#### What is written on it
 
 Enough for a person who is entitled to it, nothing for a person who is not.
 
@@ -651,7 +656,7 @@ Seal each one as the Recovery Sheet is sealed (Phase A, step 4): an envelope,
 signature across the flap. That is what turns "each location is tamper-evident"
 into a mechanism rather than an intention.
 
-### Media, per location
+#### Media, per location
 
 - **Laser toner, not inkjet, and never thermal receipt paper**, which fades to
   blank within a few years. Handwriting in pencil or a pigment pen outlasts most
@@ -664,7 +669,12 @@ into a mechanism rather than an intention.
   has no idea what they are holding. "Important documents, do not discard,
   [your name]" costs nothing and does not say bitcoin.
 
-### The three homes
+### Placing the card
+
+Everything after: which locations, what may sit beside a card, and when to
+re-split rather than copy another.
+
+#### The three homes
 
 **One location, one share. Never two.** Two different cards in one envelope,
 one drawer, or one deposit box is a spendable quorum sitting in a single
@@ -702,7 +712,7 @@ For 2-of-3, pick three homes such that:
   than borrowed: a second bank's box, a property you own, or a storage unit
   in your name.
 
-### Where the cards can live
+#### Where the cards can live
 
 | Location | What it gives you | What it costs |
 | --- | --- | --- |
@@ -759,7 +769,7 @@ only, so a cheap USB stick gives the identical result. A hardened phone's
 strengths are about protecting plaintext at rest on a live device, and this
 design keeps no plaintext at rest anywhere.
 
-### May the payload share a location with a card?
+#### May the payload share a location with a card?
 
 **A location, yes. A person, never.** The two halves have different reasons,
 and the second is the one that actually protects you.
@@ -810,7 +820,7 @@ to yourself: all poor homes for a card, all good homes for ciphertext, because
 rule 5 asks nothing of them but that they still exist. A payload copy needs
 only to be somewhere your cards are not.
 
-### Duplicating a card, or re-splitting
+#### Duplicating a card, or re-splitting
 
 > **The short version: copy at most one card, and never all of them.** A copy
 > does not raise the threshold, so it adds a place to steal from without
