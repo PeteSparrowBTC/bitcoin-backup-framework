@@ -333,7 +333,10 @@ fixed terms, and both failure directions matter
 The encrypted design does not abolish that trade; it puts a dial on it. A share
 reveals nothing and a payload without its key reveals nothing, so an attacker
 needs threshold-many shares **and** the payload: two different classes of
-artifact, normally kept in different places. Adding shares while the threshold
+artifact, so no number of shares alone recovers anything. Whether the two
+classes also live in different places is a separate decision, and this
+framework's default answer is mostly no, for reasons set out in
+[§8](#8-storing-the-shares-the-object-and-where-it-goes). Adding shares while the threshold
 stays put does still help an attacker, who needs the same number and now has more
 places to take them from. The difference is that the threshold moves too. Going
 from 2-of-3 to 3-of-5 survives two lost shares instead of one *and* demands three
@@ -742,6 +745,41 @@ hardening buys in the second job, which is nothing. Layer 2 holds ciphertext
 only, so a cheap USB stick gives the identical result. A hardened phone's
 strengths are about protecting plaintext at rest on a live device, and this
 design keeps no plaintext at rest anywhere.
+
+### May the payload share a location with a card?
+
+Yes, and the framework's default already does. What is worth making explicit
+is what that costs, because the answer is not "nothing".
+
+**One card plus a payload copy in one place is not a compromise.** The
+boundary is threshold-many cards **and** the payload, and one card is not
+threshold-many. Whoever empties that location holds one card and a file that
+decrypts nothing, and still needs a second card from somewhere else.
+
+**The payload is not a second geographic factor, though.** For a 2-of-3 any
+two locations already yield a quorum, so if the payload sits in any share
+location at all, at least one pair of raids is complete on its own. The
+default layout does exactly that: Layer 2 sticks live in the bank box and the
+home pouch, and the Recovery Sheet lives in both as well, which is a payload
+copy by another name because it opens the vault that holds one. A raid on
+those two locations is therefore complete, and it was complete the moment the
+threshold was met. The payload's job is to make cards alone worthless, and it
+does that job wherever it sits.
+
+**If you want a physical-only attacker to need something beyond your
+locations**, the condition for 2-of-3 is strict: keep the payload *and* the
+Recovery Sheet out of all three share locations. Two raids then yield two
+cards and nothing to decrypt them with. The default declines this on rule 4
+grounds: with no local payload copy, a password-manager failure combined with
+a house fire is unrecoverable, and that pair of events is likelier than a
+targeted raid on two separate buildings.
+
+**The cheap improvement, whichever way you go: keep at least one payload copy
+somewhere that holds no card.** Here the locations rejected above become the
+right answer. A workplace drawer, an offline phone, a cloud folder, an email
+to yourself: all poor homes for a card, all good homes for ciphertext, because
+rule 5 asks nothing of them but that they still exist. A payload copy needs
+only to be somewhere your cards are not.
 
 ### Duplicating a card, or re-splitting
 
