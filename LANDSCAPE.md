@@ -58,14 +58,51 @@ because several of these carry backup features of their own.
 
 ## 4. Written protocols and guides
 
-The closest comparisons to this document.
+The largest category, and the closest comparisons to this document. They differ
+in a way worth noticing before you pick one: a **protocol** tells you what to do
+in order and expects to be followed, while a **guide** explains a topic and
+expects you to decide. Reading a protocol as a guide is how people end up with
+half a protocol, which is usually worse than either.
 
-| Guide | Where | What it is |
+### Step-by-step protocols
+
+| Protocol | Where | What it is |
 | --- | --- | --- |
-| **Glacier Protocol** | [glacierprotocol.org](https://glacierprotocol.org/) | The most rigorous published cold-storage protocol, at 93 pages, and the reason [§12](README.md#12-what-this-framework-deliberately-does-not-do) treats complexity as its own risk: its own community has noted that most people attempting it are more likely to lose funds than gain security. Largely unmaintained |
+| **Glacier Protocol** | [glacierprotocol.org](https://glacierprotocol.org/) | The most rigorous published cold-storage protocol, at 93 pages: multisig, keys on paper, and eternally quarantined factory-new hardware that never goes online again. It is also the reason [§12](README.md#12-what-this-framework-deliberately-does-not-do) treats complexity as its own risk axis, since its own community has noted that most people attempting it are more likely to lose funds than gain security. Largely unmaintained |
+| **CryptoGlacier** | [vogelito.github.io/cryptoglacierdocs](https://vogelito.github.io/cryptoglacierdocs/docs/overview/) | A continuation of Glacier's approach by a different author, for readers who want that protocol with more recent maintenance |
+| **Yeti** | [yeticold.com](https://yeticold.com/), [github.com/JWWeatherman/yeticold](https://github.com/JWWeatherman/yeticold) | A script that installs Bitcoin Core and walks you through a multisig cold-storage setup, explicitly preferring safety over ease of use. Notable for a decision this framework shares: recovery instructions are stored **with every copy of the keys**, so the plan cannot be separated from the material it explains |
 | **10x Security Bitcoin Guide** | [btcguide.github.io](https://btcguide.github.io/) | Michael Flaxman's multisig guide, built on the argument that a fault-tolerant setup lets you survive one or more catastrophic mistakes. Where this framework protects the backup of a key, that one removes the single key |
-| **SmartCustody** | [smartcustody.com](https://www.smartcustody.com/) | Blockchain Commons. A risk-modelling exercise rather than a recipe: itemise your assets, name your adversaries, then resolve each. The source of the adversary list referenced in [§13](README.md#13-what-we-read-and-what-each-source-changed) |
-| **Cryptoasset Inheritance Planning** | Pamela Morgan, book | The standard work on the part this framework deliberately leaves out ([§12](README.md#12-what-this-framework-deliberately-does-not-do)) |
+| **SmartCustody** | [smartcustody.com](https://www.smartcustody.com/) | Blockchain Commons. A risk-modelling exercise rather than a recipe: itemise your assets, name your adversaries, then resolve each, across a 14-step cold-storage scenario. The source of the adversary list referenced in [§13](README.md#13-what-we-read-and-what-each-source-changed) |
+
+### Reference libraries and topic guides
+
+| Resource | Where | What it is |
+| --- | --- | --- |
+| **Lopp's Bitcoin security resources** | [lopp.net/bitcoin-information/security.html](https://www.lopp.net/bitcoin-information/security.html) | Jameson Lopp's curated index. The place to start if you want breadth rather than one opinion |
+| **Metal seed storage stress tests** | [jlopp.github.io/metal-bitcoin-storage-reviews](https://jlopp.github.io/metal-bitcoin-storage-reviews/) | The same author's destructive testing of metal backup products, now into its sixth round and dozens of devices. The reference for [§8](README.md#8-storing-the-shares-the-object-and-where-it-goes)'s durability claims, and the source of the figure that a house fire peaks around 1,300°F |
+| **Athena Alpha** | [athena-alpha.com](https://www.athena-alpha.com/expert-bitcoin-security/) | Security and privacy guides written in three tiers, beginner through expert, so you can find the level you are actually at instead of the level a document assumes |
+| **Multisig.Guide** | [bitcoiner.guide/multisig](https://bitcoiner.guide/multisig/) | Focused on the part most multisig material skips, which is recovering one rather than creating one |
+| **Wizardsardine's self-custody guide** | [wizardsardine.com/blog/self-custody-guide](https://wizardsardine.com/blog/self-custody-guide/) | A current step-by-step for someone starting from nothing, from the team behind Liana |
+| **Bitcoin Core's multisig tutorial** | [github.com/bitcoin/bitcoin](https://github.com/bitcoin/bitcoin/blob/master/doc/multisig-tutorial.md) | Multisig at the level of the reference implementation, with no product attached |
+
+### Taught rather than read
+
+Worth listing separately, because for a procedure that must be executed
+correctly once, watching somebody do it is a different kind of help.
+
+| Resource | Where | What it is |
+| --- | --- | --- |
+| **Ministry of Nodes** | [ministryofnodes.com.au](https://www.ministryofnodes.com.au/) | Video walkthroughs of wallet and node setup, including Sparrow |
+| **BTC Sessions** | [btcsessions.ca](https://www.btcsessions.ca/) | Long-running video tutorials covering most hardware and wallet combinations |
+| **Coldcard's own videos** | [coldcard.com/docs/how-to-videos](https://coldcard.com/docs/how-to-videos/) | Vendor material, which is the right source for device-specific steps and the wrong one for whether to use that device |
+| **Bitcoiner.Guide** | [bitcoiner.guide](https://bitcoiner.guide/) | Now primarily paid one-to-one mentorship covering self-custody, multisig and inheritance, alongside the guides its author has written. Listed because for some people the missing ingredient is a person rather than a page |
+
+### Books
+
+| Book | What it is |
+| --- | --- |
+| **Cryptoasset Inheritance Planning**, Pamela Morgan | The standard work on the part this framework deliberately leaves out ([§12](README.md#12-what-this-framework-deliberately-does-not-do)) |
+| **#SmartCustody**, Blockchain Commons | The book form of the risk-modelling material above, [free to read](https://github.com/BlockchainCommons/SmartCustodyBook) |
 
 ## 5. Inheritance and timelocks
 
