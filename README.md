@@ -254,7 +254,14 @@ below assumes real entropy at the root.
    worst, encrypted files and privacy leaks, never spendable keys.
 4. **Nothing single is necessary to recover.** No single location, device,
    memory, or company may be a single point of failure. Redundancy for
-   availability; thresholds for confidentiality.
+   availability; thresholds for confidentiality. **Copies are not redundancy
+   unless the threshold rises with them.** Duplicating something you already
+   hold adds places it can be taken from without adding anything an attacker
+   has to defeat, which is the same trade a plaintext seed forces on you
+   ([§4](#4-inventory-the-secrets-you-actually-hold)) reappearing inside a
+   threshold scheme. Six locations holding a duplicated 2-of-3 still fall to
+   two break-ins; six holding a 3-of-6 need three
+   ([§8](#8-storing-the-shares-the-object-and-where-it-goes)).
 5. **Ciphertext is cheap; keys are precious.** Encrypted blobs
    (`payload.age`, encrypted vault exports) may be replicated freely:
    USB sticks, cloud, an email to yourself. The *keys* to them live only in
@@ -690,6 +697,12 @@ would give one person the payload and a card at once.
 
 ### Duplicating a card, or re-splitting
 
+> **The short version: copy at most one card, and never all of them.** A copy
+> does not raise the threshold, so it adds a place to steal from without
+> adding anything an attacker must defeat (rule 4). If you have five or six
+> locations worth using, re-split to 3-of-5 or 3-of-6 rather than copying:
+> better in both directions at once, and nothing extra to keep track of.
+
 A tempting shortcut: keep the 2-of-3 and store a second copy of one card
 somewhere, rather than generating a new split. It is a real option with a
 measurable cost, and there is one version of it you should not do.
@@ -782,6 +795,7 @@ belief.
 | One share location destroyed | threshold margin; re-split to a fresh 2-of-3 promptly, you are now at zero margin |
 | **Two share locations destroyed at once** | **nothing. This is the limit of 2-of-3; geographic separation is what makes it unlikely, and [§11](#11-involving-others-later-the-upgrade-path) is what fixes it properly** |
 | A share is found by a stranger | reveals nothing alone (and even all shares yield only `k` without `payload.age`); re-split at leisure |
+| **You copied every share, so six locations hold your 2-of-3** | **nothing, and you are now weaker than you were with three.** The spare copies hold one of each between them, so they recover the wallet on their own: a second complete backup built from your three weakest locations. Two break-ins still do it and the attacker picks the easiest two of six. Six locations are enough for a 3-of-6, which needs three break-ins and survives the same losses (rule 4, [§8](#8-storing-the-shares-the-object-and-where-it-goes)) |
 | `payload.age` lost everywhere | **unrecoverable. This is the artifact to replicate generously (rule 5)** |
 | You are incapacitated | Emergency Access (vault: bills, email, accounts) after the waiting period; **coins wait**, no solo mechanism covers them ([§11](#11-involving-others-later-the-upgrade-path)) |
 | You die | **by default: the coins are lost.** This framework is not an inheritance plan. The access plan in the bank box gives your estate a chance (a diligent executor, the will breadcrumb, the legal process); [§11](#11-involving-others-later-the-upgrade-path) is the real fix |
