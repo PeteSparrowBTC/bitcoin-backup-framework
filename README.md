@@ -1,5 +1,26 @@
 # From Zero to a Complete Backup Strategy: Solo Edition
 
+<!-- site-banner:start -->
+> ### Read this as a website
+>
+> **[petesparrowbtc.github.io/bitcoin-backup-framework](https://petesparrowbtc.github.io/bitcoin-backup-framework/)**
+>
+> The same words, with a contents panel, search, and one page per section
+> instead of one page of nine hundred lines.
+>
+> - **[Start here](https://petesparrowbtc.github.io/bitcoin-backup-framework/)**
+>   is the six-step version, for doing rather than deciding.
+> - **[The framework](https://petesparrowbtc.github.io/bitcoin-backup-framework/framework/)**
+>   is this document, split into its sections.
+> - **[How the numbers work](https://petesparrowbtc.github.io/bitcoin-backup-framework/numbers/)**
+>   derives 2.585 bits a roll, 24 words, and 64 hex characters.
+> - **[What else is out there](https://petesparrowbtc.github.io/bitcoin-backup-framework/landscape/)**
+>   maps the other frameworks, and where they are stronger than this one.
+>
+> Every page is generated from the markdown in this repository, so the two
+> cannot disagree. The site fetches nothing from any other host.
+<!-- site-banner:end -->
+
 If you have been meaning to take real custody of your bitcoin for a year or
 two and keep postponing it, this document is for you. It is a complete
 framework for securing a Bitcoin seed phrase, its passphrase, and the digital

@@ -66,7 +66,26 @@ SIBLING_PAGES = {
 
 def read(path: str) -> str:
     with open(os.path.join(ROOT, path), encoding="utf-8") as handle:
-        return handle.read()
+        return strip_site_banner(handle.read())
+
+
+def strip_site_banner(markdown: str) -> str:
+    """Remove the "read this as a website" block when building the website.
+
+    README.md opens with a banner pointing at the published site, because most
+    readers meet the document on GitHub and the split version is easier to use.
+    On the site that banner would be telling a reader to go where they already
+    are, and linking them to the page they are already on.
+
+    Delimited by HTML comments rather than matched by content, so editing the
+    banner's wording cannot silently stop it being stripped.
+    """
+    return re.sub(
+        r"[ \t]*<!--\s*site-banner:start\s*-->.*?<!--\s*site-banner:end\s*-->\n?",
+        "",
+        markdown,
+        flags=re.S,
+    )
 
 
 def write(relpath: str, front: dict, body: str) -> None:
