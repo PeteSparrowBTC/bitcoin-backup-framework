@@ -370,7 +370,7 @@ version workable: even someone who found **every** share would hold only
  │  SLIP-39 share cards (33 words)   Recovery Sheet (×2 copies)  │
  │  2-of-3, three locations you      • PM master password        │
  │  alone control (home fireproof    • PM 2FA recovery code      │
- │  pouch / bank box / office)       • vault-export password     │
+ │  pouch / bank box / one more)     • vault-export password     │
  │                                   • access plan (bank box)    │
  └───────────────┬───────────────────────────┬───────────────────┘
                  │ threshold of shares → k   │ unlocks the account
@@ -452,8 +452,10 @@ onward.
 8. From the generated `output.zip`, immediately split the contents:
    - **shares → three self-controlled homes** ([§8](#8-storing-the-shares-the-object-and-where-it-goes)): copy each
      share's 33 words onto a card *before you leave the offline session*, then
-     place the cards: home pouch, bank box, one more (second bank's box, locked
-     drawer at work). The zips are transport; the cards are the backup.
+     place the cards: home pouch, bank box, and one more that is yours rather
+     than borrowed. **One location, one card**, and [§8](#8-storing-the-shares-the-object-and-where-it-goes)
+     has the full list of homes, including the ones to avoid. The zips are
+     transport; the cards are the backup.
    - **`payload.age` → Bitwarden attachment** in a dedicated entry, together
      with `verification-record.txt`.
    - **`payload.age` → Layer 2 USB stick(s)** as well. Bitwarden's export
@@ -623,6 +625,15 @@ into a mechanism rather than an intention.
 
 ### The three homes
 
+**One location, one share. Never two.** Two different cards in one envelope,
+one drawer, or one deposit box is a spendable quorum sitting in a single
+place, and it turns your 2-of-3 into a 1-of-2 while everything still looks
+correct from the outside. This is the one error in this section that costs
+you the whole design, and it happens by drift rather than by decision: the
+bank box already holds the access plan and a Recovery Sheet copy, so it is
+the natural place for a second card to end up "for now". Check the box, not
+your intentions.
+
 For 2-of-3, pick three homes such that:
 
 - **No two share a disaster domain**: not all in one building or flood
@@ -646,8 +657,91 @@ For 2-of-3, pick three homes such that:
   gives up the property the whole design is built on
   ([§4](#4-inventory-the-secrets-you-actually-hold)).
 - Convenient default: home fireproof pouch, bank deposit box (anchor:
-  access plan + Recovery Sheet + share), locked drawer or small box at your
-  workplace / second bank.
+  access plan + Recovery Sheet + share), and a third that is yours rather
+  than borrowed: a second bank's box, a property you own, or a storage unit
+  in your name.
+
+### Where the cards can live
+
+| Location | What it gives you | What it costs |
+| --- | --- | --- |
+| **Home, fireproof pouch** | The default first home. Cheap, always reachable, and your family finds it, which is a feature | Shares a fire and flood domain with everything else you own, which the pouch is there to answer |
+| **Bank deposit box** | The anchor, and the one common option your estate can reach through legal process | Opening hours (also duress protection), typically uninsured contents, drilled if you stop paying, and in some jurisdictions sealed or inventoried at death, which is both how the estate reaches it and why it is slow |
+| **Second bank, another city** | The strongest third location: independent disaster domain, guarded, estate-reachable | A trip, and a second annual fee |
+| **A property you own** | Holiday home, garage, a rental under your control. Genuinely separate domain, fully yours | Only exists if you have one, and empty properties are burgled more often than occupied ones |
+| **Self-storage unit** | In your name, your own padlock as real tamper-evidence, usually reachable at any hour | Miss enough payments and the contents are auctioned, with less warning than a bank gives. Not estate-reachable unless the access plan names it |
+| **A relative's or friend's home** | The cheapest independent location most people already have (see below) | Their disasters become yours, and it is the option most likely to lapse when a relationship changes, without anyone deciding that it should |
+| **Lawyer, notary, or accountant** | Professional custody, estate-reachable, often free if they already hold your will | Slow to retrieve, and you are trusting an institution to still exist and to still have it |
+| **Workplace drawer or pedestal** | Convenient, and separate from home | Not a location you control. Your employer can open it, it offers no tamper-evidence, and it disappears the day you change jobs, leaving a live card in a building you can no longer enter. Rule 7 makes that permanent until you re-split. Treat it as temporary, never as one of the three |
+| **Home safe** | Deters an opportunist burglar | Shares the fire domain with the house unless it is genuinely fire-rated, and it advertises that something is worth taking. This framework assumes none |
+| **Buried or hidden cache** | Nothing this framework wants | Rejected in [§12](#12-what-this-framework-deliberately-does-not-do): obscurity holds until the one renovation or house move, and no executor will ever find it |
+| **Vehicle or boat** | Nothing | Heat, theft, and it moves |
+| **Cloud, email, or any online storage** | Nothing worth the cost | It breaks the rule 3 margin. Vault compromise is supposed to yield ciphertext and no coins; a card stored online means an attacker holding your vault has a share *and* `payload.age`, and needs only one more. Replicate the payload online instead, which is what rule 5 is for |
+
+**On a relative's home**, the framework is stricter than its own arithmetic
+requires, and it is worth being clear why. Rule 7 says trust is never
+foundational, but the security boundary here is threshold-many cards **plus**
+`payload.age`, and one sealed card is neither. Handing it to your brother is
+not a grant of trust in rule 7's sense, and it becomes one only if he could
+ever hold a second card as well. So this option is open to you today. Do not
+combine it with making the same person your Emergency Access contact
+([Phase A](#phase-a-establish-the-digital-root-an-afternoon), step 5), which
+would give one person the payload and a card at once.
+
+### Duplicating a card, or re-splitting
+
+A tempting shortcut: keep the 2-of-3 and store a second copy of one card
+somewhere, rather than generating a new split. It is a real option with a
+measurable cost, and there is one version of it you should not do.
+
+What duplication does not change is the number of break-ins an attacker
+needs, which is still two. What it changes is how many pairs of locations
+work, meaning how much choice the attacker has about which two:
+
+| Scheme | Locations | Break-ins for theft | Losses survived | Do the extra copies form a quorum alone? |
+| --- | --- | --- | --- | --- |
+| 2-of-3, distinct | 3 | 2 | any 1 | no |
+| 2-of-3, one card duplicated | 4 | 2 | any 2 but one combination | no |
+| 2-of-3, **every** card duplicated | 6 | 2 | any 3 | **yes** |
+| 3-of-5, distinct | 5 | 3 | any 2 | no |
+| 3-of-6, distinct | 6 | 3 | any 3 | no |
+
+Read the last column first. **Duplicating every card builds a second complete
+backup**, because the three spare copies hold one of each between them and
+recover the wallet without touching the originals. That would be harmless if
+all six locations were equally good, and they never are: your first three are
+the best you have, so the spares are by definition the weaker three. You have
+made a complete copy of your wallet out of your weakest locations, and an
+attacker takes the easy copy while your bank box goes untouched. Duplicating
+*one* card does not do this, because someone holding the spare still has to
+reach a strong location for a second, different card.
+
+At the same number of locations, re-splitting dominates. 3-of-6 survives the
+same three losses as full duplication while demanding three break-ins instead
+of two, and leaves no weak subset that recovers on its own. There is no
+trade-off to weigh between those two; one is better in every direction.
+
+Against that, keep the count small for a reason that has nothing to do with
+attackers. Rule 7 means a superseded card stays a working backup forever, so
+every re-split obliges you to visit each location and destroy what is there.
+Three locations makes that an afternoon; six makes it a project, projects get
+postponed, and old cards stay in circulation, which is the hazard rule 7 names.
+The annual drill ([§9](#9-the-annual-drill)) grows the same way.
+
+So, in order of preference:
+
+- **Three good locations: 2-of-3, distinct.** The default, and right for most
+  people.
+- **A fourth location that is weaker than the others: duplicate one card into
+  it**, choosing the card whose location is most likely to be *lost* rather
+  than robbed. Bounded cost, real gain, and the pair counts as one location
+  when you re-check the disaster-domain and reach-in-time rules above.
+- **Five or six locations you would genuinely trust: re-split to 3-of-5 or
+  3-of-6.** Better in both directions, and nothing to keep track of.
+- **Never duplicate every card**, at any location count.
+- **Duplicate `payload.age` freely** before you consider duplicating any card
+  at all. It is ciphertext (rule 5), it costs nothing, it adds no theft risk,
+  and cards without it recover nothing.
 
 ## 9. The annual drill
 
