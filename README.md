@@ -350,7 +350,7 @@ exists and why a printed copy belongs with your access plan.
 **Metal is a medium, not a scheme.** Durability, meaning paper burns and steel
 does not, is a separate question from confidentiality. Stamp SLIP-39 shares into
 metal and you get both properties at once
-([§8](#8-choosing-locations-you-alone-control)). What this framework avoids is
+([§8](#8-storing-the-shares-the-object-and-where-it-goes)). What this framework avoids is
 not metal; it is a readable seed sitting in one place.
 
 Note what this table achieves: **row 1 never exists in storable form.** The
@@ -367,7 +367,7 @@ version workable: even someone who found **every** share would hold only
 ```
  LAYER 0 - PHYSICAL ROOT OF TRUST (depends on nothing, held only by you)
  ┌───────────────────────────────────────────────────────────────┐
- │  SLIP-39 share zips/mnemonics     Recovery Sheet (×2 copies)  │
+ │  SLIP-39 share cards (33 words)   Recovery Sheet (×2 copies)  │
  │  2-of-3, three locations you      • PM master password        │
  │  alone control (home fireproof    • PM 2FA recovery code      │
  │  pouch / bank box / office)       • vault-export password     │
@@ -450,8 +450,10 @@ onward.
    defaults to 3-of-5, which assumes five homes; three locations you alone
    control is realistic, five rarely is).
 8. From the generated `output.zip`, immediately split the contents:
-   - **share zips → three self-controlled homes** ([§8](#8-choosing-locations-you-alone-control)): home pouch, bank
-     box, one more (second bank's box, locked drawer at work).
+   - **shares → three self-controlled homes** ([§8](#8-storing-the-shares-the-object-and-where-it-goes)): copy each
+     share's 33 words onto a card *before you leave the offline session*, then
+     place the cards: home pouch, bank box, one more (second bank's box, locked
+     drawer at work). The zips are transport; the cards are the backup.
    - **`payload.age` → Bitwarden attachment** in a dedicated entry, together
      with `verification-record.txt`.
    - **`payload.age` → Layer 2 USB stick(s)** as well. Bitwarden's export
@@ -554,7 +556,72 @@ onward.
   must chase down and destroy every superseded copy. Stabilize solo, drill
   once, then distribute (rule 7).
 
-## 8. Choosing locations you alone control
+## 8. Storing the shares: the object, and where it goes
+
+### The object
+
+The tool's output is a distribution package, not a backup. Each
+`share-K-of-N.zip` holds one SLIP-39 mnemonic (33 words) and a short read-me.
+**The zip is transport; the words are the backup.** Copy the words onto
+something physical, then delete the share zips along with `output.zip`
+([Phase B](#phase-b-back-up-the-seed-one-offline-session)). A file left on a USB
+stick is a storage decision with a shelf life, not the default.
+
+Two ways to get the words out of the offline session:
+
+- **Copy them by hand.** Thirty-three words per share, ninety-nine for a 2-of-3,
+  about an hour done carefully. No device joins the trusted set, so rule 8 holds
+  without an exception. SLIP-39 words carry a checksum, so a miscopied word is
+  refused at recovery rather than silently yielding the wrong key, and the dry
+  run (Phase B, step 9) is what proves your copies while it is still cheap to
+  find out.
+- **Print them, on a printer kept for this.** Faster, and it removes
+  transcription risk. The cost is that the printer joins the trusted set:
+  connect it by cable, and prefer one with no wireless hardware at all over one
+  with wireless switched off. A laser printer retains the last page as a drum
+  image and its spool can survive a power cycle, so the printer lives with your
+  backups rather than on the office desk.
+
+Not a QR code. This tool emits words on purpose: they can be checked by eye and
+stamped into metal, and they do not need a working scanner decades from now.
+
+### What is written on it
+
+Enough for a person who is entitled to it, nothing for a person who is not.
+
+**Write:** the words, numbered; which share this is and how many are needed
+("share 2, any 2 of 3 recover"); and **the date it was made**. The date is the
+one people leave off and the one that matters. Rule 7 makes superseded shares a
+standing hazard, and you visit these locations once a year: an undated card
+found in a drawer cannot be told apart from a current one. When you re-split,
+the new date is what makes the old cards visibly old, and you still destroy
+them.
+
+**Do not write:** any seed word, the BIP-39 passphrase, or where the other
+shares live. The last is the one that looks helpful. A card listing all three
+locations turns any single compromised location into a map of the whole set, and
+gives back the geographic separation the rest of this section buys. Locations
+belong in the access plan, in the bank box
+([Phase C](#phase-c-the-access-plan-without-trusting-anyone-an-evening)).
+
+Seal each one as the Recovery Sheet is sealed (Phase A, step 4): an envelope,
+signature across the flap. That is what turns "each location is tamper-evident"
+into a mechanism rather than an intention.
+
+### Media, per location
+
+- **Laser toner, not inkjet, and never thermal receipt paper**, which fades to
+  blank within a few years. Handwriting in pencil or a pigment pen outlasts most
+  printer ink.
+- **The home card faces fire**: fireproof pouch as the minimum, stamped metal as
+  the upgrade. Bank-box copies can stay paper, where the climate is stable and
+  fire is not the threat.
+- **Label the envelope so it survives a house move.** The most common way a
+  share dies is not a burglar or a flood; it is someone clearing a drawer who
+  has no idea what they are holding. "Important documents, do not discard,
+  [your name]" costs nothing and does not say bitcoin.
+
+### The three homes
 
 For 2-of-3, pick three homes such that:
 
@@ -748,7 +815,7 @@ and adjusted the design where the evidence pushed back:
   protects use; this framework protects backup; compose them).
 - **Jameson Lopp's security research** (lopp.net): the field's best
   curated index, and the source of the **metal share plate** guidance in
-  [§8](#8-choosing-locations-you-alone-control). His independent stress tests (fire, crush, corrosion) of commercial
+  [§8](#8-storing-the-shares-the-object-and-where-it-goes). His independent stress tests (fire, crush, corrosion) of commercial
   seed-storage products are the reference when paper stops being enough.
 - **The 2026 Coldcard entropy disclosure** (Coinkite's advisory; Wizardsardine's
   technical analysis): a live demonstration that backup discipline cannot
