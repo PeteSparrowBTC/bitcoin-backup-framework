@@ -79,8 +79,9 @@ Secret, regardless of whether it is the original data or not." A mistyped
 SLIP-39 passphrase therefore yields a different, entirely valid-looking wallet
 with no error, which is the same silent failure
 [§7](README.md#7-known-traps-each-has-bitten-real-people) records for BIP-39
-passphrases. One unvalidated passphrase in a design is a trap worth documenting;
-two is a design that will lose somebody's coins.
+passphrases. This framework already carries one unvalidated passphrase, the
+BIP-39 one, and documents the trap it creates. Carrying a second would double
+the number of ways to arrive at a valid wallet that is not yours.
 
 **What this survey did not find** is another project combining all three of a
 random key rather than a passphrase-derived one, SLIP-39 as the splitting layer,
