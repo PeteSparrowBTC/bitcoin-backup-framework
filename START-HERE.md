@@ -191,6 +191,7 @@ Fifteen minutes ([the drill in full](README.md#9-the-annual-drill)):
 | --- | --- |
 | Why any of this, in one page | [The rules](README.md#3-the-rules) |
 | Where every number here comes from | [How the numbers work](NUMBERS.md) |
+| What other people have built | [What else is out there](LANDSCAPE.md) |
 | Why dice rather than the device | [§2](README.md#2-before-you-back-it-up-is-the-secret-worth-protecting) |
 | Why encrypt and split, rather than write the seed down | [§4](README.md#4-inventory-the-secrets-you-actually-hold) |
 | Where cards go, and why not everywhere | [§8](README.md#8-storing-the-shares-the-object-and-where-it-goes) |

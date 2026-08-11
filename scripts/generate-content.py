@@ -60,6 +60,7 @@ REPO_FILE_LINKS = {
 # the depth of the page doing the linking decides how many levels to climb.
 SIBLING_PAGES = {
     "NUMBERS.md": "numbers",
+    "LANDSCAPE.md": "landscape",
 }
 
 
@@ -184,13 +185,40 @@ def promote_headings(markdown: str) -> str:
     return re.sub(r"^(#{3,6}) ", lambda m: "#" * (len(m.group(1)) - 1) + " ", markdown, flags=re.M)
 
 
-def retarget(markdown: str, from_depth: int, current_slug: str = "") -> str:
-    """Rewrite "](#anchor)" for a page at the given depth below the site root.
+def retarget(
+    markdown: str,
+    from_depth: int,
+    current_slug: str = "",
+    to_framework: str | None = None,
+) -> str:
+    """Rewrite the links in a source file for the page it is becoming.
 
-    depth 0 is the front page, 1 is /framework/, 2 is a section page. Links to
-    an anchor that now lives on this same page are left alone, because they
-    still work and a relative link to oneself is noise.
+    from_depth is how far the page sits below the site root, which decides how
+    many levels a link has to climb: 0 for the front page, 1 for /framework/ or
+    a standalone page such as /numbers/, 2 for a framework section page.
+
+    to_framework is the way from this page to the framework's section pages, and
+    it is not derivable from depth alone: /framework/ and /landscape/ are both
+    one level down, and only one of them has the sections as siblings. It
+    defaults to the right answer for pages inside the framework tree.
+
+    Three kinds of link are handled, all of which are written in the sources the
+    way GitHub needs them:
+
+      ](#anchor)            a same-document anchor in README.md
+      ](README.md#anchor)   another document pointing into README.md
+      ](NUMBERS.md#anchor)  a standalone sibling, per SIBLING_PAGES
+
+    Links to an anchor that still lives on this same page are left alone.
     """
+    up = "../" * from_depth
+    if to_framework is None:
+        to_framework = {0: "framework/", 1: "", 2: "../"}[from_depth]
+
+    # Normalise cross-document references into README to the same form as its
+    # own internal ones, so a single rule below places both.
+    markdown = markdown.replace("](README.md#", "](#")
+    markdown = markdown.replace("](README.md)", f"]({up}framework/)")
 
     def replace(match: re.Match) -> str:
         anchor = match.group(1)
@@ -202,17 +230,12 @@ def retarget(markdown: str, from_depth: int, current_slug: str = "") -> str:
         page, fragment = target
         if page == current_slug:
             return f"](#{fragment or anchor})"
-        prefix = {0: "framework/", 1: "", 2: "../"}[from_depth]
         suffix = f"#{fragment}" if fragment else ""
-        return f"]({prefix}{page}/{suffix})"
+        return f"]({to_framework}{page}/{suffix})"
 
     markdown = re.sub(r"\]\(#([a-z0-9-]+)\)", replace, markdown)
 
-    # Links to a sibling document, with or without a fragment. The number of
-    # levels to climb is the linking page's own depth, so the same source line
-    # resolves correctly whether it is read from the front page or from a
-    # section three levels down.
-    up = "../" * from_depth
+    # Links to a standalone sibling, with or without a fragment.
     for source, page in SIBLING_PAGES.items():
         markdown = re.sub(
             re.escape(f"]({source}") + r"(#[a-z0-9-]+)?\)",
@@ -236,7 +259,6 @@ shutil.rmtree(CONTENT, ignore_errors=True)
 # work when the file is read on GitHub; here they become site paths.
 quickstart = read("START-HERE.md")
 quickstart = re.sub(r"\A#[^\n]*\n", "", quickstart, count=1)
-quickstart = quickstart.replace("](README.md#", "](#").replace("](README.md)", "](framework/)")
 quickstart = retarget(quickstart, from_depth=0)
 
 if "README.md" in quickstart:
@@ -268,18 +290,22 @@ for section in sections:
         promote_headings(retarget(section["body"], from_depth=2, current_slug=section["slug"])),
     )
 
-# The arithmetic explainer, as its own top-level page. It is referenced from
-# both the quickstart and the framework, so it belongs beside them rather than
-# inside either.
-numbers = read("NUMBERS.md")
-numbers = re.sub(r"\A#[^\n]*\n", "", numbers, count=1)
-write(
-    "numbers/_index.md",
-    {"title": yaml_quote("How the numbers work"), "weight": 3},
-    retarget(numbers, from_depth=1),
-)
+# The standalone pages, each beside the framework rather than inside it, because
+# both are referenced from the quickstart and from several sections.
+STANDALONE = [
+    ("NUMBERS.md", "numbers", "How the numbers work", 3),
+    ("LANDSCAPE.md", "landscape", "What else is out there", 4),
+]
+
+for source, page, title, weight in STANDALONE:
+    body = re.sub(r"\A#[^\n]*\n", "", read(source), count=1)
+    write(
+        f"{page}/_index.md",
+        {"title": yaml_quote(title), "weight": weight},
+        retarget(body, from_depth=1, to_framework="../framework/"),
+    )
 
 print(
     f"generate-content: 1 front page, 1 section index, {len(sections)} framework pages, "
-    f"1 explainer, {len(anchor_to_page)} anchors mapped"
+    f"{len(SIBLING_PAGES)} sibling pages, {len(anchor_to_page)} anchors mapped"
 )

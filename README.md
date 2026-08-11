@@ -1028,6 +1028,10 @@ any order, years apart, as trust arrives.
 
 ## 13. What we read, and what each source changed
 
+This section is the sources that changed the design. For a wider map of what
+else exists, including the schemes and tools this framework did not choose,
+see [what else is out there](LANDSCAPE.md).
+
 This framework was not invented in a vacuum. We reviewed the established
 literature (books, protocols, published criticism, and curated research)
 and adjusted the design where the evidence pushed back:
