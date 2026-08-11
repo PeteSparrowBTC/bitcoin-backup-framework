@@ -23,7 +23,7 @@ when you are ready to involve people.
 
 | | |
 | --- | --- |
-| **Dice** | One ordinary six-sided die is enough. Five of them, ideally in five colours, make step 1 about five times faster and add one rule to follow. Casino dice are not needed ([why](https://github.com/PeteSparrowBTC/dice-to-seed#what-you-need)) |
+| **Dice** | One ordinary six-sided die, used for both roll sessions. Casino dice are not needed, and neither is a handful ([why one](NUMBERS.md#why-this-guide-says-one-die)) |
 | **Paper and a pen** | Pencil or a pigment pen. Not a thermal printer receipt |
 | **A spare computer** | Anything that boots from USB. It never goes online during any of this |
 | **Two USB sticks** | One for Tails, one for backup copies |
@@ -43,7 +43,8 @@ seed phrase and tell whether it was random
 ([why this matters](README.md#2-before-you-back-it-up-is-the-secret-worth-protecting)).
 
 1. **Log one, for the seed.** Roll **111** times for a 24-word seed, or **60**
-   for 12 words. Write each digit down as it lands.
+   for 12 words ([where those counts come from](NUMBERS.md#why-99-rolls-is-not-256-bits)).
+   Write each digit down as it lands.
 2. **Log two, for the backup key.** Roll the same number again, on a **fresh
    log**. This is a different secret and must not reuse log one.
 
@@ -54,24 +55,23 @@ your backup key derivable from the wallet it is protecting. Both tools defend
 this: `dice-to-seed` clears your rolls when you switch modes, and `slip39-backup`
 compares the key against your seed and refuses if they match.
 
-**Speed, and the rule that comes with it.** Five dice thrown together turn 111
-rolls into 23 throws. That is safe only if you fix the reading order **before**
-the first throw: left to right where they land, or five different colours in an
-order you have written down. Five dice are five independent rolls in whatever
-order you read them, as long as the order does not depend on what they show.
+**The same die for both logs is correct.** A die has no memory, so two sessions
+with one die are two independent sets of rolls, and a second die would add
+nothing except a second object whose fairness you have not thought about. What
+has to be fresh is the log, not the dice.
 
-Reading them sorted by value instead, which is the natural thing to do by
-accident, throws most of the randomness away. Five dice have 7,776 ordered
-outcomes and only 252 unordered ones, so sorting costs about five of the twelve
-and a half bits the throw was worth. Discard any throw where a die is cocked or
-leaves the table.
-
-One die is the version with no rule to remember, at ten to eighteen minutes per
-log instead of two to three.
+**One die, not a handful.** Throwing several at once and reading them in one go
+is faster, and it adds a rule: the reading order has to be fixed before the
+throw, because an order that depends on what the dice show is not random. The
+rule is easy to state and easy to forget at roll eighty, the penalty for
+forgetting is invisible in the result, and it grows with the number of dice
+([the arithmetic](NUMBERS.md#why-this-guide-says-one-die)). One die has no rule
+to forget. The cost is about a quarter of an hour per log.
 
 **Do not re-roll a log because it looks wrong.** Fifty 1s is exactly as likely as
 any other fifty rolls, and discarding logs narrows the set your seed is drawn
-from.
+from. Discard a roll only when the die is cocked or leaves the table, which is a
+question about the throw and not about the number.
 
 ---
 
@@ -85,7 +85,8 @@ Boot Tails on the spare computer, **with networking off**.
 1. Run [dice-to-seed](https://github.com/PeteSparrowBTC/dice-to-seed) and enter
    log one. It gives you your seed words.
 2. Switch to **Rolling for a backup key** and enter log two. It gives you 64 hex
-   characters and a four-character check code.
+   characters and a four-character check code
+   ([why 64, and what the check code is worth](NUMBERS.md#bytes-and-why-a-hex-character-is-half-a-byte)).
 3. **Check both against a second implementation.** The conversion is
    deterministic, so any correct tool produces the same answer from the same
    rolls. Two tools agreeing is the proof; which one you ran first does not
@@ -189,6 +190,7 @@ Fifteen minutes ([the drill in full](README.md#9-the-annual-drill)):
 | If you want to know | Read |
 | --- | --- |
 | Why any of this, in one page | [The rules](README.md#3-the-rules) |
+| Where every number here comes from | [How the numbers work](NUMBERS.md) |
 | Why dice rather than the device | [§2](README.md#2-before-you-back-it-up-is-the-secret-worth-protecting) |
 | Why encrypt and split, rather than write the seed down | [§4](README.md#4-inventory-the-secrets-you-actually-hold) |
 | Where cards go, and why not everywhere | [§8](README.md#8-storing-the-shares-the-object-and-where-it-goes) |

@@ -93,7 +93,8 @@ Why this matters is not hypothetical. In July 2026 Coinkite disclosed that a
 build regression dating to March 2021 had stopped its hardware wallets from
 calling their hardware random number generator during seed creation, falling
 back to a weak software source with no visible sign. Seeds made on affected
-Mk2 and Mk3 devices carry roughly 40 bits of entropy instead of the intended
+Mk2 and Mk3 devices carry roughly 40 bits of entropy
+([what a bit of entropy is](NUMBERS.md#a-bit-is-one-halving)) instead of the intended
 128, and Mk4, Mk5 and Q seeds roughly 72. Attackers drained about 1,816 BTC
 from more than 5,200 addresses. Every one of those owners could have followed
 every rule in this document and still lost everything, because the defect was
@@ -105,7 +106,8 @@ Since the output tells you nothing, only the process is auditable:
 
 - **Supply your own randomness.** Every device worth using lets you mix in
   dice. At least 50 fair, private, independent rolls get hashed directly into
-  the seed, bypassing the device generator. This is the only path that does
+  the seed, bypassing the device generator
+  ([how many rolls, and why](NUMBERS.md#why-99-rolls-is-not-256-bits)). This is the only path that does
   not require trusting a black box you cannot inspect, and it is exactly what
   separated a non-event from a loss in July 2026.
 - **Know what verification does and does not prove.** Checking the wallet
@@ -366,7 +368,8 @@ not metal; it is a readable seed sitting in one place.
 Note what this table achieves: **row 1 never exists in storable form.** The
 [SLIP-39 + age tool](https://github.com/PeteSparrowBTC/slip39-backup)
 encrypts the seed, passphrase, descriptor, and notes into `payload.age` using
-a random 32-byte key `k`, and SLIP-39 splits only `k`. The security boundary
+a random 32-byte key `k` ([what a byte is, and why 32 of them](NUMBERS.md#bytes-and-why-a-hex-character-is-half-a-byte)),
+and SLIP-39 splits only `k`. The security boundary
 is *possession of threshold-many shares AND the `payload.age` file*: no
 single artifact anywhere is sufficient. This is also what makes the solo
 version workable: even someone who found **every** share would hold only

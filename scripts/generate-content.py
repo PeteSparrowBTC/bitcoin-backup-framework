@@ -55,6 +55,13 @@ REPO_FILE_LINKS = {
     "LICENSE": REPO_BLOB + "LICENSE",
 }
 
+# Sibling documents that become their own top-level page. On GitHub the sources
+# link to each other by filename; on the site those filenames become paths, and
+# the depth of the page doing the linking decides how many levels to climb.
+SIBLING_PAGES = {
+    "NUMBERS.md": "numbers",
+}
+
 
 def read(path: str) -> str:
     with open(os.path.join(ROOT, path), encoding="utf-8") as handle:
@@ -182,6 +189,18 @@ def retarget(markdown: str, from_depth: int, current_slug: str = "") -> str:
 
     markdown = re.sub(r"\]\(#([a-z0-9-]+)\)", replace, markdown)
 
+    # Links to a sibling document, with or without a fragment. The number of
+    # levels to climb is the linking page's own depth, so the same source line
+    # resolves correctly whether it is read from the front page or from a
+    # section three levels down.
+    up = "../" * from_depth
+    for source, page in SIBLING_PAGES.items():
+        markdown = re.sub(
+            re.escape(f"]({source}") + r"(#[a-z0-9-]+)?\)",
+            lambda m: f"]({up}{page}/{m.group(1) or ''})",
+            markdown,
+        )
+
     for repo_path, url in REPO_FILE_LINKS.items():
         markdown = markdown.replace(f"]({repo_path})", f"]({url})")
 
@@ -230,7 +249,18 @@ for section in sections:
         retarget(section["body"], from_depth=2, current_slug=section["slug"]),
     )
 
+# The arithmetic explainer, as its own top-level page. It is referenced from
+# both the quickstart and the framework, so it belongs beside them rather than
+# inside either.
+numbers = read("NUMBERS.md")
+numbers = re.sub(r"\A#[^\n]*\n", "", numbers, count=1)
+write(
+    "numbers/_index.md",
+    {"title": yaml_quote("How the numbers work"), "weight": 3},
+    retarget(numbers, from_depth=1),
+)
+
 print(
     f"generate-content: 1 front page, 1 section index, {len(sections)} framework pages, "
-    f"{len(anchor_to_page)} anchors mapped"
+    f"1 explainer, {len(anchor_to_page)} anchors mapped"
 )
