@@ -369,6 +369,19 @@ single artifact anywhere is sufficient. This is also what makes the solo
 version workable: even someone who found **every** share would hold only
 `k`, never the wallet, without `payload.age`.
 
+**The payload ships in three forms, and any one of them recovers the wallet.**
+`payload.age` is the age ciphertext; `payload.age.txt` is the same bytes in
+ASCII armor, meaning text you can print or paste; `payload.age.gpg` is that
+same age file wrapped a second time in OpenPGP AES-256. Prefer the wrapped
+form for the copy that travels furthest, such as the password-manager
+attachment, because an attacker who reaches it must then defeat both formats
+rather than either one. Keep the unwrapped forms too, for the failure that is
+actually likely: recovery decades from now, by someone under stress, with
+whatever tools still exist. The tool's design record is explicit that shipping
+only the wrapped form would buy resistance to cryptanalysis, the least likely
+failure, at the cost of recovery complexity, the most likely one. Where this
+document says `payload.age`, it means whichever of the three you stored.
+
 ## 5. The architecture: three layers
 
 ```
@@ -463,11 +476,16 @@ onward.
      than borrowed. **One location, one card**, and [§8](#8-storing-the-shares-the-object-and-where-it-goes)
      has the full list of homes, including the ones to avoid. The zips are
      transport; the cards are the backup.
-   - **`payload.age` → Bitwarden attachment** in a dedicated entry, together
-     with `verification-record.txt`.
-   - **`payload.age` → Layer 2 USB stick(s)** as well. Bitwarden's export
-     does **not** include attachments ([§7](#7-known-traps-each-has-bitten-real-people)), and shares alone cannot recover
-     without it. Replicate it generously; it is ciphertext.
+   - **`payload.age.gpg` → Bitwarden attachment** in a dedicated entry,
+     together with `verification-record.txt`. Use the doubly-wrapped form for
+     this copy specifically: it is the one living where a compromise is most
+     plausible, and it is the one an attacker has to break twice
+     ([§4](#4-inventory-the-secrets-you-actually-hold)).
+   - **All three payload forms → Layer 2 USB stick(s)** as well. Bitwarden's
+     export does **not** include attachments ([§7](#7-known-traps-each-has-bitten-real-people)), and shares alone cannot
+     recover without it. Replicate generously; every form is ciphertext, and
+     the plain and armored ones are what keep recovery possible with ordinary
+     tools long after this software is gone.
    - Delete `output.zip`. It is a distribution package, not a keepsake.
 9. Before funding the wallet seriously: **dry-run recovery** in Recoverer
    mode with threshold-many shares + `payload.age`, and check the
@@ -684,6 +702,7 @@ For 2-of-3, pick three homes such that:
 | **Buried or hidden cache** | Nothing this framework wants | Rejected in [§12](#12-what-this-framework-deliberately-does-not-do): obscurity holds until the one renovation or house move, and no executor will ever find it |
 | **Vehicle or boat** | Nothing | Heat, theft, and it moves |
 | **Cloud, email, or any online storage** | Nothing worth the cost | It breaks the rule 3 margin. Vault compromise is supposed to yield ciphertext and no coins; a card stored online means an attacker holding your vault has a share *and* `payload.age`, and needs only one more. Replicate the payload online instead, which is what rule 5 is for |
+| **A phone or USB stick, however hardened** | Real resistance to a burglar, and none of it is the property Layer 0 needs | Rule 2 rules this out and the reasoning is worth having in full, because a GrapheneOS phone is a strong device and the rejection is not about its quality. See below |
 
 **On a relative's home**, the framework is stricter than its own arithmetic
 requires, and it is worth being clear why. Rule 7 says trust is never
@@ -694,6 +713,35 @@ ever hold a second card as well. So this option is open to you today. Do not
 combine it with making the same person your Emergency Access contact
 ([Phase A](#phase-a-establish-the-digital-root-an-afternoon), step 5), which
 would give one person the payload and a card at once.
+
+**On a phone or a USB stick.** Rule 2 rejects every digital carrier for
+Layer 0, and a phone running a hardened Android build such as GrapheneOS is
+the strongest version of the case for one, so it deserves an answer rather
+than a wave. Verified boot, a secure element that throttles PIN attempts in
+hardware, and a duress wipe genuinely beat a card in a drawer against a
+burglar. Four things still rule it out, in the order they are likely to bite:
+
+- **The card is now behind something you must remember**, and memory is the
+  failure mode [§12](#12-what-this-framework-deliberately-does-not-do) rates
+  at 100% eventually. Write the unlock code down and you are back to paper,
+  now with a device that can fail as well.
+- **Unpowered flash carries no multi-year retention guarantee**, and a locked
+  bootloader means a device that will not boot is a card you cannot read. Dry
+  paper does nothing for decades and still works, which is the entire point of
+  rule 2.
+- **Your executor has to operate it.** [Phase C](#phase-c-the-access-plan-without-trusting-anyone-an-evening)
+  is written for someone who can follow "gather two envelopes and type the
+  words" and who will not get through "unlock the phone, find the app, export
+  the file".
+- **Reading the card means connecting the device** at recovery time, which is
+  the exact moment rule 8 exists to protect.
+
+Such a device does have two proper jobs here: Layer 1, running the password
+manager and your TOTP, and Layer 2, holding payload copies. Note what the
+hardening buys in the second job, which is nothing. Layer 2 holds ciphertext
+only, so a cheap USB stick gives the identical result. A hardened phone's
+strengths are about protecting plaintext at rest on a live device, and this
+design keeps no plaintext at rest anywhere.
 
 ### Duplicating a card, or re-splitting
 
