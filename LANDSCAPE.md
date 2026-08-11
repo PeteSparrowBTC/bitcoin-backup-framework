@@ -52,7 +52,44 @@ The scheme decides what a "piece" of your backup is and how many you need.
 | **SSKR** | [developer.blockchaincommons.com/sskr](https://developer.blockchaincommons.com/sskr/) | Blockchain Commons' sharding format, and **the closest relative to this framework's design**, which is worth stating plainly. Their documented construction encrypts the payload with a unique random symmetric key, shards that key, and stores the shares: the same two layers, down to the same cipher family. One difference decides everything downstream, and it is described below |
 | **Multisig** | Bitcoin itself | Not a backup scheme, and frequently proposed instead of one. Several independent keys sign, and no complete secret is ever assembled. It protects the *use* of keys; each key still needs backing up, which is the problem this framework addresses. The two compose ([§11](README.md#11-involving-others-later-the-upgrade-path)) |
 
-**SSKR and this framework, and the one difference between them.** Blockchain
+### Is "encrypt the payload, split the key" an existing design?
+
+Yes, in three separate places, and it is worth laying them side by side because
+the differences are where the argument actually is.
+
+| | the key comes from | split with | where the ciphertext lives | to recover you need |
+| --- | --- | --- | --- | --- |
+| **SLIP-39 on its own** (Trezor) | a passphrase | Shamir, over the encrypted secret | nowhere: the shares *are* the secret | threshold-many shares **and** the passphrase |
+| **SSKR + Gordian Envelope** | a random symmetric key | SSKR | inside every envelope, beside a share | threshold-many envelopes |
+| **Superbacked**, **Hyperbacked** | a user passphrase, via Argon2 | Shamir (`sss-cli` in Superbacked's case) | inside every block | threshold-many blocks **and** the passphrase |
+| **This framework** | a random 32-byte key, no passphrase | SLIP-39 | one separate file, replicated freely | threshold-many shares **and** the payload |
+
+**SLIP-39 already does encrypt-then-split, internally.** Its specification
+encrypts the master secret with a passphrase into an Encrypted Master Secret,
+and splits *that*. So the shape is inside the standard this framework uses. What
+differs is the purpose: SLIP-39's inner layer adds a passphrase factor to the
+secret being split, while the layer here adds a **container**, which is what
+lets one backup hold a passphrase and a descriptor as well as a seed
+([§4](README.md#4-inventory-the-secrets-you-actually-hold)).
+
+**And that inner passphrase is deliberately left empty here**, for a reason the
+specification states outright: "passphrases are not validated in any way.
+Decrypting an EMS with any passphrase will produce data usable as the Master
+Secret, regardless of whether it is the original data or not." A mistyped
+SLIP-39 passphrase therefore yields a different, entirely valid-looking wallet
+with no error, which is the same silent failure
+[§7](README.md#7-known-traps-each-has-bitten-real-people) records for BIP-39
+passphrases. One unvalidated passphrase in a design is a trap worth documenting;
+two is a design that will lose somebody's coins.
+
+**What this survey did not find** is another project combining all three of a
+random key rather than a passphrase-derived one, SLIP-39 as the splitting layer,
+and the ciphertext kept apart from the shares. That is a statement about what
+these searches turned up and not a claim of novelty: the nearest neighbours
+above each differ in one axis, and if something combines all three it belongs on
+this page.
+
+**SSKR and this framework, and the difference that matters.** Blockchain
 Commons builds three envelopes, **each holding the encrypted payload plus one
 share** of the key. This framework keeps the payload apart from the shares
 entirely.
