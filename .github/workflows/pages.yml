@@ -59,14 +59,6 @@ jobs:
         run: bash scripts/build-site.sh
 
       # Only the default branch produces something to publish.
-      - name: Configure Pages
-        if: github.ref == 'refs/heads/main'
-        uses: actions/configure-pages@v5
-        with:
-          # Turns Pages on for the repository on first run, so publishing needs
-          # no click in Settings.
-          enablement: true
-
       - name: Upload artifact
         if: github.ref == 'refs/heads/main'
         uses: actions/upload-pages-artifact@v3
@@ -86,5 +78,19 @@ jobs:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
     steps:
+      # Turns Pages on for the repository on first run, so publishing needs no
+      # click in Settings.
+      #
+      # This lives in `deploy` rather than in `build`, where the usual template
+      # puts it, because creating the Pages site needs `pages: write` and the
+      # whole point of the split is that `build` never holds that token while it
+      # fetches and runs a third-party Hugo module. Nothing here consumes the
+      # step's outputs: the site URL is pinned in hugo.yaml, so the step is
+      # wanted only for `enablement`.
+      - name: Configure Pages
+        uses: actions/configure-pages@v5
+        with:
+          enablement: true
+
       - id: deployment
         uses: actions/deploy-pages@v4
