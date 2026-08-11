@@ -72,6 +72,8 @@ fi
 # remembers to look. The check itself has a test (test-no-external-requests.sh)
 # for the same reason: its first version could not fail.
 
-"$ROOT/scripts/check-no-external-requests.sh" public
+# Invoked through bash rather than executed, so it runs the same way whether or
+# not the checkout preserved the executable bit.
+bash "$ROOT/scripts/check-no-external-requests.sh" public
 
 echo "build-site: output in public/"
