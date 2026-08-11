@@ -23,7 +23,7 @@ when you are ready to involve people.
 
 | | |
 | --- | --- |
-| **Dice** | Five ordinary six-sided dice, or one if you are patient. Casino dice are not needed ([why](https://github.com/PeteSparrowBTC/dice-to-seed#what-you-need)) |
+| **Dice** | One ordinary six-sided die is enough. Five of them, ideally in five colours, make step 1 about five times faster and add one rule to follow. Casino dice are not needed ([why](https://github.com/PeteSparrowBTC/dice-to-seed#what-you-need)) |
 | **Paper and a pen** | Pencil or a pigment pen. Not a thermal printer receipt |
 | **A spare computer** | Anything that boots from USB. It never goes online during any of this |
 | **Two USB sticks** | One for Tails, one for backup copies |
@@ -54,9 +54,20 @@ your backup key derivable from the wallet it is protecting. Both tools defend
 this: `dice-to-seed` clears your rolls when you switch modes, and `slip39-backup`
 compares the key against your seed and refuses if they match.
 
-**Speed.** Five dice thrown together, read in a spatial order you decide *before*
-the first throw, turns 111 rolls into about 23 throws. Discard any throw where a
-die is cocked or leaves the table.
+**Speed, and the rule that comes with it.** Five dice thrown together turn 111
+rolls into 23 throws. That is safe only if you fix the reading order **before**
+the first throw: left to right where they land, or five different colours in an
+order you have written down. Five dice are five independent rolls in whatever
+order you read them, as long as the order does not depend on what they show.
+
+Reading them sorted by value instead, which is the natural thing to do by
+accident, throws most of the randomness away. Five dice have 7,776 ordered
+outcomes and only 252 unordered ones, so sorting costs about five of the twelve
+and a half bits the throw was worth. Discard any throw where a die is cocked or
+leaves the table.
+
+One die is the version with no rule to remember, at ten to eighteen minutes per
+log instead of two to three.
 
 **Do not re-roll a log because it looks wrong.** Fifty 1s is exactly as likely as
 any other fifty rolls, and discarding logs narrows the set your seed is drawn

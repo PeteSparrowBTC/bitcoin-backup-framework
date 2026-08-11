@@ -1,6 +1,27 @@
 /* Hextra includes this file automatically. Keep it self-contained: no @import
    and no url() to another host, or the build fails its own leak check. */
 
+/* Dark mode, toned down.
+
+   The theme pairs a #111 page with near-white text, which measures about 17:1.
+   That is roughly twice what WCAG asks for at AAA, and on a long prose document
+   it reads as glare rather than as clarity. These values land at about 11:1:
+   still comfortably past AAA (7:1), with the page lifted off black and the text
+   pulled back from white.
+
+   Scoped to .dark, which Hextra puts on <html>, so light mode is untouched.
+   The variables are the theme's own, so every component that uses them moves
+   together instead of this having to chase individual elements. */
+.dark {
+  --hx-color-dark: #1b1e23; /* page background */
+  --hx-color-gray-50: #dfe3e9; /* headings */
+  --hx-color-gray-100: #ccd2db; /* body text */
+  --hx-color-gray-200: #bcc3ce;
+  --hx-color-gray-300: #a9b1bd; /* secondary text */
+  --hx-color-neutral-900: #23272e; /* code blocks and cards, lifted off the page */
+  --hx-color-neutral-800: #2b3038;
+}
+
 :root {
   /* Hextra caps the reading column at 72rem regardless of page.width, so
      setting the page to full alone moves the sidebars apart and leaves the text
