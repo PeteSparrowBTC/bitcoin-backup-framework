@@ -62,9 +62,22 @@ def read(path: str) -> str:
 
 
 def write(relpath: str, front: dict, body: str) -> None:
+    """Write a page, always typed `docs`.
+
+    The type is what decides whether Hextra keeps the left-hand navigation on
+    screen. Hugo derives a page's type from its top-level section, so pages
+    under content/framework/ were typed `framework`, and Hextra renders anything
+    that is not `docs` with a sidebar hidden below 1280px wide
+    (`hx:md:hidden hx:xl:block` rather than `hx:md:sticky`). The tree was in the
+    HTML the whole time and simply not displayed.
+
+    Setting it explicitly keeps the URLs descriptive: /framework/8-storing.../
+    rather than /docs/8-storing.../, which matters because these paths are meant
+    to go in video descriptions and stay put.
+    """
     path = os.path.join(CONTENT, relpath)
     os.makedirs(os.path.dirname(path), exist_ok=True)
-    lines = ["---"]
+    lines = ["---", "type: docs"]
     for key, value in front.items():
         lines.append(f"{key}: {value}")
     lines.append("---")
@@ -94,6 +107,26 @@ preamble, raw_sections = parts[0], parts[1:]
 if not raw_sections:
     sys.exit("generate-content: README.md has no '## ' sections to split on")
 
+def short_label(heading: str) -> str:
+    """A sidebar-sized version of a section heading.
+
+    The sidebar column is about 16rem. Full headings such as "8. Storing the
+    shares: the object, and where it goes" wrap to three lines there and the
+    numbers stop lining up, which is most of what makes a tree readable.
+
+    Section headings in this document are written as "N. Subject: elaboration"
+    or "N. Subject, elaboration", so the subject is what precedes the first
+    colon, comma or bracket. The page keeps its full heading; only the link text
+    is shortened.
+    """
+    label = re.split(r"[:,(]", heading, maxsplit=1)[0].strip()
+    # Never shorten to just the number, and do not bother when the saving is
+    # small enough that the truncation is only a loss of meaning.
+    if len(label) < 12 or len(heading) - len(label) < 6:
+        return heading
+    return label
+
+
 sections = []
 for index, raw in enumerate(raw_sections, start=1):
     heading, _, body = raw.partition("\n")
@@ -108,6 +141,7 @@ for index, raw in enumerate(raw_sections, start=1):
             # Titles keep their number so the sidebar reads in document order
             # even where a theme sorts alphabetically.
             "title": heading,
+            "link_title": short_label(heading),
         }
     )
 
@@ -179,9 +213,20 @@ write(
 )
 
 for section in sections:
+    # Breadcrumbs are off by default for this page kind. On a split document
+    # they carry the context the single page used to give for free: which of
+    # thirteen sections you are in, and that there is a whole above it.
+    # They render linkTitle, so they pick up the short labels too.
+    front = {
+        "title": yaml_quote(section["title"]),
+        "weight": section["weight"],
+        "breadcrumbs": "true",
+    }
+    if section["link_title"] != section["title"]:
+        front["linkTitle"] = yaml_quote(section["link_title"])
     write(
         f"framework/{section['slug']}.md",
-        {"title": yaml_quote(section["title"]), "weight": section["weight"]},
+        front,
         retarget(section["body"], from_depth=2, current_slug=section["slug"]),
     )
 
