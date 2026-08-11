@@ -48,10 +48,21 @@ menu:
       weight: 5
 
 params:
+  # Full width throughout. The framework carries wide tables (the locations
+  # table in section 8, the failure matrix in section 10) that were being
+  # squeezed into a column narrower than the screen.
+  #
+  # `page.width` governs the outer container; the reading column has its own cap
+  # of 72rem which assets/css/custom.css lifts, otherwise the setting moves the
+  # sidebars outward and leaves the text where it was.
+  page:
+    width: full
   navbar:
+    width: full
     displayTitle: true
     displayLogo: false
   footer:
+    width: full
     displayCopyright: false
     displayPoweredBy: false
   theme:

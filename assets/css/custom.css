@@ -1,0 +1,38 @@
+/* Hextra includes this file automatically. Keep it self-contained: no @import
+   and no url() to another host, or the build fails its own leak check. */
+
+:root {
+  /* Hextra caps the reading column at 72rem regardless of page.width, so
+     setting the page to full alone moves the sidebars apart and leaves the text
+     in the middle at its old width. This lifts the cap. */
+  --hextra-max-content-width: 100%;
+}
+
+/* Full width helps the tables and hurts the prose: a paragraph running the
+   width of a wide monitor is measurably harder to read, because the eye loses
+   its place on the return sweep. So the container is unbounded and the
+   paragraphs are not.
+
+   Anything that benefits from width is exempted below. To undo all of this,
+   delete this file and set page.width back to `normal` in hugo.yaml. */
+.content p,
+.content ul,
+.content ol,
+.content blockquote {
+  max-width: 80ch;
+}
+
+/* Tables, code blocks and the ASCII architecture diagram want every pixel. */
+.content table,
+.content pre {
+  max-width: 100%;
+}
+
+/* Wide tables scroll inside their own box rather than pushing the page sideways.
+   Section 8's locations table and section 10's failure matrix are both wider
+   than a laptop screen. */
+.content .table-wrapper,
+.content table {
+  display: block;
+  overflow-x: auto;
+}
