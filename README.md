@@ -591,8 +591,9 @@ onward.
 ### The object
 
 The tool's output is a distribution package, not a backup. Each
-`share-K-of-N.zip` holds one SLIP-39 mnemonic (33 words) and a short read-me.
-**The zip is transport; the words are the backup.** Copy the words onto
+`share-K-of-N.zip` holds one SLIP-39 mnemonic (33 words), the same mnemonic
+again as `share-qr.png`, a read-me, and a tool-independent recovery manual.
+**The zip is transport; what you carry out of it is the backup.** Copy the words onto
 something physical, then delete the share zips along with `output.zip`
 ([Phase B](#phase-b-back-up-the-seed-one-offline-session)). A file left on a USB
 stick is a storage decision with a shelf life, not the default.
@@ -605,15 +606,24 @@ Two ways to get the words out of the offline session:
   refused at recovery rather than silently yielding the wrong key, and the dry
   run (Phase B, step 9) is what proves your copies while it is still cheap to
   find out.
-- **Print them, on a printer kept for this.** Faster, and it removes
-  transcription risk. The cost is that the printer joins the trusted set:
+- **Print them, on a printer kept for this.** Faster, and printing the words
+  and the QR together removes transcription risk in both directions: none
+  going onto the card, none coming off it at recovery. The cost is that the
+  printer joins the trusted set:
   connect it by cable, and prefer one with no wireless hardware at all over one
   with wireless switched off. A laser printer retains the last page as a drum
   image and its spool can survive a power cycle, so the printer lives with your
   backups rather than on the office desk.
 
-Not a QR code. This tool emits words on purpose: they can be checked by eye and
-stamped into metal, and they do not need a working scanner decades from now.
+**Print the QR alongside the words, not instead of them.** `share-qr.png` holds
+the same mnemonic as plain text, so it adds no secret and leaks nothing the
+words do not. What it removes is the transcription risk at recovery, when
+somebody under stress would otherwise retype 33 words, and it is rendered at an
+error-correction level that tolerates print damage. What it cannot do is be
+read by eye, stamped into metal, or decoded in thirty years without working
+scanner software. So a card carrying both has a fast path and a fallback, and
+the fallback is the one that has to last. If you print only one of the two,
+print the words.
 
 ### What is written on it
 
