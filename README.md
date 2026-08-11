@@ -748,8 +748,24 @@ design keeps no plaintext at rest anywhere.
 
 ### May the payload share a location with a card?
 
-Yes, and the framework's default already does. What is worth making explicit
-is what that costs, because the answer is not "nothing".
+**A location, yes. A person, never.** The two halves have different reasons,
+and the second is the one that actually protects you.
+
+**Never the same person.** In the solo framework the question does not arise,
+because nobody holds anything: all three locations are yours. It arrives with
+[§11](#11-involving-others-later-the-upgrade-path), where shares go to holders
+in other cities. What makes that grant safe to give is that a holder's share is
+useless to them, and it is useless only for as long as they cannot reach a
+payload copy. So a share-holder must not also receive the full Recovery Sheet,
+must not be your Emergency Access contact, and must not be handed a Layer 2
+USB, because every one of those is a route to `payload.age`. Keep two lists,
+the people who can reach the payload and the people who hold shares, and put
+nobody on both. Your executor is the single deliberate exception: they are
+meant to assemble everything, and what gates them is your death rather than
+your trust.
+
+The rest of this answer is about places, where the reasoning is different
+because a place grants nothing to anyone until someone breaks into it.
 
 **One card plus a payload copy in one place is not a compromise.** The
 boundary is threshold-many cards **and** the payload, and one card is not
@@ -881,6 +897,7 @@ belief.
 | One share location destroyed | threshold margin; re-split to a fresh 2-of-3 promptly, you are now at zero margin |
 | **Two share locations destroyed at once** | **nothing. This is the limit of 2-of-3; geographic separation is what makes it unlikely, and [§11](#11-involving-others-later-the-upgrade-path) is what fixes it properly** |
 | A share is found by a stranger | reveals nothing alone (and even all shares yield only `k` without `payload.age`); re-split at leisure |
+| A share-holder is also on the payload list (full Recovery Sheet, Emergency Access, a Layer 2 USB) | the threshold, and nothing else. The second layer was the whole reason a holder's share was safe to give, so once it is gone you are relying on a plain 3-of-5: three such holders can spend. Keep the two lists disjoint ([§11](#11-involving-others-later-the-upgrade-path)) |
 | **You copied every share, so six locations hold your 2-of-3** | **nothing, and you are now weaker than you were with three.** The spare copies hold one of each between them, so they recover the wallet on their own: a second complete backup built from your three weakest locations. Two break-ins still do it and the attacker picks the easiest two of six. Six locations are enough for a 3-of-6, which needs three break-ins and survives the same losses (rule 4, [§8](#8-storing-the-shares-the-object-and-where-it-goes)) |
 | `payload.age` lost everywhere | **unrecoverable. This is the artifact to replicate generously (rule 5)** |
 | You are incapacitated | Emergency Access (vault: bills, email, accounts) after the waiting period; **coins wait**, no solo mechanism covers them ([§11](#11-involving-others-later-the-upgrade-path)) |
@@ -926,16 +943,18 @@ redone:
   not. The inheritance-planning literature ([§13](#13-what-we-read-and-what-each-source-changed)) treats this as the
   foundation, not an extra. Keys and seeds still never appear in any legal
   document; those become public.
-- **Give them a sealed envelope.** Full Recovery Sheet if the trust is
+- **Give them a sealed envelope**, to someone who holds no share. Full
+  Recovery Sheet if the trust is
   there. If not, use the **split variant**: their envelope holds only the
   2FA recovery code + export password. Useless alone, but it completes the
   chain when combined with the estate-reachable bank box. (Cost: the master
   password then exists in only one physical copy plus your memory, a
   conscious loss-resilience trade.)
 - **Re-split shares to 3-of-5** and hand one or two shares to holders in
-  other cities. Tell them it is one useless-alone piece of a backup, so they
-  guard it without being able to spend, and without panic. Collect and
-  destroy the superseded 2-of-3 artifacts (rule 7).
+  other cities, chosen from people who are *not* on the payload list above.
+  Tell them it is one useless-alone piece of a backup, so they guard it
+  without being able to spend, and without panic. Collect and destroy the
+  superseded 2-of-3 artifacts (rule 7).
 - **Have them execute a dry run** of the access plan while you watch and
   say nothing. That, not your own re-reading, is the real test of whether
   the plan works without you (rule 6).
@@ -950,6 +969,16 @@ redone:
   *backup* of each key.** The backup tool already supports per-cosigner
   seeds and stores the descriptor (which multisig makes truly
   recovery-critical) inside `payload.age`.
+
+**Keep the two lists disjoint.** The steps above grant two different things:
+a route to the payload (the full Recovery Sheet, Emergency Access, a Layer 2
+USB), or a share. Never both to the same person. You can tell a holder their
+share is one useless-alone piece because it is true, and it stops being true
+the moment that person can also reach `payload.age`. Nothing warns you when
+the two grants drift onto the same name, because each was reasonable on the
+day you made it, so re-read the list rather than trusting your memory of it
+([§8](#8-storing-the-shares-the-object-and-where-it-goes)). The executor is
+the deliberate exception, gated by death rather than by trust.
 
 Each step is independently revocable and independently useful. Take them in
 any order, years apart, as trust arrives.
