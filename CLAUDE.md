@@ -66,6 +66,26 @@ gh api repos/PeteSparrowBTC/bitcoin-backup-framework/branches/main/protection \
 Equivalent UI path: Settings, Branches, Add branch ruleset, target `main`, tick "Require a
 pull request before merging" and "Do not allow bypassing the above settings".
 
+### Setup: enable Pages (once per repo)
+
+The site at `petesparrowbtc.github.io/bitcoin-backup-framework/` is built and
+deployed by `.github/workflows/pages.yml`, but the Pages site itself has to
+exist before the workflow can deploy into it, and the workflow cannot create it.
+
+```bash
+gh api -X POST repos/PeteSparrowBTC/bitcoin-backup-framework/pages -f build_type=workflow
+```
+
+Equivalent UI path: Settings, Pages, Source: GitHub Actions.
+
+Why this is not automated: `actions/configure-pages` accepts `enablement: true`,
+and it fails. Creating a Pages site that has never existed needs repository
+admin, which `GITHUB_TOKEN` does not have at any permission level, including
+`pages: write`. Both placements were tried and both returned "Create Pages site
+failed: Resource not accessible by integration". Once the site exists the
+workflow deploys to it without any further permission, so this is a one-time
+cost rather than a recurring one.
+
 ### Enable the local hook after cloning
 
 ```bash

@@ -78,19 +78,17 @@ jobs:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
     steps:
-      # Turns Pages on for the repository on first run, so publishing needs no
-      # click in Settings.
+      # No `actions/configure-pages` step here, deliberately.
       #
-      # This lives in `deploy` rather than in `build`, where the usual template
-      # puts it, because creating the Pages site needs `pages: write` and the
-      # whole point of the split is that `build` never holds that token while it
-      # fetches and runs a third-party Hugo module. Nothing here consumes the
-      # step's outputs: the site URL is pinned in hugo.yaml, so the step is
-      # wanted only for `enablement`.
-      - name: Configure Pages
-        uses: actions/configure-pages@v5
-        with:
-          enablement: true
-
+      # It was used with `enablement: true` to switch Pages on automatically,
+      # and that does not work: creating a Pages site that has never existed
+      # needs repository admin, which GITHUB_TOKEN does not have at any
+      # permission level. Both attempts failed with "Create Pages site failed:
+      # Resource not accessible by integration", first from `build` and then
+      # from `deploy` with `pages: write` granted.
+      #
+      # Pages is therefore enabled once by a human (see CLAUDE.md). After that
+      # the step had nothing left to do, because its outputs are unused: the
+      # site URL is pinned in hugo.yaml rather than read from it.
       - id: deployment
         uses: actions/deploy-pages@v4
