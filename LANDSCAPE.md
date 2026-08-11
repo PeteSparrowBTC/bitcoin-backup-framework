@@ -16,6 +16,28 @@ projects that sound comparable often are not. Splitting a secret, storing it,
 generating it in the first place, and passing it on after death are four
 problems, and a tool that solves one usually does not touch the others.
 
+**And a word on kinds.** Three different things get compared as though they
+were alternatives:
+
+- **A method** teaches you to derive your own answer. It names no products and
+  finishes with a decision you made. SmartCustody is the clearest example.
+- **A procedure** hands you an answer and expects to be followed in order.
+  Glacier, Yeti and this framework are procedures.
+- **A tool** is software you run. It decides nothing about your setup.
+
+Most projects are one of these. A few are several, and the useful question
+about any of them is which part you are actually short of. If you do not know
+whether a 2-of-3 fits your life, no tool will tell you and a procedure will
+just answer for you.
+
+**Where this framework sits on that axis:** it is a procedure plus the tools to
+execute it, and it is deliberately not a method. It picks the scheme, the
+threshold, the media and the locations, and states the reasoning so you can
+disagree with a specific choice rather than the whole thing. If what you want
+is to derive your own answer from your own threat model, SmartCustody is the
+better starting point and this document is one of the things you might arrive
+at.
+
 ---
 
 ## 1. Ways to split a secret
@@ -27,8 +49,27 @@ The scheme decides what a "piece" of your backup is and how many you need.
 | **SLIP-39** | [github.com/satoshilabs/slips](https://github.com/satoshilabs/slips/blob/master/slip-0039.md) | Shamir's Secret Sharing with a defined encoding: a threshold of n pieces recovers, fewer reveal nothing. Its own 1,024-word list, so shares are 20 or 33 words and are not BIP-39 phrases. Native in Trezor Model T, Safe 3 and Safe 5. **This framework uses it**, to split the key that encrypts the backup rather than the seed itself ([why](README.md#4-inventory-the-secrets-you-actually-hold)) |
 | **SeedXOR** | [seedxor.com](https://seedxor.com/) | Coinkite's scheme, in Coldcard firmware. Splits a seed by XOR rather than by Shamir's polynomials, and each part is itself a valid BIP-39 phrase. The important difference: **it has no threshold.** Every part is required, so it protects against theft and makes loss strictly more likely |
 | **codex32** | [github.com/BlockstreamResearch/codex32](https://github.com/BlockstreamResearch/codex32), [secretcodex32.com](https://secretcodex32.com/) | Shamir's Secret Sharing plus a strong error-correcting checksum, designed to be computed **by hand**, with paper wheels called volvelles instead of a computer. Intellectually the most interesting entry here, because it removes the computer from the trusted set entirely. Its own README says it is "currently under construction and far from production-ready", that "no wallets currently support such secrets", and "do not use this scheme with real money" |
-| **SSKR** | [github.com/BlockchainCommons/bc-sskr](https://github.com/BlockchainCommons/bc-sskr) | Blockchain Commons' sharding format, used across their SmartCustody material |
+| **SSKR** | [developer.blockchaincommons.com/sskr](https://developer.blockchaincommons.com/sskr/) | Blockchain Commons' sharding format, and **the closest relative to this framework's design**, which is worth stating plainly. Their documented construction encrypts the payload with a unique random symmetric key, shards that key, and stores the shares: the same two layers, down to the same cipher family. One difference decides everything downstream, and it is described below |
 | **Multisig** | Bitcoin itself | Not a backup scheme, and frequently proposed instead of one. Several independent keys sign, and no complete secret is ever assembled. It protects the *use* of keys; each key still needs backing up, which is the problem this framework addresses. The two compose ([§11](README.md#11-involving-others-later-the-upgrade-path)) |
+
+**SSKR and this framework, and the one difference between them.** Blockchain
+Commons builds three envelopes, **each holding the encrypted payload plus one
+share** of the key. This framework keeps the payload apart from the shares
+entirely.
+
+The consequence is the whole trade. Under their arrangement, threshold-many
+envelopes are sufficient: gather two of three and you are done, because each
+one already carried the ciphertext. Under this one, threshold-many shares are
+*not* sufficient, because the payload is a separate artifact you also have to
+hold ([§4](README.md#4-inventory-the-secrets-you-actually-hold)).
+
+Theirs is simpler to recover and has one fewer thing to lose, which is the more
+common failure. This one resists a group of share-holders combining against you
+and survives a stranger finding every share, and pays for that with a second
+artifact that must also survive
+([§10](README.md#10-failure-mode-matrix-what-saves-you) lists losing it as
+unrecoverable). Neither is the strict improvement, and anyone claiming the
+two-layer idea as novel should be pointed at SSKR.
 
 ## 2. Tools that produce the backup
 
@@ -72,7 +113,7 @@ half a protocol, which is usually worse than either.
 | **CryptoGlacier** | [vogelito.github.io/cryptoglacierdocs](https://vogelito.github.io/cryptoglacierdocs/docs/overview/) | A continuation of Glacier's approach by a different author, for readers who want that protocol with more recent maintenance |
 | **Yeti** | [yeticold.com](https://yeticold.com/), [github.com/JWWeatherman/yeticold](https://github.com/JWWeatherman/yeticold) | A script that installs Bitcoin Core and walks you through a multisig cold-storage setup, explicitly preferring safety over ease of use. Notable for a decision this framework shares: recovery instructions are stored **with every copy of the keys**, so the plan cannot be separated from the material it explains |
 | **10x Security Bitcoin Guide** | [btcguide.github.io](https://btcguide.github.io/) | Michael Flaxman's multisig guide, built on the argument that a fault-tolerant setup lets you survive one or more catastrophic mistakes. Where this framework protects the backup of a key, that one removes the single key |
-| **SmartCustody** | [smartcustody.com](https://www.smartcustody.com/) | Blockchain Commons. A risk-modelling exercise rather than a recipe: itemise your assets, name your adversaries, then resolve each, across a 14-step cold-storage scenario. The source of the adversary list referenced in [§13](README.md#13-what-we-read-and-what-each-source-changed) |
+| **SmartCustody** | [smartcustody.com](https://www.smartcustody.com/) | Blockchain Commons, and the odd one out here because it is all three kinds at once. A **method**: itemise your assets, name your adversaries, resolve each, across a 186-page book and a 14-step cold-storage scenario, and the source of the adversary list in [§13](README.md#13-what-we-read-and-what-each-source-changed). **Specifications**: SSKR, Gordian Envelope, multisig and timelock patterns. **Software**: [Gordian Seed Tool](https://github.com/BlockchainCommons/GordianSeedTool-iOS) for iOS, plus command-line tools including seedtool, which converts a seed between BIP-39, SSKR, hex and Bytewords. Deliberately not prescriptive: it analyses wallets such as Sparrow and Passport as case studies rather than telling you which to buy. The complement to this document rather than a competitor, and the better place to start if you want to derive your own answer instead of adopting one |
 
 ### Reference libraries and topic guides
 
