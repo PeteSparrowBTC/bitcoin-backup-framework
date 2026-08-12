@@ -57,3 +57,44 @@
   display: block;
   overflow-x: auto;
 }
+
+/* The one-on-one work, as a solid button rather than a fifth link.
+
+   Hextra gives menu entries no class of their own, so the hook is the href.
+   Scoped to the two containers that render the menu, which keeps the styling
+   off any ordinary mention of the same URL in the prose:
+
+     .hextra-max-navbar-width   the desktop bar
+     .hextra-sidebar-container  the same menu inside the mobile drawer
+
+   Colour is deliberately not the theme's. It is a warm orange close to the gold
+   petesparrow.com already uses, so the two sites read as the same person's
+   work, and it is the one element on the page that is meant to be an offer
+   rather than part of the document. Dark text on orange rather than white
+   clears AA in both themes; white on orange does not.
+
+   Display is left alone on purpose. The theme uses `hx:hidden hx:md:inline-flex`
+   to decide which copy of the menu you see at which width, and overriding it
+   here would show both at once. */
+.hextra-max-navbar-width a[href^="https://petesparrow.com"],
+.hextra-sidebar-container a[href^="https://petesparrow.com"] {
+  background: #dd7a2e;
+  color: #14181d;
+  font-weight: 600;
+  border-radius: 4px;
+  padding: 0.35rem 0.8rem;
+  margin-left: 0.5rem;
+}
+
+.hextra-max-navbar-width a[href^="https://petesparrow.com"]:hover,
+.hextra-sidebar-container a[href^="https://petesparrow.com"]:hover {
+  background: #e8913f;
+  color: #14181d;
+}
+
+/* The mobile drawer lays its items out as full-width rows, so the button fills
+   the row there instead of floating in the middle of it. */
+.hextra-sidebar-container a[href^="https://petesparrow.com"] {
+  margin-left: 0;
+  justify-content: center;
+}
