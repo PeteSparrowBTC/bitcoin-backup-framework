@@ -23,7 +23,11 @@ module:
 # context menu copies and links to. Without this the menu renders with nothing
 # behind it.
 outputs:
-  home: [html, rss, markdown]
+  # `llms` on the home page emits /llms.txt: a plain-text index of every page
+  # with a one-line summary, which is the convention assistants are starting to
+  # look for when handed a bare domain. It costs one file and it is the same
+  # audience the context menu serves, arriving by a different route.
+  home: [html, rss, markdown, llms]
   page: [html, markdown]
   section: [html, rss, markdown]
 
@@ -82,6 +86,15 @@ menu:
       weight: 10
 
 params:
+  # One sentence, used for the page meta description and as the opening line
+  # of /llms.txt, where an assistant reads it to decide what this site is
+  # before fetching anything. Without it that line renders empty.
+  description: >-
+    A complete backup strategy for a Bitcoin seed phrase, its passphrase and
+    the accounts around them, built for one person who trusts nobody: dice you
+    can account for, one encrypted payload, and SLIP-39 shares in separate
+    locations.
+
   # Full width throughout. The framework carries wide tables (the locations
   # table in section 8, the failure matrix in section 10) that were being
   # squeezed into a column narrower than the screen.
