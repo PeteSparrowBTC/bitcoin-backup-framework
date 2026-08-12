@@ -126,11 +126,20 @@ detected it by examining their words.
 Since the output tells you nothing, only the process is auditable:
 
 - **Supply your own randomness.** Every device worth using lets you mix in
-  dice. At least 50 fair, private, independent rolls get hashed directly into
-  the seed, bypassing the device generator
-  ([how many rolls, and why](NUMBERS.md#why-99-rolls-is-not-256-bits)). This is the only path that does
-  not require trusting a black box you cannot inspect, and it is exactly what
-  separated a non-event from a loss in July 2026.
+  dice, and the rolls are hashed directly into the seed, bypassing the device
+  generator. Coinkite's own advisory is the demonstration: seeds made with at
+  least 50 rolls were unaffected by the defect that cost everyone else. Roll
+  **60** for a twelve-word seed and **111** for twenty-four, which clears the
+  vendor minimums of 50 and 99 with margin for a die that is not quite fair
+  ([why those counts, and why 99 is not 256 bits](NUMBERS.md#why-99-rolls-is-not-256-bits)).
+  This is the only path that does not require trusting a black box you cannot
+  inspect.
+- **Check the conversion in a second implementation.** Rolls to words is
+  deterministic, so any correct tool produces the same words from the same
+  rolls, and two tools agreeing is the proof. Which one you ran first does not
+  matter. [dice-to-seed](https://github.com/PeteSparrowBTC/dice-to-seed) exists
+  for this job and has no generator of its own to distrust. If two tools
+  disagree, stop and find out why before going further.
 - **Know what verification does and does not prove.** Checking the wallet
   fingerprint in independent software, confirming a receive address on a
   second device, and sending a small test transaction all catch a swapped,
@@ -147,6 +156,41 @@ Since the output tells you nothing, only the process is auditable:
   plus a superseded `payload.age.gpg.asc` stay a working backup forever, so
   distributing first means travelling to every location later to destroy what
   you left there.
+
+### Two roll logs, and both are plaintext secrets
+
+Dice produce two secrets in this framework, not one. The first log becomes the
+wallet seed. The second becomes `k`, the key that encrypts the backup payload
+([§4](#4-inventory-the-secrets-you-actually-hold)), which otherwise comes from
+the backup machine's generator and would be the one number in the design with
+no origin you can account for. Roll the same count for both.
+
+**They must be separate logs.** On a twenty-four-word seed the BIP-39 entropy
+is SHA-256 of your rolls, and `k` is SHA-256 of your rolls: same function, same
+input, same output. Reuse one log and the key protecting the backup *is* the
+wallet it protects, so the shares stop protecting anything and the two-layer
+design collapses to one layer
+([the arithmetic](NUMBERS.md#what-the-hash-does-and-the-one-thing-it-cannot-do)).
+A twelve-word seed takes the first half of the same hash, which is no better.
+Both tools enforce this rather than warning about it: `dice-to-seed` clears
+your rolls when you change mode, and `slip39-backup` recovers the entropy of
+every seed in the form and refuses a key that matches one.
+
+**One die for both is correct.** A die has no memory, so two sessions are two
+independent sets of rolls, and a bias does not couple them: an attacker who
+exploits it still has to search each secret separately. A second die adds
+nothing except another object whose fairness you have not considered. What has
+to be fresh is the log ([why one die rather than a handful](NUMBERS.md#why-this-guide-says-one-die)).
+
+**Destroy both logs once the backup verifies.** This is the step people leave
+until later, and later is the problem. Until it is burned, log one is a
+plaintext seed in your own handwriting, sitting outside every protection this
+document builds, and log two opens the payload without any share at all. They
+are the two artifacts [§7](#7-known-traps-each-has-bitten-real-people) forbids
+in every other form, created by the guide's own first instruction. Keep them
+only as long as it takes to run the dry run
+([Phase B](#phase-b-back-up-the-seed-one-offline-session)), then destroy them
+in the same session.
 
 ### The passphrase: strength you can actually assess
 
@@ -396,6 +440,29 @@ single artifact anywhere is sufficient. This is also what makes the solo
 version workable: even someone who found **every** share would hold only
 `k`, never the wallet, without `payload.age.gpg.asc`.
 
+**Dice do not remove the random number generator from this backup**, and it is
+worth being exact about the one that remains, because
+[§2](#2-before-you-back-it-up-is-the-secret-worth-protecting) spends its whole
+argument on entropy provenance and this is the part it does not reach. Neither
+lock is opened by `k` directly. Each format generates its own key on the backup
+machine and encrypts under that, and `k` only wraps those keys. So a defective
+generator on the machine you run the tool on does not weaken any share: it makes
+the payload readable without one. Every card you then distribute is irrelevant
+to an attacker who never needed them.
+
+The tool states this on the screen where you paste the key, and the framework
+should not be more confident than the software it drives. Two things soften it.
+The keys are independent, so an attacker who can predict age's still has to get
+past OpenPGP to reach the ciphertext it protects, which is a defence the second
+lock provides and the first cannot. And Tails boots fresh from published media,
+which is a narrower thing to trust than firmware that has been in a drawer for
+five years. Neither is a proof, and no drill detects it: this is the same
+unobservable failure as a weak seed, one layer down.
+
+What dice buy, then, is not a design with no generator in it. It is a `k` whose
+origin you can account for and recompute, which is worth having and is a
+different claim.
+
 **The payload is one file with two locks: `payload.age.gpg.asc`.** It is the age
 ciphertext wrapped a second time in OpenPGP AES-256 and then ASCII-armored, so
 what you store is text rather than binary. Both locks open with the same key
@@ -438,15 +505,15 @@ the text alone in a password manager is not holding an anonymous block.
                  ▼                           ▼
  LAYER 1 - PASSWORD MANAGER (online, zero-knowledge)
  ┌───────────────────────────────────────────────────────────────┐
- │  payload.age.gpg.asc (attachment)  ← ciphertext only; k is NOT here   │
+ │  payload.age.gpg.asc  ← ciphertext only; k is NOT here        │
  │  verification-record.txt, descriptor copy, all daily logins,  │
- │  email credentials; Emergency Access dead-man switch (§6.5)   │
+ │  email credentials; Emergency Access dead-man switch (Phase A)│
  └───────────────┬───────────────────────────────────────────────┘
-                 │ encrypted export + payload.age.gpg.asc, refreshed together
+                 │ encrypted export + payload, refreshed together
                  ▼
  LAYER 2 - OFFLINE REPLICAS (cheap, promiscuous)
  ┌───────────────────────────────────────────────────────────────┐
- │  USB stick(s): encrypted vault export + payload.age.gpg.asc copy      │
+ │  USB stick(s): encrypted vault export + payload copy          │
  │  (bank box / home pouch; ciphertext everywhere is fine)       │
  └───────────────────────────────────────────────────────────────┘
 ```
@@ -502,37 +569,81 @@ onward.
 
 ### Phase B: back up the seed (one offline session)
 
-6. Download the tool's AppImage and verify its checksum (see the tool's
-   [TAILS_INSTRUCTIONS.md](https://github.com/PeteSparrowBTC/slip39-backup/blob/main/TAILS_INSTRUCTIONS.md)).
-7. Boot Tails **offline**, run the tool, Owner mode: enter seed words,
-   optional BIP-39 passphrase, and (**do not skip this**) the wallet
-   descriptor. For multisig, the descriptor is as recovery-critical as the
-   seeds. For a solo setup, set the group shape to **2-of-3** (the tool
+6. **While still online**, download both AppImages, `dice-to-seed` and
+   `slip39-backup`, with their `SHA256SUMS`, and check what you took:
+   `sha256sum -c SHA256SUMS`. Do this even though you will run them offline.
+   The two protect different things: Tails decides whether your seed can get
+   out, and the checksum decides whether the program deriving it is the one
+   that was published. A tampered build needs no network to hurt you, only
+   words its author can also compute, and an offline session runs it
+   faithfully. Afterwards there is no second chance, because you cannot fetch
+   a checksum from a machine with the network off (the tools'
+   [TAILS_INSTRUCTIONS.md](https://github.com/PeteSparrowBTC/slip39-backup/blob/main/TAILS_INSTRUCTIONS.md)
+   has the detail).
+7. Boot Tails **offline**, and roll the dice now if you have not
+   ([§2](#2-before-you-back-it-up-is-the-secret-worth-protecting)). Run
+   `dice-to-seed` on log one for the seed words, then switch modes and run it
+   on log two for `k`: 64 hex characters and a four-character check code
+   ([what those counts mean](NUMBERS.md#bytes-and-why-a-hex-character-is-half-a-byte)).
+   Check both against a second implementation before going on.
+
+   **If you are backing up a seed you already hold**, you have no dice log for
+   it and cannot acquire one, so rule 0 is answered by how that seed was made
+   rather than by anything you do here. Read
+   [§2](#2-before-you-back-it-up-is-the-secret-worth-protecting) and decide
+   whether to back this seed up or generate a fresh one and move the coins
+   first. Roll log two for `k` either way: it is a new secret and dice are
+   available to it even when they are not available to the seed.
+8. Run `slip39-backup` in Owner mode: enter seed words, optional BIP-39
+   passphrase (generated, never invented,
+   [§2](#2-before-you-back-it-up-is-the-secret-worth-protecting)), and
+   (**do not skip this**) the wallet descriptor. For multisig, the descriptor
+   is as recovery-critical as the seeds. **Paste `k` and its check code** into
+   the backup-key fields rather than letting the tool generate one; leave them
+   empty and the key protecting every copy of your backup comes from a
+   generator you cannot check. Set the group shape to **2-of-3** (the tool
    defaults to 3-of-5, which assumes five homes; three locations you alone
    control is realistic, five rarely is).
-8. From the generated `output.zip`, immediately split the contents:
-   - **shares → three self-controlled homes** ([§8](#8-storing-the-shares-the-object-and-where-it-goes)): copy each
-     share's 33 words onto a card *before you leave the offline session*, then
-     place the cards: home pouch, bank box, and one more that is yours rather
-     than borrowed. **One location, one card**, and [§8](#8-storing-the-shares-the-object-and-where-it-goes)
-     has the full list of homes, including the ones to avoid. The zips are
-     transport; the cards are the backup.
-   - **`payload.age.gpg.asc` → Bitwarden attachment** in a dedicated entry,
-     together with `verification-record.txt`. It is armored text, so it can go
-     in a note as easily as an attachment
-     ([§4](#4-inventory-the-secrets-you-actually-hold)).
-   - **The same file → Layer 2 USB stick(s)** as well. Bitwarden's export does
-     **not** include attachments ([§7](#7-known-traps-each-has-bitten-real-people)), and shares alone cannot recover
-     without it. Replicate it generously: it is ciphertext behind two locks,
-     and copies of it cost you nothing (rule 5).
-   - Delete `output.zip`. It is a distribution package, not a keepsake.
-9. Before funding the wallet seriously: **dry-run recovery** in Recoverer
-   mode with threshold-many shares + `payload.age.gpg.asc`, and check the
-   verification record. Rules 6 and 8: the dry run happens on Tails too.
+9. **Dry-run the recovery before anything leaves this room.** Open a second
+   copy of the tool in Recoverer mode, feed it threshold-many shares and
+   `payload.age.gpg.asc`, and check the result against
+   `verification-record.txt`. Rules 6 and 8. Doing it now rather than after
+   the errands is rule 7: shares you have already placed in three locations
+   are a working backup forever, so a fault found later costs you a trip to
+   every one of them, and the trap at the end of
+   [§7](#7-known-traps-each-has-bitten-real-people) is exactly this mistake.
+10. **Destroy both roll logs**, in this session, once the dry run has passed.
+    Log one is your seed in plain text and log two is `k`; you have the words
+    and the hex, and the logs are now the only unprotected copies of either
+    ([§2](#2-before-you-back-it-up-is-the-secret-worth-protecting)).
+11. Only now, from the generated `output.zip`, split the contents:
+    - **shares → three self-controlled homes** ([§8](#8-storing-the-shares-the-object-and-where-it-goes)): copy each
+      share's 33 words onto a card *before you leave the offline session*, then
+      place the cards: home pouch, bank box, and one more that is yours rather
+      than borrowed. **One location, one card**, and [§8](#8-storing-the-shares-the-object-and-where-it-goes)
+      has the full list of homes, including the ones to avoid. The zips are
+      transport; the cards are the backup.
+    - **`MANUAL-RECOVERY.txt` → printed, one copy per location.** It is the
+      tool-independent recovery manual, and the tool puts it in every share zip
+      for a reason: whoever ends up holding a card years from now needs the
+      instructions in the same envelope, not in a bank box they may not reach.
+      This is the property [§4](#4-inventory-the-secrets-you-actually-hold)
+      relies on when it answers the "plaintext recovers anywhere" objection, and
+      it holds only if you actually keep the manual.
+    - **`payload.age.gpg.asc` → Bitwarden attachment** in a dedicated entry,
+      together with `verification-record.txt`. It is armored text, so it can go
+      in a note as easily as an attachment
+      ([§4](#4-inventory-the-secrets-you-actually-hold)).
+    - **The same file → Layer 2 USB stick(s)** as well. Bitwarden's export does
+      **not** include attachments ([§7](#7-known-traps-each-has-bitten-real-people)), and shares alone cannot recover
+      without it. Replicate it generously: it is ciphertext behind two locks,
+      and copies of it cost you nothing (rule 5).
+    - Delete `output.zip`. It is a distribution package, not a keepsake, and
+      everything in it worth keeping is now somewhere else.
 
 ### Phase C: the access plan, without trusting anyone (an evening)
 
-10. Write the **access plan** and put it **in the bank box**. This is more
+12. Write the **access plan** and put it **in the bank box**. This is more
     than a note about the coins; it is the document that answers the fear
     every parent holding bitcoin has: *"if I'm gone, my family has no idea
     what a seed phrase is."* It contains:
@@ -552,7 +663,7 @@ onward.
     - **A date, and a promise to re-date it.** Update it on life events:
       move, new wallet, marriage or divorce, a location change. A stale
       access plan fails exactly when it is needed.
-11. This grants **nothing while you live**; nobody knows the plan exists.
+13. This grants **nothing while you live**; nobody knows the plan exists.
     But a bank box is reachable by your estate's executor through the legal
     process that settles an estate (probate, in many jurisdictions), so the
     plan upgrades "if I die, the coins are gone" to "my estate has a real
@@ -563,9 +674,9 @@ onward.
 
 ### Phase D: make it a system, not an event (recurring)
 
-12. Quarterly (or after significant vault changes): refresh the encrypted
+14. Quarterly (or after significant vault changes): refresh the encrypted
     vault export + `payload.age.gpg.asc` copy on the Layer 2 USB, *together*.
-13. Annually: full recovery drill ([§9](#9-the-annual-drill)). Solo systems have no second pair of
+15. Annually: full recovery drill ([§9](#9-the-annual-drill)). Solo systems have no second pair of
     eyes; the drill is the only audit you get.
 
 ## 7. Known traps (each has bitten real people)
@@ -577,7 +688,7 @@ onward.
   access plan lives *in* the box; the will only points at the box.
 - **Bitwarden exports exclude attachments.** Your vault export does *not*
   contain `payload.age.gpg.asc`. Back the file up separately
-  ([Phase B](#phase-b-back-up-the-seed-one-offline-session) step 8) or the
+  ([Phase B](#phase-b-back-up-the-seed-one-offline-session) step 11) or the
   export gives false confidence.
 - **The email ↔ vault cycle.** Without 2FA, Bitwarden's new-device login
   wants an email verification code; if your email password lives only in the
@@ -614,6 +725,13 @@ onward.
 - **Storing the raw seed "just in case" somewhere digital.** The entire
   design collapses if a plaintext copy of row 1 exists in a photo, note, or
   cloud drive. It exists only inside `payload.age.gpg.asc`. Ever.
+- **Keeping the dice logs.** This is the previous trap wearing a disguise the
+  guide handed you. A roll log is not working paper: log one *is* the seed and
+  log two *is* `k`, and either one alone defeats the whole design, `k` without
+  needing a single share. They are the only unprotected copies you will ever
+  make of those secrets, they look like scratch paper, and they are the thing
+  most likely to still be in a drawer a year later. Burn both in the session
+  that made them ([§2](#2-before-you-back-it-up-is-the-secret-worth-protecting)).
 - **Recovering on a daily-use computer.** The reconstruction moment is when
   the whole seed exists in one place; on an everyday machine that is exactly
   where malware waits (rule 8). Recovery happens on offline Tails, full stop.
@@ -943,6 +1061,9 @@ belief.
 | Scenario | What saves you |
 |---|---|
 | Your device's random number generator was defective | **nothing in this framework; a perfect backup preserves the flaw.** [§2](#2-before-you-back-it-up-is-the-secret-worth-protecting) is the only defence: your own dice entropy, vendor diversity in multisig, and rotation when a defect is disclosed |
+| The **backup machine's** generator was defective | the second lock, partially, and nothing else. Each format keys itself from that machine, so a predictable key opens the payload with no share at all and every card you placed is beside the point. An attacker who predicts age's key still has to break OpenPGP to reach what it protects, which is the defence-in-depth argument doing real work ([§4](#4-inventory-the-secrets-you-actually-hold)). Dice give `k` an origin you can recompute; they do not reach this |
+| A roll log survives in a drawer | **nothing.** Log one is the seed in plain text; log two is `k`, which opens the payload without any share. Destroying both in the session that made them is the whole of the defence ([§2](#2-before-you-back-it-up-is-the-secret-worth-protecting)) |
+| You reused one roll log for the seed and the key | **nothing, and the shares were never protecting anything.** Same hash, same input, so `k` is derivable from the wallet it encrypts. Both tools refuse this, which is the only reason it is unlikely rather than common |
 | Forgotten master password | Recovery Sheet (Layer 0) |
 | Lost phone / 2FA device | 2FA recovery code on the sheet |
 | House fire destroys home pouch + devices | bank-box sheet copy; 2-of-3 tolerates the lost share; cloud vault intact |
