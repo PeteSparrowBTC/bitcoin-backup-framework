@@ -33,36 +33,53 @@ when you are ready to involve people.
 | **Paper and a pen** | Pencil or a pigment pen. Not a thermal printer receipt |
 | **A spare computer** | Anything that boots from USB. It never goes online during any of this |
 | **Three USB sticks** | One for Tails, and two for payload copies, because one goes in the bank box and one stays home |
-| **[Tails](https://tails.net)** | A operating system that runs from the USB stick and forgets everything when you shut down |
+| **[Tails](https://tails.net)** | An operating system that runs from the USB stick and forgets everything when you shut down. 1.8 GB, free, and the one piece of software here that is not optional ([why](README.md#the-clean-room-tails)) |
 | **A password manager** | Bitwarden or equivalent, with two-factor authentication |
 | **Three storage places** | Home, a bank deposit box, and one more that is yours rather than borrowed. Pick them now, because step 6 is errands ([which places](README.md#8-storing-the-shares-the-object-and-where-it-goes)) |
 | **A fireproof document pouch** | The kind sold for passports |
 
 ---
 
-## 1. Download the tools and check them
+## 1. Download Tails and the tools, and check what you got
 
-**Ten minutes, and it is the only step that happens online. Do not skip it and
-do not defer it.**
+**An hour, most of it a 1.8 GB download. This is the only step that happens
+online.**
 
-From the releases pages of
+**Tails first.** Everything after this happens on it, and it is the one download
+here that can be verified properly rather than approximately. Follow
+[tails.net/install](https://tails.net/install/), which walks you through writing
+the image to a USB stick and then verifies it in the browser, or with an OpenPGP
+signature if you would rather. Do the verification. A tampered Tails is a
+tampered everything ([what Tails is for, and why nothing else will
+do](README.md#the-clean-room-tails)).
+
+**Then the two tools.** From the releases pages of
 [dice-to-seed](https://github.com/PeteSparrowBTC/dice-to-seed/releases) and
 [slip39-backup](https://github.com/PeteSparrowBTC/slip39-backup/releases), take
-each AppImage and its `SHA256SUMS`, then check what you took:
+each AppImage **together with its checksum file**, and copy both onto a second
+USB stick. `dice-to-seed` also publishes a `-tails.zip` containing the AppImage,
+its checksum and a `start-here.sh` that does the check for you and refuses to
+open the app if it fails. Take that one if you would rather not use a terminal.
+
+**The check happens on Tails, not here.** A checksum file travels with the file
+it describes, so carrying both to the offline machine proves exactly as much
+there as it would prove now:
 
 ```bash
 sha256sum -c --ignore-missing SHA256SUMS
 ```
 
-Copy the checked files to a USB stick. You cannot do this later: the machine
-that runs them has no network, so there is no way to fetch a checksum once you
-are offline.
+What you cannot do offline is compare that hash against anywhere else. If you
+want that, do it now while you have a network: open the release's build log and
+check that the hash it recorded is the hash you hold. That is the difference
+between "this file is intact" and "this file is the one that was built", and
+only the second one needs to happen today.
 
-**Why bother, if it runs offline anyway.** The two answer different questions.
-Tails decides whether your seed can get out. The checksum decides whether the
-program deriving it is the one that was published. A tampered build needs no
-network to hurt you, only words its author can also compute, and an offline
-session will run it perfectly faithfully.
+**Why bother at all, if it runs offline anyway.** Tails and the checksum answer
+different questions. Tails decides whether your seed can get out. The checksum
+decides whether the program deriving it is the one that was published. A
+tampered build needs no network to hurt you, only words its author can also
+compute, and an offline session will run it perfectly faithfully.
 
 ---
 

@@ -354,8 +354,8 @@ below assumes real entropy at the root.
    working backup forever.
 8. **Secrets are reconstructed only in the clean room.** The one moment your
    seed exists in one place is recovery. Do it only in the same offline,
-   leave-no-trace environment used to create the backup (Tails Linux on a
-   spare computer), never on a daily-use machine. This rule exists because
+   leave-no-trace environment used to create the backup ([Tails on a spare
+   computer](#the-clean-room-tails)), never on a daily-use machine. This rule exists because
    the published criticism of share-based backups ([§13](#13-what-we-read-and-what-each-source-changed)) is precisely that
    the reconstruction moment is where malware wins; a clean room removes
    that moment from the reach of malware entirely.
@@ -576,19 +576,88 @@ onward.
    and bills), never your coins; `payload.age.gpg.asc` without shares is noise. If
    no candidate exists yet, skip and note it as an open item ([§11](#11-involving-others-later-the-upgrade-path)).
 
+### The clean room: Tails
+
+Rule 8 says secrets are reconstructed only in a clean room, and every offline
+step below happens in one. This is what it is and why nothing else in this
+document is as non-negotiable.
+
+**Tails is an operating system on a USB stick that runs entirely in memory and
+forgets everything when you shut it down.** It is free, about 1.8 GB, and
+maintained by a project whose only product is this property. You boot the spare
+computer from the stick, do the work, and shut down; nothing was written to the
+computer's disk because nothing is ever written to the computer's disk.
+
+**Why not simply an old laptop with the network unplugged.** Because an ordinary
+operating system is built to remember, and you would have to prove it did not.
+Swap and hibernation write memory to disk. Journals record what ran. Shell
+history keeps what you typed. The file manager caches thumbnails, the text
+editor keeps undo history, and a deleted file's blocks stay readable until
+something happens to overwrite them. None of that is a defect; it is the whole
+point of a computer you use every day. To trust an offline machine you would
+have to demonstrate the absence of all of it, on hardware you cannot see inside,
+and then demonstrate it again next year. Tails inverts the burden: keeping
+nothing is the default and persistence is the thing you would have to switch on.
+
+It also means the spare computer never has to be trusted with anything. It lends
+a processor and a screen for an evening. The property you depend on lives on the
+stick, and the same stick behaves the same way on any machine you boot it from.
+
+**Three things to get right at the Welcome Screen**, which is the setup dialog
+before the desktop appears:
+
+- **Turn on Offline Mode.** Tails offers it explicitly, and it disables
+  networking in software rather than leaving you to remember not to connect. An
+  unplugged cable is a decision you have to keep making; Offline Mode is one you
+  make once, and it also covers the wireless you forgot the machine had.
+- **Do not create or unlock Persistent Storage.** Persistence is a real Tails
+  feature and a reasonable thing to want for other work. For this work it is the
+  one setting that undoes the reason you booted Tails, and rule 2 has already
+  refused a Tails persistent volume as a home for anything at Layer 0.
+- **Leave the Unsafe Browser off.** It exists to log in to captive portals and
+  has no role in an offline session.
+
+**Verify the image, because this is the one download here that can be.** The
+tools this guide uses publish a checksum that travels beside the file it
+describes, which catches corruption and not much else. Tails publishes a real
+signature, and its installation pages verify the image in your browser or with
+OpenPGP if you prefer. A tampered Tails is a tampered everything downstream of
+it, so it is worth the extra five minutes exactly once.
+
+**What it does not do**, stated so the reliance is honest. Tails cannot help
+against a compromised machine below the operating system, meaning firmware or
+hardware, which is one reason the spare computer should be an ordinary boring
+one and not a gift. And Tails forgets; a USB stick plugged into Tails does not.
+Anything you deliberately save leaves the amnesic world at that moment and
+becomes a storage decision governed by the rest of this document. That is why
+[Phase B](#phase-b-back-up-the-seed-one-offline-session) writes cards and
+destroys logs inside the session rather than saving work for later.
+
 ### Phase B: back up the seed (one offline session)
 
-6. **While still online**, download both AppImages, `dice-to-seed` and
-   `slip39-backup`, with their `SHA256SUMS`, and check what you took:
-   `sha256sum -c SHA256SUMS`. Do this even though you will run them offline.
-   The two protect different things: Tails decides whether your seed can get
-   out, and the checksum decides whether the program deriving it is the one
-   that was published. A tampered build needs no network to hurt you, only
-   words its author can also compute, and an offline session runs it
-   faithfully. Afterwards there is no second chance, because you cannot fetch
-   a checksum from a machine with the network off (the tools'
+6. **While still online**, download Tails and write it to a USB stick,
+   following [tails.net/install](https://tails.net/install/) and doing the
+   verification it offers. That is the one download in this procedure with a
+   real signature behind it, and a tampered Tails is a tampered everything.
+   Then take both AppImages, `dice-to-seed` and `slip39-backup`, **each with its
+   checksum file**, onto a second stick. `dice-to-seed` also publishes a
+   `-tails.zip` that carries the AppImage, its checksum and a `start-here.sh`
+   which verifies before it will open the app.
+
+   **The tools' own check runs on Tails, not here.** A checksum file travels
+   with the file it describes, so carrying both across proves exactly as much
+   there as it would prove now: `sha256sum -c SHA256SUMS`, or the zip's script
+   if you would rather not use a terminal (the tools'
    [TAILS_INSTRUCTIONS.md](https://github.com/PeteSparrowBTC/slip39-backup/blob/main/TAILS_INSTRUCTIONS.md)
-   has the detail).
+   has the detail). What you cannot do offline is compare that hash with
+   anywhere else, so if you want the stronger check, open the release's build
+   log now and confirm the hash it recorded is the hash you hold. Intact and
+   genuine are different claims, and only the second one needs a network.
+
+   Do all of this even though the tools run offline. Tails decides whether your
+   seed can get out; the checksum decides whether the program deriving it is the
+   one that was published. A tampered build needs no network to hurt you, only
+   words its author can also compute, and an offline session runs it faithfully.
 7. Boot Tails **offline**, and roll the dice now if you have not
    ([§2](#2-before-you-back-it-up-is-the-secret-worth-protecting)). Run
    `dice-to-seed` on log one for the seed words, then switch modes and run it
