@@ -19,6 +19,14 @@ module:
   imports:
     - path: github.com/imfing/hextra
 
+# Every page is emitted as markdown beside its HTML, which is what the page
+# context menu copies and links to. Without this the menu renders with nothing
+# behind it.
+outputs:
+  home: [html, rss, markdown]
+  page: [html, markdown]
+  section: [html, rss, markdown]
+
 markup:
   goldmark:
     renderer:
@@ -69,6 +77,31 @@ params:
   # sidebars outward and leaves the text where it was.
   page:
     width: full
+    # The page context menu: copy this page as markdown, view its raw source, or
+    # open it in a chat assistant. Readers arrive at a long security document
+    # with questions it does not answer for their situation, and asking one of
+    # these is what they are going to do anyway. Handing them the whole page
+    # beats them pasting a half-remembered summary of it.
+    #
+    # This does not weaken the no-external-requests promise. The two entries
+    # below are ordinary links: nothing is fetched, nothing is told that you
+    # opened the page, and the check in scripts/check-no-external-requests.sh
+    # ignores <a href> for exactly that reason while still failing on anything
+    # the browser would load on its own.
+    #
+    # The prompt text is ours rather than the theme's default, and it ends by
+    # telling the assistant not to ask for secrets. Everything on this site is
+    # public and costs nothing to share. A reader's seed words, shares and
+    # payload file are not, and no question about this guide needs them.
+    contextMenu:
+      enable: true
+      links:
+        - name: Open in ChatGPT
+          icon: chatgpt
+          url: "https://chatgpt.com/?hints=search&q=I%27m+reading+this+bitcoin+backup+guide%3A+{url}%0AHelp+me+understand+it+and+pressure-test+whether+it+fits+my+situation.+Do+not+ask+me+for+my+seed+words%2C+my+SLIP-39+shares+or+my+payload+file%2C+and+I+will+not+paste+them."
+        - name: Open in Claude
+          icon: claude
+          url: "https://claude.ai/new?q=I%27m+reading+this+bitcoin+backup+guide%3A+{url}%0AHelp+me+understand+it+and+pressure-test+whether+it+fits+my+situation.+Do+not+ask+me+for+my+seed+words%2C+my+SLIP-39+shares+or+my+payload+file%2C+and+I+will+not+paste+them."
   navbar:
     width: full
     displayTitle: true

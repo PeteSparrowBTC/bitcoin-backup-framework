@@ -733,7 +733,13 @@ onward.
   `payload.age.gpg.asc` *and* anywhere else convenient; it is not spend-sufficient.
 - **Storing the raw seed "just in case" somewhere digital.** The entire
   design collapses if a plaintext copy of row 1 exists in a photo, note, or
-  cloud drive. It exists only inside `payload.age.gpg.asc`. Ever.
+  cloud drive. It exists only inside `payload.age.gpg.asc`. Ever. A chat window
+  is the newest version of this and the easiest one to walk into, because
+  answering an assistant's questions feels like a conversation rather than
+  publishing. Every page of this guide is public and costs nothing to paste
+  anywhere, which is why the site offers to open one in an assistant for you.
+  Your words, your shares and your payload are the other thing entirely, and no
+  question about this document requires them.
 - **Keeping the dice logs.** This is the previous trap wearing a disguise the
   guide handed you. A roll log is not working paper: log one *is* the seed and
   log two *is* `k`, and either one alone defeats the whole design, `k` without
