@@ -4,6 +4,12 @@ This framework is one answer among many, and the others are worth knowing about
 before you commit to this one. This page is a map: what each project is, where
 to find it, and how it relates to the choices made here.
 
+<!-- revision:start -->
+**Revised 2026-08-12.** This is the page that rots fastest here. Projects
+release, change licence and get abandoned, so treat every entry as true on that
+date and confirm at the source before relying on it.
+<!-- revision:end -->
+
 **What this page is not.** It is not a review. Except where noted, each entry is
 described from the project's own documentation rather than from having run it,
 and none of the endorsements or criticisms of any project here are based on an

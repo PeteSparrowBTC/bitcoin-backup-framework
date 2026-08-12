@@ -28,6 +28,7 @@ Output tree:
 import os
 import re
 import shutil
+import subprocess
 import sys
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -51,6 +52,7 @@ def slugify(heading: str) -> str:
 # at the file where it actually lives. Checked by scripts/check-links.py, which
 # is how the LICENSE link was found in the first place.
 REPO_BLOB = "https://github.com/PeteSparrowBTC/bitcoin-backup-framework/blob/main/"
+REPO_COMMIT = "https://github.com/PeteSparrowBTC/bitcoin-backup-framework/commit/"
 REPO_FILE_LINKS = {
     "LICENSE": REPO_BLOB + "LICENSE",
 }
@@ -66,7 +68,58 @@ SIBLING_PAGES = {
 
 def read(path: str) -> str:
     with open(os.path.join(ROOT, path), encoding="utf-8") as handle:
-        return strip_site_banner(handle.read())
+        return stamp_revision(strip_site_banner(handle.read()))
+
+
+def build_commit() -> str:
+    """The commit this build came from, or "" if it cannot be established.
+
+    GITHUB_SHA is what Actions sets and is the push that triggered the build.
+    The git fallback is for a local build, where a dirty tree makes the answer
+    approximate; that is acceptable because the stamp exists to date the
+    published copy, and the published copy is always built in CI.
+    """
+    sha = os.environ.get("GITHUB_SHA", "")
+    if sha:
+        return sha
+    try:
+        return subprocess.check_output(
+            ["git", "rev-parse", "HEAD"], cwd=ROOT, text=True, stderr=subprocess.DEVNULL
+        ).strip()
+    except Exception:
+        return ""
+
+
+def stamp_revision(markdown: str) -> str:
+    """Add the build's commit to the revision note, and drop the markers.
+
+    The sources carry a hand-written date, because a date says when somebody
+    last checked the claims and no tool can know that. They cannot carry the
+    commit: the hash of a commit is not available to the file inside it. So the
+    hash is added here, where it can be read off the build.
+
+    The two answer different questions and both are wanted. The date says how
+    stale the *thinking* is; the commit says exactly which text you are reading,
+    which matters because this document names files that other repositories
+    produce and those names have already changed once.
+
+    Delimited by HTML comments for the same reason the site banner is: editing
+    the wording must not be able to stop the substitution silently.
+    """
+    sha = build_commit()
+
+    def replace(match: re.Match) -> str:
+        body = match.group(1).strip()
+        if not sha:
+            return body + "\n"
+        return f"{body} Built from commit [`{sha[:8]}`]({REPO_COMMIT}{sha}).\n"
+
+    return re.sub(
+        r"[ \t]*<!--\s*revision:start\s*-->\n(.*?)<!--\s*revision:end\s*-->\n?",
+        replace,
+        markdown,
+        flags=re.S,
+    )
 
 
 def strip_site_banner(markdown: str) -> str:
@@ -102,6 +155,13 @@ def write(relpath: str, front: dict, body: str) -> None:
     rather than /docs/8-storing.../, which matters because these paths are meant
     to go in video descriptions and stay put.
     """
+    # A marker that reaches the site means its block was never substituted, so
+    # the page would carry a revision note with no commit and an HTML comment
+    # where the sentence should be. Cheap to check, and the failure is silent
+    # otherwise because HTML comments do not render.
+    if "revision:start" in body or "site-banner:start" in body:
+        sys.exit(f"generate-content: an unsubstituted marker survived into {relpath}")
+
     path = os.path.join(CONTENT, relpath)
     os.makedirs(os.path.dirname(path), exist_ok=True)
     lines = ["---", "type: docs"]
