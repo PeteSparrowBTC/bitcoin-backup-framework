@@ -144,7 +144,7 @@ Since the output tells you nothing, only the process is auditable:
 - **Rotate on disclosure, before you protect.** When a defect affecting your
   device and firmware is announced, treat the seed as compromised and move the
   coins before building backups around it. Rule 7 is why: superseded shares
-  plus a superseded `payload.age` stay a working backup forever, so
+  plus a superseded `payload.age.gpg.asc` stay a working backup forever, so
   distributing first means travelling to every location later to destroy what
   you left there.
 
@@ -189,7 +189,7 @@ lockout. Offline cracking with your seed words in hand has no attempt limit.
   defensible.
 - **Written down, stored apart from the seed.** Memory-only is total loss with
   no recovery path, and storing it beside the seed defeats its purpose. In
-  this framework it lives inside `payload.age` while the shares live
+  this framework it lives inside `payload.age.gpg.asc` while the shares live
   elsewhere, which separates them by construction.
 - **Plain ASCII, no leading or trailing spaces.** Wallets differ in unicode
   normalisation, and a passphrase that recovers on one wallet but not another
@@ -216,7 +216,7 @@ security. It does not. The risk vectors:
 3. **Multisig in form, single-sig in risk.** A quorum's value comes from its
    keys being independent. Derive them from one seed and a single compromise,
    plus a fast key-derivation function, reaches all of them.
-4. **The backup collapses too.** One `payload.age` then holds the seed and
+4. **The backup collapses too.** One `payload.age.gpg.asc` then holds the seed and
    every passphrase, so whoever opens it holds the whole quorum. The multisig
    buys nothing at backup time.
 5. **Operational confusion.** Which passphrase belongs to which wallet, with
@@ -286,7 +286,7 @@ below assumes real entropy at the root.
    two break-ins; six holding a 3-of-6 need three
    ([§8](#8-storing-the-shares-the-object-and-where-it-goes)).
 5. **Ciphertext is cheap; keys are precious.** Encrypted blobs
-   (`payload.age`, encrypted vault exports) may be replicated freely:
+   (`payload.age.gpg.asc`, encrypted vault exports) may be replicated freely:
    USB sticks, cloud, an email to yourself. The *keys* to them live only in
    Layer 0 (and your head). Guard few things hard rather than many things
    weakly.
@@ -297,7 +297,7 @@ below assumes real entropy at the root.
 7. **Trust is additive, never foundational.** The system must be fully
    functional with zero trusted parties. Every grant of trust is a later,
    revocable enhancement ([§11](#11-involving-others-later-the-upgrade-path)). Never distribute artifacts of an undrilled
-   system: superseded shares plus a superseded `payload.age` remain a
+   system: superseded shares plus a superseded `payload.age.gpg.asc` remain a
    working backup forever.
 8. **Secrets are reconstructed only in the clean room.** The one moment your
    seed exists in one place is recovery. Do it only in the same offline,
@@ -313,10 +313,10 @@ Before placing anything, list what exists. For a typical self-custody setup:
 
 | # | Secret | Kind | Sufficient to spend BTC? | Where it will live |
 |---|---|---|---|---|
-| 1 | BIP-39 seed words (+ optional BIP-39 passphrase) | bearer | yes | **only inside `payload.age`**, never stored raw |
-| 2 | SLIP-39 shares (protecting random key `k`) | bearer (threshold) | only threshold-many **+** `payload.age` | Layer 0: separate locations you alone control |
-| 3 | `payload.age` (encrypted wallet payload) | ciphertext | no (useless without `k`) | replicated: vault attachment + offline copies |
-| 4 | Wallet descriptor / xpubs | recovery-critical metadata | no (privacy leak only) | inside `payload.age`; copy in vault |
+| 1 | BIP-39 seed words (+ optional BIP-39 passphrase) | bearer | yes | **only inside `payload.age.gpg.asc`**, never stored raw |
+| 2 | SLIP-39 shares (protecting random key `k`) | bearer (threshold) | only threshold-many **+** `payload.age.gpg.asc` | Layer 0: separate locations you alone control |
+| 3 | `payload.age.gpg.asc` (encrypted wallet payload) | ciphertext | no (useless without `k`) | replicated: vault attachment + offline copies |
+| 4 | Wallet descriptor / xpubs | recovery-critical metadata | no (privacy leak only) | inside `payload.age.gpg.asc`; copy in vault |
 | 5 | Password-manager master password | revocable | no | your head + Layer 0 sheet |
 | 6 | Password-manager 2FA recovery code | revocable | no | Layer 0 sheet |
 | 7 | Vault-export password | revocable | no | Layer 0 sheet |
@@ -325,7 +325,7 @@ Before placing anything, list what exists. For a typical self-custody setup:
 Jargon, once: **SLIP-39 shares** are word lists produced by splitting a
 secret so that any 2 of 3 (your choice of threshold) can rebuild it and
 fewer reveal nothing. A **wallet descriptor** is the small text that tells
-wallet software how your wallet derives its addresses. **`payload.age`** is
+wallet software how your wallet derives its addresses. **`payload.age.gpg.asc`** is
 one encrypted file produced by the backup tool.
 
 Why not simply split the seed words themselves with SLIP-39 and skip the
@@ -388,26 +388,40 @@ not metal; it is a readable seed sitting in one place.
 
 Note what this table achieves: **row 1 never exists in storable form.** The
 [SLIP-39 + age tool](https://github.com/PeteSparrowBTC/slip39-backup)
-encrypts the seed, passphrase, descriptor, and notes into `payload.age` using
+encrypts the seed, passphrase, descriptor, and notes into `payload.age.gpg.asc` using
 a random 32-byte key `k` ([what a byte is, and why 32 of them](NUMBERS.md#bytes-and-why-a-hex-character-is-half-a-byte)),
 and SLIP-39 splits only `k`. The security boundary
-is *possession of threshold-many shares AND the `payload.age` file*: no
+is *possession of threshold-many shares AND the `payload.age.gpg.asc` file*: no
 single artifact anywhere is sufficient. This is also what makes the solo
 version workable: even someone who found **every** share would hold only
-`k`, never the wallet, without `payload.age`.
+`k`, never the wallet, without `payload.age.gpg.asc`.
 
-**The payload ships in three forms, and any one of them recovers the wallet.**
-`payload.age` is the age ciphertext; `payload.age.txt` is the same bytes in
-ASCII armor, meaning text you can print or paste; `payload.age.gpg` is that
-same age file wrapped a second time in OpenPGP AES-256. Prefer the wrapped
-form for the copy that travels furthest, such as the password-manager
-attachment, because an attacker who reaches it must then defeat both formats
-rather than either one. Keep the unwrapped forms too, for the failure that is
-actually likely: recovery decades from now, by someone under stress, with
-whatever tools still exist. The tool's design record is explicit that shipping
-only the wrapped form would buy resistance to cryptanalysis, the least likely
-failure, at the cost of recovery complexity, the most likely one. Where this
-document says `payload.age`, it means whichever of the three you stored.
+**The payload is one file with two locks: `payload.age.gpg.asc`.** It is the age
+ciphertext wrapped a second time in OpenPGP AES-256 and then ASCII-armored, so
+what you store is text rather than binary. Both locks open with the same key
+`k`, and recovery takes them off in order.
+
+Two locks rather than one because an attacker must then break both formats, and
+a break in either leaves the wallet standing. Text rather than binary because
+armor is a lossless re-encoding that survives every channel this file has to
+pass: a password-manager note, an email to yourself, a printed page, somebody
+retyping it. OpenPGP armor also carries a checksum, so a mangled copy is
+detected rather than discovered at recovery.
+
+**Only this file ships, and that is a correction rather than a preference.** The
+tool previously emitted the unwrapped age file and an age-armored copy alongside
+it, and its design record now records why that was wrong: a second lock is worth
+nothing while the thing it protects is also shipped unlocked, because an
+attacker who reaches the folder simply takes the weaker file. The storage advice
+made that certain rather than merely possible, since it sent the unwrapped copy
+to the password manager, the USB and the safe.
+
+The cost is real and is paid rather than avoided: recovery now needs both locks
+off instead of one. It is softened by GnuPG shipping with Tails when age does
+not, by the tool unwrapping OpenPGP itself so no separate install is required,
+and by both `MANUAL-RECOVERY.txt` and `VERIFY-THIS-BACKUP.txt` carrying the two
+commands. The armor also names itself in a comment header, so a reader who finds
+the text alone in a password manager is not holding an anonymous block.
 
 ## 5. The architecture: three layers
 
@@ -424,15 +438,15 @@ document says `payload.age`, it means whichever of the three you stored.
                  ▼                           ▼
  LAYER 1 - PASSWORD MANAGER (online, zero-knowledge)
  ┌───────────────────────────────────────────────────────────────┐
- │  payload.age (attachment)  ← ciphertext only; k is NOT here   │
+ │  payload.age.gpg.asc (attachment)  ← ciphertext only; k is NOT here   │
  │  verification-record.txt, descriptor copy, all daily logins,  │
  │  email credentials; Emergency Access dead-man switch (§6.5)   │
  └───────────────┬───────────────────────────────────────────────┘
-                 │ encrypted export + payload.age, refreshed together
+                 │ encrypted export + payload.age.gpg.asc, refreshed together
                  ▼
  LAYER 2 - OFFLINE REPLICAS (cheap, promiscuous)
  ┌───────────────────────────────────────────────────────────────┐
- │  USB stick(s): encrypted vault export + payload.age copy      │
+ │  USB stick(s): encrypted vault export + payload.age.gpg.asc copy      │
  │  (bank box / home pouch; ciphertext everywhere is fine)       │
  └───────────────────────────────────────────────────────────────┘
 ```
@@ -445,12 +459,12 @@ control but your estate can eventually reach."
 
 Check the design against the rules:
 
-- **Vault compromised** (malware, phishing): attacker gets `payload.age`
+- **Vault compromised** (malware, phishing): attacker gets `payload.age.gpg.asc`
   (ciphertext), xpubs (privacy leak), and your logins (rotate them). No `k`,
   no coins. Rule 3 holds.
 - **Any one share location burns**: 2-of-3 still recovers `k`. Rule 4 holds.
 - **You forget the master password**: Recovery Sheet. Rule 4 holds.
-- **Password manager company disappears**: Layer 2 export + `payload.age`
+- **Password manager company disappears**: Layer 2 export + `payload.age.gpg.asc`
   copy. Rule 4 holds.
 - **Recovery Sheet stolen**: the finder can enter the vault → you rotate
   everything in it; still no coins (rule 3 already held). Bad day, not a
@@ -483,7 +497,7 @@ onward.
    for the whole waiting period, which is precisely the mechanism working
    when you are in a hospital bed. It is revocable in one click, unilaterally.
    Scope check: it reaches your *vault* (someone can manage your accounts
-   and bills), never your coins; `payload.age` without shares is noise. If
+   and bills), never your coins; `payload.age.gpg.asc` without shares is noise. If
    no candidate exists yet, skip and note it as an open item ([§11](#11-involving-others-later-the-upgrade-path)).
 
 ### Phase B: back up the seed (one offline session)
@@ -503,19 +517,17 @@ onward.
      than borrowed. **One location, one card**, and [§8](#8-storing-the-shares-the-object-and-where-it-goes)
      has the full list of homes, including the ones to avoid. The zips are
      transport; the cards are the backup.
-   - **`payload.age.gpg` → Bitwarden attachment** in a dedicated entry,
-     together with `verification-record.txt`. Use the doubly-wrapped form for
-     this copy specifically: it is the one living where a compromise is most
-     plausible, and it is the one an attacker has to break twice
+   - **`payload.age.gpg.asc` → Bitwarden attachment** in a dedicated entry,
+     together with `verification-record.txt`. It is armored text, so it can go
+     in a note as easily as an attachment
      ([§4](#4-inventory-the-secrets-you-actually-hold)).
-   - **All three payload forms → Layer 2 USB stick(s)** as well. Bitwarden's
-     export does **not** include attachments ([§7](#7-known-traps-each-has-bitten-real-people)), and shares alone cannot
-     recover without it. Replicate generously; every form is ciphertext, and
-     the plain and armored ones are what keep recovery possible with ordinary
-     tools long after this software is gone.
+   - **The same file → Layer 2 USB stick(s)** as well. Bitwarden's export does
+     **not** include attachments ([§7](#7-known-traps-each-has-bitten-real-people)), and shares alone cannot recover
+     without it. Replicate it generously: it is ciphertext behind two locks,
+     and copies of it cost you nothing (rule 5).
    - Delete `output.zip`. It is a distribution package, not a keepsake.
 9. Before funding the wallet seriously: **dry-run recovery** in Recoverer
-   mode with threshold-many shares + `payload.age`, and check the
+   mode with threshold-many shares + `payload.age.gpg.asc`, and check the
    verification record. Rules 6 and 8: the dry run happens on Tails too.
 
 ### Phase C: the access plan, without trusting anyone (an evening)
@@ -529,7 +541,7 @@ onward.
       survivor would otherwise never find.
     - **The recovery steps, written for a smart but non-technical reader**
       (your spouse, your kids' guardian): *"gather any 2 of the 3 share
-      envelopes (locations listed below) + the file `payload.age` from
+      envelopes (locations listed below) + the file `payload.age.gpg.asc` from
       Bitwarden (via Emergency Access) or the USB stick in this box; start
       the included AppImage on the offline computer; use Recoverer mode;
       take this to a professional if you get stuck; the envelopes alone
@@ -552,7 +564,7 @@ onward.
 ### Phase D: make it a system, not an event (recurring)
 
 12. Quarterly (or after significant vault changes): refresh the encrypted
-    vault export + `payload.age` copy on the Layer 2 USB, *together*.
+    vault export + `payload.age.gpg.asc` copy on the Layer 2 USB, *together*.
 13. Annually: full recovery drill ([§9](#9-the-annual-drill)). Solo systems have no second pair of
     eyes; the drill is the only audit you get.
 
@@ -564,7 +576,7 @@ onward.
   [bank]") and never a password, seed word, share, or instruction. The
   access plan lives *in* the box; the will only points at the box.
 - **Bitwarden exports exclude attachments.** Your vault export does *not*
-  contain `payload.age`. Back the file up separately
+  contain `payload.age.gpg.asc`. Back the file up separately
   ([Phase B](#phase-b-back-up-the-seed-one-offline-session) step 8) or the
   export gives false confidence.
 - **The email ↔ vault cycle.** Without 2FA, Bitwarden's new-device login
@@ -598,14 +610,14 @@ onward.
   Save the threshold machinery for the bearer secret.
 - **Descriptor amnesia.** Multisig funds behind a lost descriptor can be
   unrecoverable even with every seed in hand. The descriptor belongs inside
-  `payload.age` *and* anywhere else convenient; it is not spend-sufficient.
+  `payload.age.gpg.asc` *and* anywhere else convenient; it is not spend-sufficient.
 - **Storing the raw seed "just in case" somewhere digital.** The entire
   design collapses if a plaintext copy of row 1 exists in a photo, note, or
-  cloud drive. It exists only inside `payload.age`. Ever.
+  cloud drive. It exists only inside `payload.age.gpg.asc`. Ever.
 - **Recovering on a daily-use computer.** The reconstruction moment is when
   the whole seed exists in one place; on an everyday machine that is exactly
   where malware waits (rule 8). Recovery happens on offline Tails, full stop.
-- **Distributing before drilling.** Old shares + an old `payload.age` are a
+- **Distributing before drilling.** Old shares + an old `payload.age.gpg.asc` are a
   valid backup *forever*. If you hand out artifacts and then redesign, you
   must chase down and destroy every superseded copy. Stabilize solo, drill
   once, then distribute (rule 7).
@@ -748,13 +760,13 @@ For 2-of-3, pick three homes such that:
 | **Home safe** | Deters an opportunist burglar | Shares the fire domain with the house unless it is genuinely fire-rated, and it advertises that something is worth taking. This framework assumes none |
 | **Buried or hidden cache** | Nothing this framework wants | Rejected in [§12](#12-what-this-framework-deliberately-does-not-do): obscurity holds until the one renovation or house move, and no executor will ever find it |
 | **Vehicle or boat** | Nothing | Heat, theft, and it moves |
-| **Cloud, email, or any online storage** | Nothing worth the cost | It breaks the rule 3 margin. Vault compromise is supposed to yield ciphertext and no coins; a card stored online means an attacker holding your vault has a share *and* `payload.age`, and needs only one more. Replicate the payload online instead, which is what rule 5 is for |
+| **Cloud, email, or any online storage** | Nothing worth the cost | It breaks the rule 3 margin. Vault compromise is supposed to yield ciphertext and no coins; a card stored online means an attacker holding your vault has a share *and* `payload.age.gpg.asc`, and needs only one more. Replicate the payload online instead, which is what rule 5 is for |
 | **A phone or USB stick, however hardened** | Real resistance to a burglar, and none of it is the property Layer 0 needs | Rule 2 rules this out and the reasoning is worth having in full, because a GrapheneOS phone is a strong device and the rejection is not about its quality. See below |
 
 **On a relative's home**, the framework is stricter than its own arithmetic
 requires, and it is worth being clear why. Rule 7 says trust is never
 foundational, but the security boundary here is threshold-many cards **plus**
-`payload.age`, and one sealed card is neither. Handing it to your brother is
+`payload.age.gpg.asc`, and one sealed card is neither. Handing it to your brother is
 not a grant of trust in rule 7's sense, and it becomes one only if he could
 ever hold a second card as well. So this option is open to you today. Do not
 combine it with making the same person your Emergency Access contact
@@ -802,7 +814,7 @@ in other cities. What makes that grant safe to give is that a holder's share is
 useless to them, and it is useless only for as long as they cannot reach a
 payload copy. So a share-holder must not also receive the full Recovery Sheet,
 must not be your Emergency Access contact, and must not be handed a Layer 2
-USB, because every one of those is a route to `payload.age`. Keep two lists,
+USB, because every one of those is a route to `payload.age.gpg.asc`. Keep two lists,
 the people who can reach the payload and the people who hold shares, and put
 nobody on both. Your executor is the single deliberate exception: they are
 meant to assemble everything, and what gates them is your death rather than
@@ -898,7 +910,7 @@ So, in order of preference:
 - **Five or six locations you would genuinely trust: re-split to 3-of-5 or
   3-of-6.** Better in both directions, and nothing to keep track of.
 - **Never duplicate every card**, at any location count.
-- **Duplicate `payload.age` freely** before you consider duplicating any card
+- **Duplicate `payload.age.gpg.asc` freely** before you consider duplicating any card
   at all. It is ciphertext (rule 5), it costs nothing, it adds no theft risk,
   and cards without it recover nothing.
 
@@ -912,7 +924,7 @@ Once a year, prove the chain from paper alone; offline Tails is the venue
 2. On a clean machine, log into Bitwarden using only the sheet (password +
    2FA recovery code path).
 3. Open the vault export with the export password; confirm it is current.
-4. Retrieve `payload.age` (from vault attachment *and* confirm the USB copy
+4. Retrieve `payload.age.gpg.asc` (from vault attachment *and* confirm the USB copy
    matches).
 5. Gather 2 of the 3 shares (rotate which two each year; this audits the
    locations too) and run Recoverer mode on Tails; verify against
@@ -934,16 +946,16 @@ belief.
 | Forgotten master password | Recovery Sheet (Layer 0) |
 | Lost phone / 2FA device | 2FA recovery code on the sheet |
 | House fire destroys home pouch + devices | bank-box sheet copy; 2-of-3 tolerates the lost share; cloud vault intact |
-| Bitwarden outage / account loss / company failure | Layer 2 export + `payload.age` copy |
+| Bitwarden outage / account loss / company failure | Layer 2 export + `payload.age.gpg.asc` copy |
 | Vault fully compromised (malware, phishing) | rule 3: attacker holds ciphertext + logins → rotate; coins untouched |
 | Malware on the machine you recover with | rule 8: you never recover on an online machine, so this scenario is designed out |
 | Recovery Sheet stolen | rotate master password, export password, re-secure; coins untouched |
 | One share location destroyed | threshold margin; re-split to a fresh 2-of-3 promptly, you are now at zero margin |
 | **Two share locations destroyed at once** | **nothing. This is the limit of 2-of-3; geographic separation is what makes it unlikely, and [§11](#11-involving-others-later-the-upgrade-path) is what fixes it properly** |
-| A share is found by a stranger | reveals nothing alone (and even all shares yield only `k` without `payload.age`); re-split at leisure |
+| A share is found by a stranger | reveals nothing alone (and even all shares yield only `k` without `payload.age.gpg.asc`); re-split at leisure |
 | A share-holder is also on the payload list (full Recovery Sheet, Emergency Access, a Layer 2 USB) | the threshold, and nothing else. The second layer was the whole reason a holder's share was safe to give, so once it is gone you are relying on a plain 3-of-5: three such holders can spend. Keep the two lists disjoint ([§11](#11-involving-others-later-the-upgrade-path)) |
 | **You copied every share, so six locations hold your 2-of-3** | **nothing, and you are now weaker than you were with three.** The spare copies hold one of each between them, so they recover the wallet on their own: a second complete backup built from your three weakest locations. Two break-ins still do it and the attacker picks the easiest two of six. Six locations are enough for a 3-of-6, which needs three break-ins and survives the same losses (rule 4, [§8](#8-storing-the-shares-the-object-and-where-it-goes)) |
-| `payload.age` lost everywhere | **unrecoverable. This is the artifact to replicate generously (rule 5)** |
+| `payload.age.gpg.asc` lost everywhere | **unrecoverable. This is the artifact to replicate generously (rule 5)** |
 | You are incapacitated | Emergency Access (vault: bills, email, accounts) after the waiting period; **coins wait**, no solo mechanism covers them ([§11](#11-involving-others-later-the-upgrade-path)) |
 | You die | **by default: the coins are lost.** This framework is not an inheritance plan. The access plan in the bank box gives your estate a chance (a diligent executor, the will breadcrumb, the legal process); [§11](#11-involving-others-later-the-upgrade-path) is the real fix |
 | You die and no will mentions the box | nothing; the thread was never tied to anything |
@@ -1012,13 +1024,13 @@ redone:
   **multisig protects the *use* of keys; this framework protects the
   *backup* of each key.** The backup tool already supports per-cosigner
   seeds and stores the descriptor (which multisig makes truly
-  recovery-critical) inside `payload.age`.
+  recovery-critical) inside `payload.age.gpg.asc`.
 
 **Keep the two lists disjoint.** The steps above grant two different things:
 a route to the payload (the full Recovery Sheet, Emergency Access, a Layer 2
 USB), or a share. Never both to the same person. You can tell a holder their
 share is one useless-alone piece because it is true, and it stops being true
-the moment that person can also reach `payload.age`. Nothing warns you when
+the moment that person can also reach `payload.age.gpg.asc`. Nothing warns you when
 the two grants drift onto the same name, because each was reasonable on the
 day you made it, so re-read the list rather than trusting your memory of it
 ([§8](#8-storing-the-shares-the-object-and-where-it-goes)). The executor is

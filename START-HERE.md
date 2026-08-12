@@ -100,7 +100,7 @@ If two tools disagree, stop and find out why before going further.
 ## 3. Make the backup
 
 **30 minutes, same offline session. You end with three share cards and the
-payload files.**
+payload file.**
 
 Run [slip39-backup](https://github.com/PeteSparrowBTC/slip39-backup) in Owner
 mode ([full instructions](https://github.com/PeteSparrowBTC/slip39-backup/blob/main/TAILS_INSTRUCTIONS.md)).
@@ -119,7 +119,7 @@ mode ([full instructions](https://github.com/PeteSparrowBTC/slip39-backup/blob/m
    ([what goes on a card, and what must not](README.md#8-storing-the-shares-the-object-and-where-it-goes)).
 5. **Destroy both roll logs.** Log one *is* your seed in plain text and log two
    *is* your backup key. You have the words and the hex now.
-6. Save the payload files, then delete `output.zip`.
+6. Save `payload.age.gpg.asc`, then delete `output.zip`.
 
 ---
 
@@ -135,8 +135,8 @@ backup sitting in one place.
 | Share card 1 | Home, in the fireproof pouch |
 | Share card 2 | Bank deposit box |
 | Share card 3 | Your third place: another bank, a property you own, a storage unit in your name |
-| `payload.age.gpg` | Password manager attachment, in its own entry |
-| All payload forms | Both USB sticks. Replicate freely; it is ciphertext |
+| `payload.age.gpg.asc` | Password manager attachment, in its own entry |
+| The same file again | Both USB sticks. Replicate freely; it is ciphertext behind two locks |
 | At least one payload copy | Somewhere holding no share card |
 
 Seal each card in an envelope with your signature across the flap, so you can
@@ -165,7 +165,7 @@ the box exists**, which is a breadcrumb and never a secret.
 
 **An hour. Do this before the wallet holds anything you would miss.**
 
-1. **Dry-run recovery** on Tails: gather two share cards plus a payload file, run
+1. **Dry-run recovery** on Tails: gather two share cards plus the payload file, run
    Recoverer mode, and check the result against the verification record.
 2. **Test spend.** Send a small amount in, then send it out again. Receiving
    proves nothing; spending proves the whole path.
