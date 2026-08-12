@@ -57,6 +57,15 @@ jobs:
       # reader is to verify what they download should not skip that in its own
       # build, and the cost is one extra fetch.
       #
+      # --fail earns its place. Without it curl treats an HTTP error page as a
+      # successful transfer: it writes the error body to the output file and
+      # exits 0, and the build dies several steps later with dpkg reporting
+      # "not a Debian format archive". That is precisely what happened on
+      # 2026-08-12, the fourth failure of this step in two days and the only one
+      # a retry alone could not have helped with, because nothing had reported
+      # an error yet. With --fail the HTTP status becomes a curl error, which
+      # makes it both visible and retryable.
+      #
       # Note what it is not. The checksums file travels from the same host as
       # the package it describes, so this catches a corrupted or truncated
       # download rather than a compromised release. That is the same limit the
@@ -67,7 +76,10 @@ jobs:
           set -euo pipefail
 
           fetch() {
-            curl --silent --show-error --location                  --retry 5 --retry-all-errors --retry-delay 2                  --connect-timeout 20 --max-time 300                  --output "$1" "$2"
+            curl --silent --show-error --location --fail \
+                 --retry 5 --retry-all-errors --retry-delay 2 \
+                 --connect-timeout 20 --max-time 300 \
+                 --output "$1" "$2"
           }
 
           base="https://github.com/gohugoio/hugo/releases/download/v${HUGO_VERSION}"
@@ -79,8 +91,10 @@ jobs:
           # Fixed-string match on the two-space separator sha256sum writes, so
           # the version's dots cannot act as wildcards and the _withdeploy_
           # variant cannot be picked by accident.
-          grep -F "  $deb" checksums.txt > wanted.txt             || { echo "no checksum published for $deb" >&2; exit 1; }
-          test "$(wc -l < wanted.txt)" -eq 1             || { echo "expected exactly one checksum line for $deb" >&2; exit 1; }
+          grep -F "  $deb" checksums.txt > wanted.txt \
+            || { echo "no checksum published for $deb" >&2; exit 1; }
+          test "$(wc -l < wanted.txt)" -eq 1 \
+            || { echo "expected exactly one checksum line for $deb" >&2; exit 1; }
           sha256sum -c wanted.txt
 
           sudo dpkg -i "$deb"
