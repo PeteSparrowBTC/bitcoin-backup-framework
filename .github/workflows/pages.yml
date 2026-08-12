@@ -42,11 +42,48 @@ jobs:
         with:
           go-version: stable
 
+      # Retried, and checked against the published checksums.
+      #
+      # The retry is not defensive programming for its own sake. This one step
+      # failed three different ways in a single day on a repository nobody was
+      # attacking: an intercepted TLS handshake (curl 60), a died connection
+      # (curl 56), and an empty reply (curl 52). Each is transient, each was
+      # fatal without a retry, and each left main published from the previous
+      # commit while the newest one silently never shipped.
+      #
+      # The checksum answers a different question from the retry. The retry
+      # decides whether the file arrived; the checksum decides whether what
+      # arrived is what Hugo published. A guide whose first instruction to the
+      # reader is to verify what they download should not skip that in its own
+      # build, and the cost is one extra fetch.
+      #
+      # Note what it is not. The checksums file travels from the same host as
+      # the package it describes, so this catches a corrupted or truncated
+      # download rather than a compromised release. That is the same limit the
+      # guide states about its own tools, and it is worth having for the same
+      # reason.
       - name: Install Hugo extended
         run: |
-          curl -sSLo hugo.deb \
-            "https://github.com/gohugoio/hugo/releases/download/v${HUGO_VERSION}/hugo_extended_${HUGO_VERSION}_linux-amd64.deb"
-          sudo dpkg -i hugo.deb
+          set -euo pipefail
+
+          fetch() {
+            curl --silent --show-error --location                  --retry 5 --retry-all-errors --retry-delay 2                  --connect-timeout 20 --max-time 300                  --output "$1" "$2"
+          }
+
+          base="https://github.com/gohugoio/hugo/releases/download/v${HUGO_VERSION}"
+          deb="hugo_extended_${HUGO_VERSION}_linux-amd64.deb"
+
+          fetch "$deb" "$base/$deb"
+          fetch checksums.txt "$base/hugo_${HUGO_VERSION}_checksums.txt"
+
+          # Fixed-string match on the two-space separator sha256sum writes, so
+          # the version's dots cannot act as wildcards and the _withdeploy_
+          # variant cannot be picked by accident.
+          grep -F "  $deb" checksums.txt > wanted.txt             || { echo "no checksum published for $deb" >&2; exit 1; }
+          test "$(wc -l < wanted.txt)" -eq 1             || { echo "expected exactly one checksum line for $deb" >&2; exit 1; }
+          sha256sum -c wanted.txt
+
+          sudo dpkg -i "$deb"
           hugo version
 
       # Proves the leak check can still fail before trusting it on real output.
