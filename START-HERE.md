@@ -12,6 +12,12 @@ non-technical person could follow.
 **What it costs.** Two evenings, a week of errands in between, and about an hour
 a year afterwards.
 
+<!-- revision:start -->
+**Revised 2026-08-12.** These steps name files and screens in two tools that
+change. If that date is old, read the tools' own instructions alongside this
+page rather than instead of it.
+<!-- revision:end -->
+
 **What it does not do.** It is not an inheritance plan, and by default your coins
 are lost when you die. Step 7 leaves your estate a thread to pull, and
 [§11](README.md#11-involving-others-later-the-upgrade-path) is the real fix, for

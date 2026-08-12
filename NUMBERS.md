@@ -10,6 +10,12 @@ rest of the guide can say "32 bytes" without stopping to explain itself, and so
 that when a tool shows you a number you can check whether it is the number it
 should be.
 
+<!-- revision:start -->
+**Revised 2026-08-12.** This page ages better than the rest of the guide,
+because arithmetic does not move. What can move is which counts the tools
+recommend, so check those against the tools rather than against this page.
+<!-- revision:end -->
+
 ---
 
 ## A bit is one halving

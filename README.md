@@ -59,6 +59,15 @@ and inheritance planning, and where the literature pushed back on our
 choices, we changed them. [§13](#13-what-we-read-and-what-each-source-changed) lists each source and what it contributed or
 challenged.
 
+<!-- revision:start -->
+**Revised 2026-08-12.** Rule 7 says an undated artifact cannot be told apart
+from a current one, and that applies to this document as much as to a share
+card. Most of what is written here is a claim about something else: what the
+backup tool emits and calls it, what it defaults to, what other projects offer.
+If the date above is old, check the tool's own output before trusting the
+filenames on this page.
+<!-- revision:end -->
+
 ---
 
 ## 1. What you are protecting, and the two ways you lose
