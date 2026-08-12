@@ -1,0 +1,106 @@
+{{/*
+  Page context menu, overriding the theme's.
+
+  WHAT CHANGES, AND WHY
+
+  The theme's version is a copy-as-markdown button with a dropdown, and the
+  assistant links are an optional extra hanging off the bottom. Here the
+  assistants are the whole point and the markdown handling is gone:
+
+    - "Copy as Markdown" and "View as Markdown" are removed. They are also not
+      configurable in the theme, which is the only reason this file exists.
+    - The primary button is now the FIRST entry in page.contextMenu.links, so
+      which assistant is the default is decided in hugo.yaml rather than here.
+      No vendor name appears in this template.
+    - The dropdown holds the remaining entries, and is not rendered at all when
+      there is only one, because the theme's JS reads the dropdown out of the
+      container on finding a toggle and would meet a null.
+
+  A SIDE EFFECT WORTH KEEPING
+
+  The theme's copy button pre-fetches each page's markdown on DOMContentLoaded,
+  so every page was making an extra request on load, and on the front page that
+  request was a 404. Dropping the button drops the fetch.
+
+  WHAT STAYS
+
+  The markdown output formats stay configured. Nothing here needs them now, but
+  /framework/index.md and friends remain fetchable, which is what /llms.txt
+  points an assistant at, and the guard in scripts/check-no-external-requests.sh
+  still passes because every link below is an <a href> the reader chooses to
+  follow rather than something the browser loads on its own.
+
+  Classes are copied from the theme so this renders as native rather than as an
+  override. Keep them in step if the theme's styling moves.
+*/}}
+{{- $enableGlobal := site.Params.page.contextMenu.enable | default false -}}
+{{- $enablePage := .Params.contextMenu -}}
+{{- $enable := cond (ne $enablePage nil) $enablePage $enableGlobal -}}
+{{- $links := site.Params.page.contextMenu.links | default slice -}}
+
+{{- if and $enable $links -}}
+  {{- $pageURL := .Permalink -}}
+  {{- $pageTitle := .Title -}}
+  {{- $markdownURL := "" -}}
+  {{- with .OutputFormats.Get "markdown" -}}{{- $markdownURL = .Permalink -}}{{- end -}}
+  {{- $values := dict "url" $pageURL "title" $pageTitle "markdown_url" $markdownURL -}}
+
+  {{- $primary := index $links 0 -}}
+  {{- $rest := after 1 $links -}}
+  {{- $primaryURL := partial "utils/template-url.html" (dict "template" $primary.url "values" $values) -}}
+
+  <div class="hextra-page-context-menu hx:relative hx:inline-flex hx:shrink-0">
+    <div class="hx:inline-flex hx:rounded-lg hx:border hx:border-gray-200 hx:transition-colors hx:hover:border-gray-300 hx:dark:border-neutral-800 hx:dark:hover:border-neutral-700">
+      <a
+        href="{{ $primaryURL }}"
+        target="_blank"
+        rel="noopener noreferrer"
+        class="hx:inline-flex hx:cursor-pointer hx:items-center hx:gap-1.5 hx:bg-transparent hx:px-2.5 hx:py-1 hx:text-sm hx:font-medium hx:text-gray-700 hx:transition-colors hx:hover:bg-slate-50 hx:dark:text-gray-300 hx:dark:hover:bg-neutral-900 hx:ltr:rounded-l-lg hx:rtl:rounded-r-lg hx:hextra-focus-visible-inset"
+        title="{{ $primary.name }}"
+      >
+        {{- with $primary.icon -}}
+        <div class="hx:pointer-events-none hx:size-4">
+          {{- partial "utils/icon.html" (dict "name" . "attributes" "height=16 width=16") -}}
+        </div>
+        {{- end -}}
+        <span>{{ $primary.name }}</span>
+      </a>
+      {{- if $rest }}
+      <button
+        class="hextra-page-context-menu-toggle hx:inline-flex hx:cursor-pointer hx:items-center hx:justify-center hx:bg-transparent hx:px-1.5 hx:py-1 hx:text-gray-500 hx:transition-colors hx:hover:bg-slate-50 hx:hover:text-gray-700 hx:dark:text-gray-400 hx:dark:hover:bg-neutral-900 hx:dark:hover:text-gray-300 hx:ltr:rounded-r-lg hx:rtl:rounded-l-lg hx:hextra-focus-visible-inset"
+        data-state="closed"
+        aria-label="{{ (T "togglePageContextMenu") | default "More assistants" }}"
+        aria-expanded="false"
+        aria-haspopup="menu"
+      >
+        <div class="hx:size-4 hx:transition-transform hx:duration-200" data-chevron>
+          {{- partial "utils/icon.html" (dict "name" "chevron-down" "attributes" "height=16 width=16") -}}
+        </div>
+      </button>
+      {{- end }}
+    </div>
+    {{- if $rest }}
+    <ul class="hextra-page-context-menu-dropdown not-prose hx:hidden hx:absolute hx:top-full hx:left-0 hx:sm:left-auto hx:sm:right-0 hx:mt-1 hx:z-20 hx:max-h-64 hx:overflow-auto hx:rounded-lg hx:border hx:border-gray-200 hx:bg-white hx:p-1 hx:text-sm hx:shadow-lg hx:dark:border-neutral-700 hx:dark:bg-neutral-900" role="menu">
+      {{- range $rest -}}
+        {{- $linkURL := partial "utils/template-url.html" (dict "template" .url "values" $values) -}}
+        <li role="none">
+          <a
+            href="{{ $linkURL }}"
+            target="_blank"
+            rel="noopener noreferrer"
+            role="menuitem"
+            class="hx:flex hx:w-full hx:cursor-pointer hx:select-none hx:items-center hx:gap-2 hx:whitespace-nowrap hx:rounded-sm hx:px-2 hx:py-1.5 hx:text-sm hx:text-gray-700 hx:outline-none hx:transition-colors hx:hover:bg-gray-100 hx:hover:text-gray-900 hx:dark:text-gray-300 hx:dark:hover:bg-neutral-800 hx:dark:hover:text-gray-100"
+          >
+            {{- with .icon -}}
+            <div class="hx:size-4 hx:shrink-0 hx:text-gray-500 hx:dark:text-gray-400">
+              {{- partial "utils/icon.html" (dict "name" . "attributes" "height=16 width=16") -}}
+            </div>
+            {{- end -}}
+            {{ .name }}
+          </a>
+        </li>
+      {{- end -}}
+    </ul>
+    {{- end }}
+  </div>
+{{- end -}}

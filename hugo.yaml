@@ -77,19 +77,25 @@ params:
   # sidebars outward and leaves the text where it was.
   page:
     width: full
-    # The page context menu: copy this page as markdown, view its raw source, or
-    # open it in a chat assistant. Readers arrive at a long security document
-    # with questions it does not answer for their situation, and asking one of
-    # these is what they are going to do anyway. Handing them the whole page
-    # beats them pasting a half-remembered summary of it.
+    # The page context menu. The theme's version is a copy-as-markdown control
+    # with assistants bolted on underneath; layouts/_partials/components/
+    # page-context-menu.html reverses that, because the assistants are the
+    # point here and the markdown buttons were not worth the space.
     #
-    # This does not weaken the no-external-requests promise. The two entries
-    # below are ordinary links: nothing is fetched, nothing is told that you
-    # opened the page, and the check in scripts/check-no-external-requests.sh
-    # ignores <a href> for exactly that reason while still failing on anything
-    # the browser would load on its own.
+    # The FIRST entry is the button. The rest are the dropdown. Reorder this
+    # list to change which assistant is the default; nothing in the template
+    # names a vendor.
     #
-    # The prompt text is ours rather than the theme's default, and it ends by
+    # Readers arrive at a long security document with questions it does not
+    # answer for their situation, and asking an assistant is what they are going
+    # to do anyway. Handing over the whole page beats a half-remembered summary.
+    #
+    # This does not weaken the no-external-requests promise. Every entry is an
+    # ordinary link: nothing is fetched, nothing is told that you opened the
+    # page, and scripts/check-no-external-requests.sh ignores <a href> for that
+    # reason while still failing on anything the browser would load by itself.
+    #
+    # The prompts are ours rather than the theme's default, and they end by
     # telling the assistant not to ask for secrets. Everything on this site is
     # public and costs nothing to share. A reader's seed words, shares and
     # payload file are not, and no question about this guide needs them.
@@ -102,6 +108,19 @@ params:
         - name: Open in Claude
           icon: claude
           url: "https://claude.ai/new?q=I%27m+reading+this+bitcoin+backup+guide%3A+{url}%0AHelp+me+understand+it+and+pressure-test+whether+it+fits+my+situation.+Do+not+ask+me+for+my+seed+words%2C+my+SLIP-39+shares+or+my+payload+file%2C+and+I+will+not+paste+them."
+        # Gemini has no way to receive a prompt from a link. gemini.google.com
+        # ignores ?q= and ?prompt= (those work only through a browser extension),
+        # and AI Studio declined the same request, so both would open an empty
+        # chat with no idea what the reader was looking at: a button that appears
+        # to work and does nothing, which is the failure mode this whole document
+        # is written against.
+        #
+        # Google AI Mode is the one surface of theirs that takes a query, and it
+        # is Gemini answering. The prompt is shorter than the other two because
+        # this one travels as a search query rather than as a chat message.
+        - name: Open in Gemini
+          icon: gemini
+          url: "https://www.google.com/search?udm=50&q=Read+this+bitcoin+backup+guide+and+explain+it+to+me%3A+{url}"
   navbar:
     width: full
     displayTitle: true
