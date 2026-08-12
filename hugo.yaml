@@ -46,6 +46,18 @@ menu:
     - name: slip39-backup
       url: https://github.com/PeteSparrowBTC/slip39-backup
       weight: 5
+    # One-on-one work, pointed at the booking section of petesparrow.com rather
+    # than at Cal.com directly, so the offer can be rewritten there without
+    # touching this repository.
+    #
+    # Rendered as a solid orange button by assets/css/custom.css, which hooks it
+    # by href because Hextra gives menu entries no class of their own. It is the
+    # last item, so it reads as an offer rather than as another section of the
+    # guide, and the guide never depends on it: everything here is free to
+    # follow alone and says so.
+    - name: Book a free intro call
+      url: https://petesparrow.com/#book
+      weight: 10
 
 params:
   # Full width throughout. The framework carries wide tables (the locations
