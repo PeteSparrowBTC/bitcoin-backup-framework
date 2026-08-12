@@ -57,6 +57,14 @@ jobs:
       # reader is to verify what they download should not skip that in its own
       # build, and the cost is one extra fetch.
       #
+      # --retry-delay is deliberately NOT set. curl backs off exponentially on its
+      # own (1s, 2s, 4s, 8s...) and setting a fixed delay switches that off. The
+      # first version of this step set 2 seconds, so five retries covered ten
+      # seconds, and on 2026-08-12 GitHub's release host answered 503 for longer
+      # than that and the build failed anyway. --retry-max-time 180 bounds the
+      # whole sequence instead, so a short outage is absorbed and a long one
+      # still fails inside three minutes rather than hanging the job.
+      #
       # --fail earns its place. Without it curl treats an HTTP error page as a
       # successful transfer: it writes the error body to the output file and
       # exits 0, and the build dies several steps later with dpkg reporting
@@ -77,7 +85,7 @@ jobs:
 
           fetch() {
             curl --silent --show-error --location --fail \
-                 --retry 5 --retry-all-errors --retry-delay 2 \
+                 --retry 6 --retry-all-errors --retry-max-time 180 \
                  --connect-timeout 20 --max-time 300 \
                  --output "$1" "$2"
           }
