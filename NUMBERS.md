@@ -110,8 +110,8 @@ there are ordered outcomes, and the gap widens with every die you add:
 | 5 | 7,776 | 252 | 12.92 | 7.98 | **4.9** |
 | 6 | 46,656 | 462 | 15.51 | 8.85 | **6.7** |
 
-So the convenience and the risk grow together, and the risk is of the worst
-kind: invisible. A seed built from sorted throws looks exactly like a seed built
+So the more dice you add, the more the mistake costs, and the mistake leaves no
+trace. A seed built from sorted throws looks exactly like a seed built
 correctly, imports fine everywhere, and derives valid addresses. Nothing tells
 you, which is the same property that made the 2026 Coldcard defect so expensive.
 
@@ -247,7 +247,7 @@ purpose, and the code is not treated as though it were security.
 | --- | --- |
 | 2.585 bits per roll | log₂(6); six is not a power of two |
 | 50 rolls | 128 ÷ 2.585 = 49.5, rounded up. The vendor minimum |
-| **60 rolls** | Clears 128 bits on the pessimistic measure, not just the average |
+| **60 rolls** | Clears 128 bits on the pessimistic measure as well as the average |
 | 99 rolls | 256 ÷ 2.585 = 99.03, rounded down. Reaches 255.9, not 256 |
 | **111 rolls** | Clears 256 bits with margin for a real die |
 | 2,048-word list | 2¹¹, so one BIP-39 word is 11 bits |
