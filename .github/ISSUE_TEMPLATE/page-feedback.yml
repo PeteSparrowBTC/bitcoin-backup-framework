@@ -1,0 +1,41 @@
+name: Something on a page is wrong
+description: A correction, an objection, or a question the guide should answer and does not
+title: "Page: "
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Objections are the point of this form, not a nuisance to it. This
+        document has already changed several times because a source or a reader
+        pushed back on a specific claim, and section 13 lists what each one
+        changed.
+
+        **Please do not put any real secret in here.** Not a seed word, not a
+        SLIP-39 share, not a passphrase, not the contents of your payload file.
+        This is a public repository and an issue cannot be unpublished. Nothing
+        about a page needs them.
+  - type: input
+    id: page
+    attributes:
+      label: Which page
+      description: Filled in for you if you arrived from the site. Otherwise paste the URL or name the section.
+      placeholder: https://petesparrowbtc.github.io/bitcoin-backup-framework/...
+    validations:
+      required: true
+  - type: textarea
+    id: what
+    attributes:
+      label: What is wrong, or what you disagree with
+      description: Quote the sentence if you can. A specific claim is easier to check than a general impression.
+    validations:
+      required: true
+  - type: textarea
+    id: instead
+    attributes:
+      label: What it should say instead
+      description: Optional, and the most useful thing you can write. A replacement sentence beats a description of the problem.
+  - type: input
+    id: source
+    attributes:
+      label: Anything that backs it up
+      description: Optional. A specification, a measurement, a link, or the tool behaviour you observed.

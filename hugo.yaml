@@ -121,6 +121,30 @@ params:
         - name: Open in Gemini
           icon: gemini
           url: "https://www.google.com/search?udm=50&q=Read+this+bitcoin+backup+guide+and+explain+it+to+me%3A+{url}"
+    # "Suggest a change", beside the assistants at the top of every page.
+    #
+    # It opens the issue form in .github/ISSUE_TEMPLATE/page-feedback.yml with
+    # the page already filled in. template-url.html url-encodes {url}, which is
+    # what a query parameter needs, and `page` is the id of the form's first
+    # field, which is how GitHub prefills it.
+    #
+    # An issue rather than an edit link, for two reasons. The pages here are
+    # generated, so "edit this page" would open content/ which is gitignored and
+    # does not exist in the repository; pointing it at the right source file
+    # would still ask the reader to work out which of four documents a section
+    # came from. And most objections are not a diff. Someone who thinks the
+    # 2-of-3 default is wrong for their situation has something worth hearing
+    # and no line to change.
+    #
+    # It sits outside the assistant dropdown deliberately. Asking a machine
+    # about the page and telling a person the page is wrong are different acts,
+    # and the second one has to be visible without opening a menu that was
+    # opened for the first.
+    suggestChange:
+      enable: true
+      name: Suggest a change
+      icon: pencil-alt
+      url: "https://github.com/PeteSparrowBTC/bitcoin-backup-framework/issues/new?template=page-feedback.yml&page={url}"
   navbar:
     width: full
     displayTitle: true

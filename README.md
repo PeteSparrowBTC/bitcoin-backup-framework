@@ -59,6 +59,16 @@ and inheritance planning, and where the literature pushed back on our
 choices, we changed them. [§13](#13-what-we-read-and-what-each-source-changed) lists each source and what it contributed or
 challenged.
 
+**If you think something here is wrong, say so.** Every page on the site carries
+a *Suggest a change* button that opens an
+[issue](https://github.com/PeteSparrowBTC/bitcoin-backup-framework/issues/new?template=page-feedback.yml)
+with the page filled in, and objections are the point of it rather than a
+nuisance to it: [§13](#13-what-we-read-and-what-each-source-changed) is a list of
+things this document changed because a source or a reader pushed back on a
+specific claim. Quote the sentence you disagree with, and if you can, write the
+one that should replace it. Never put a seed word, a share or a passphrase in an
+issue; the repository is public and nothing about a page needs them.
+
 <!-- revision:start -->
 **Revised 2026-08-12.** Rule 7 says an undated artifact cannot be told apart
 from a current one, and that applies to this document as much as to a share
