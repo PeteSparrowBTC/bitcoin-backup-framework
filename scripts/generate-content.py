@@ -63,6 +63,7 @@ REPO_FILE_LINKS = {
 SIBLING_PAGES = {
     "NUMBERS.md": "numbers",
     "LANDSCAPE.md": "landscape",
+    "ACTIONS.md": "actions",
 }
 
 
@@ -347,7 +348,7 @@ write("_index.md", {"title": yaml_quote("Start here"), "weight": 1}, quickstart)
 
 write(
     "framework/_index.md",
-    {"title": yaml_quote("The framework"), "weight": 2},
+    {"title": yaml_quote("The framework"), "weight": 3},
     retarget(preamble, from_depth=1),
 )
 
@@ -372,8 +373,9 @@ for section in sections:
 # The standalone pages, each beside the framework rather than inside it, because
 # both are referenced from the quickstart and from several sections.
 STANDALONE = [
-    ("NUMBERS.md", "numbers", "How the numbers work", 3),
-    ("LANDSCAPE.md", "landscape", "What else is out there", 4),
+    ("ACTIONS.md", "actions", "Generate, back up, or both", 2),
+    ("NUMBERS.md", "numbers", "How the numbers work", 4),
+    ("LANDSCAPE.md", "landscape", "What else is out there", 5),
 ]
 
 for source, page, title, weight in STANDALONE:
