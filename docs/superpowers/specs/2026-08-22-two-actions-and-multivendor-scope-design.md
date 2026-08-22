@@ -240,3 +240,40 @@ a defect. The backup tool's own default is 3-of-5 cards, so the instruction to c
    differently.
 4. The roll sheet arrives with `dice-to-seed` pull request 33, which is open. The generation
    instructions depend on it landing.
+
+## 13. A page on the cryptography, added after the plan was written
+
+Requested during execution: a page explaining what SHA-256 and the rest of the cryptography here
+is, and how it works.
+
+**Placement.** Its own sibling page, `CRYPTOGRAPHY.md`, beside `NUMBERS.md` rather than a section
+of the framework. That is the pattern the guide already has: NUMBERS exists so the framework can
+say "32 bytes" without stopping to explain itself, and this page exists so the framework can say
+"SHA-256" or "threshold" without the same interruption. The framework is already long enough that
+a reader cannot link into it precisely, which is the argument the 2026-08-09 plan made for
+splitting things out rather than in.
+
+**Depth.** For each primitive: what goes in, what comes out, what makes it hard to reverse, what
+it guarantees, what it does not, and why this framework relies on it. Not the internals. No
+compression functions, no round structure, no field arithmetic. The stated reader is a smart
+non-specialist, and section 12 treats complexity as a risk axis in itself, so a primer that turns
+into a cryptography course would contradict the document it serves. The arithmetic stays in
+NUMBERS, and the two pages cross-link rather than repeat.
+
+**What it covers**, which is everything this framework actually relies on and nothing it does not:
+
+| Subject | What the page has to settle |
+| --- | --- |
+| One-way functions and SHA-256 | Dice string in, 32 bytes out, no way back. Same input gives the same output, which is what lets you recompute a seed from a sheet and is also why reusing a sheet makes the backup key the wallet it protects |
+| BIP-39 | Entropy plus checksum becomes words; the words plus an optional passphrase become the seed through PBKDF2-HMAC-SHA512 at 2048 iterations, with the passphrase as salt. Why a wrong passphrase opens a valid empty wallet instead of reporting an error |
+| BIP-32 | One seed, many keys, and why the descriptor and the fingerprint are recovery-critical while an xpub is a privacy leak rather than a spending risk |
+| SLIP-39 | Shamir's threshold sharing: threshold-many cards reconstruct, and fewer reveal nothing at all rather than revealing a little. What it protects here is the backup key only, never the seed |
+| age with scrypt | The backup key used as a passphrase, scrypt's work factor, and ChaCha20-Poly1305's authentication, which means tampering is detected rather than silently decrypted into something wrong |
+| OpenPGP AES-256 and ASCII armor | Why a second lock over the first, what armor's CRC-24 catches, and why armored text can live in a password manager entry |
+| Signatures against checksums | Tails publishes a signature; the tools publish a SHA-256 file. What each one proves, and the point the roll sheet exists for: none of them can see a mis-press |
+| What none of it protects | Weak entropy at the root, a filled sheet left in a drawer, and threshold-many cards sitting in the same place as the payload |
+
+**Why it ships with this change rather than after it.** It adds a sibling page and reorders the
+sidebar weights, which is the same machinery section 11 describes for `ACTIONS.md`. Doing it later
+means editing `generate-content.py` and the weights twice, and resolving a conflict in the same two
+lists.
