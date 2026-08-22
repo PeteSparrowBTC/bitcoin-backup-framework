@@ -11,9 +11,9 @@ non-technical person could follow.
 **Which journey is yours.** This framework covers two actions, generating
 seeds and backing seeds up, and either is useful without the other. You might
 be doing both in one sitting, backing up two cosigner seeds you already hold,
-or generating yours and stopping before the backup. [Which parts you
-need](ACTIONS.md) names the three journeys and which steps below belong to
-each.
+generating one seed and bringing the other, or generating yours and stopping
+before the backup. [Which parts you need](ACTIONS.md) names the four journeys,
+how many sheets each one prints, and which steps below belong to each.
 
 **What it costs.** Two evenings, a week of errands in between, and about an hour
 a year afterwards.
