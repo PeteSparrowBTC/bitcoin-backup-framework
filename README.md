@@ -730,48 +730,63 @@ destroys logs inside the session rather than saving work for later.
    verify either way. It is blank, so printing it now carries nothing;
    nothing filled in ever goes near a printer, because a spooler, an
    internal disk and a network queue are all memory this framework cannot
-   audit. Print one sheet for each roll you expect to make: three if you
-   are generating both cosigner seeds and building the backup in this
-   sitting, two if you are generating the seeds alone, one if you already
-   hold both seeds and are only rolling for the backup key. A spare blank
-   sheet costs nothing if you print one you do not end up using. Set aside
-   a blank card for every value you expect to derive, too: one per
-   cosigner seed, plus one for the backup key if you are rolling for it.
-   Step 7 writes each value onto its card before it clears the roll log,
-   and there is nothing to write on if you arrive without them. Step 11
-   makes a separate set of cards for the shares.
+   audit. Print one sheet for every roll you will make: one for each
+   cosigner seed you are generating here, plus one for the backup key if
+   you are building the backup in this sitting. Set aside a blank card for
+   every value you will derive, which is the same count. Step 7 writes
+   each value onto its card before it clears the roll log, and there is
+   nothing to write on if you arrive without them. Step 11 makes a
+   separate set of cards for the shares. Print one spare sheet and hold
+   back one spare card as well: printing happens here and the session
+   that follows is offline, so that spare pair is what you roll the key
+   on if you meant to stop after generating and then change your mind.
 7. Boot Tails **offline**. **If you already hold both cosigner seeds,
    skip the seed rolls**: roll one sheet only, for the backup key, using
-   the same cycle described below. Seeds you bring have no dice log and
-   cannot be given one, so rule 0 is answered by how each of them was
-   made rather than by anything you do here: a backup preserves exactly
-   the strength a seed had when it was made, and cannot add any. Read
+   the same cycle described below. **If you hold one cosigner seed and are
+   generating the other**, roll for the one you are generating, and for
+   the key as well if you are building the backup here. Any seed you
+   bring, one of them or both, has no dice log and cannot be given one,
+   so rule 0 is answered by how that seed was made rather than by
+   anything you do here: a backup preserves exactly the strength a seed
+   had when it was made, and cannot add any. Read
    [§2](#2-before-you-back-it-up-is-the-secret-worth-protecting) and
    decide, for each seed you brought, whether to back it up or generate a
-   fresh one and move the coins first. **If you are generating the seeds
+   fresh one and move the coins first. **If you are generating both seeds
    here**, roll the dice now if you have not. Each sheet you roll follows
    the same cycle: roll it, compare it against the screen, derive from
    it, record what you derived, then clear before moving to the next
    sheet.
 
-   - **Cosigner seed one.** Roll the die and write each throw onto the
-     sheet as it lands. Do not copy it from the screen afterward: a sheet
-     is only an independent record of what the dice showed if it was
-     written from the dice, not from the app. Before deriving, compare the
-     filled sheet against the on-screen log, row by row. The app shows the
-     log in rows of ten, numbered by the position of the first roll. The
-     printed sheet numbers its own rows the same way, so this is a
-     row-by-row read rather than a hunt through undifferentiated digits.
-     It is the only check in the system that can catch a mis-press
+   Each of the two seed bullets below carries a label. A seed you roll
+   under a bullet takes that bullet's label, and a seed you brought takes
+   the label of the bullet you skip for it. If you brought both, that
+   means settling which of the two is cosigner one and which is cosigner
+   two before step 8, and keeping that answer, because nothing further on
+   can tell your seeds apart for you.
+
+   - **Cosigner seed one.** Skip the rolling here if you brought the seed
+     for this label, but read the bullet either way: the cycle it spells
+     out is the one the other two refer back to. Roll the die and write
+     each throw onto the sheet as it lands. Do not copy it from the screen
+     afterward: a sheet is only an independent record of what the dice
+     showed if it was written from the dice, not from the app. Before
+     deriving, compare the filled sheet against the on-screen log, row by
+     row. The app shows the log in rows of ten, numbered by the position
+     of the first roll. The printed sheet numbers its own rows the same
+     way, so this is a row-by-row read rather than a hunt through
+     undifferentiated digits. It is the only check in the system that can
+     catch a mis-press
      ([§2](#2-before-you-back-it-up-is-the-secret-worth-protecting)). Run
      `dice-to-seed` to derive its seed words, and write them onto a card
      labelled "cosigner one"; verify what you wrote against the screen.
      Only then clear the roll log, or restart the app: clearing is what
      makes the next sheet safe to roll, and there is no way back to words
      you did not write down.
-   - **Cosigner seed two.** The same cycle, on its own fresh sheet: roll
-     and write, compare, derive, record onto a card labelled "cosigner
-     two", verify, then clear. The tool clears the log when you change
+   - **Cosigner seed two.** Skip this too if you brought the seed for this
+     label. Otherwise, the same cycle, on its own fresh sheet: roll and
+     write, compare, derive, record onto a card labelled "cosigner two",
+     verify, then clear. That clearing is what separates the two seeds
+     when you roll both here. The tool clears the log when you change
      mode, and deliberately keeps it when the mode you ask for is the one
      you are already in. That is so pressing the button you are on cannot
      destroy the **60** (or **111**, for a twenty-four-word seed) rolls
@@ -793,34 +808,28 @@ destroys logs inside the session rather than saving work for later.
    Check every derived value against a second implementation before going
    on.
 
-   **Work from one sheet at a time.** Once cosigner seed two exists, two
-   filled seed sheets are in the room together, and by design neither
-   carries a name, a date or a label. If you go on to build the backup,
-   both stay in the room until the dry run proves it; if you stop at the
-   exit below instead, both are destroyed there. Keep the one you are
-   using in front of you and turn the other face down and out of the way.
-   Which cosigner is which is not something to record on the sheet; each
-   cosigner card carries that label instead, written when you make it
-   above.
-
-   **If you are backing up one cosigner seed you already hold and
-   generating the other here**, rule 0 is answered two different ways in
-   one sitting: by the dice for the seed you roll, and by how the seed you
-   brought was made. Roll one sheet for the seed you are generating, and
-   one for `k` if you are going on to build the backup.
+   **Work from one sheet at a time.** If you rolled both cosigner seeds
+   here, two filled seed sheets are in the room together, and by design
+   neither carries a name, a date or a label. If you go on to build the
+   backup, both stay in the room until the dry run proves it; if you stop
+   at the exit below instead, both are destroyed there. Keep the one you
+   are using in front of you and turn the other face down and out of the
+   way. Which cosigner is which is not something to record on the sheet;
+   each cosigner card carries that label instead, written when you make
+   it above.
 
 #### If you are stopping after generating
 
-If you stop here, you rolled two sheets, one per cosigner seed, and you
-hold two cosigner seeds written on paper, in one place, with none of it
-backed up. Destroy both dice sheets in this same sitting regardless: a
-sheet is a seed in plain text, whether or not a backup gets built from it
-today. If you already rolled a third sheet for the backup key before
-deciding to stop, destroy that one too, along with wherever you wrote `k`
-down: a key protects nothing without a payload to lock. Do not fund the
-wallet beyond pocket change until the backup in the rest of this phase
-exists. And the machine that has now held two seeds in memory still never
-connects to a network again.
+If you stop here, you hold both cosigner seeds and no backup of either:
+each seed you generated in this sitting is on its card, and a seed you
+brought is wherever you already kept it. Destroy every sheet you rolled,
+in this same sitting, regardless: a sheet is a seed in plain text,
+whether or not a backup gets built from it today. If you rolled for the
+backup key before deciding to stop, destroy that sheet too, along with
+wherever you wrote `k` down: a key protects nothing without a payload to
+lock. Do not fund the wallet beyond pocket change until the backup in
+the rest of this phase exists. And the machine that has held a cosigner
+seed in memory still never connects to a network again.
 
 8. Run `slip39-backup` in Owner mode: enter both cosigner seeds' words, an
    optional BIP-39 passphrase (generated, never invented,
@@ -830,7 +839,8 @@ connects to a network again.
    the backup-key fields rather than letting the tool generate one; leave them
    empty and the key protecting every copy of your backup comes from a
    generator you cannot check. If you skipped the key sheet in step 7
-   because you meant to stop there, go back and roll it now, the same way,
+   because you meant to stop there, roll it now, the same way, on the
+   spare sheet and card step 6 told you to hold back,
    before continuing. Set the group shape to **2-of-3** (the tool defaults
    to 3-of-5, which assumes five homes; three locations you alone control
    is realistic, five rarely is).
