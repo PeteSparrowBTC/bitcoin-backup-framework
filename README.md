@@ -23,18 +23,18 @@
 
 If you have been meaning to take real custody of your bitcoin for a year or
 two and keep postponing it, this document is for you, if the holding is
-large. It is a complete framework for large holdings: a Bitcoin seed phrase
-per cosigner key, its passphrase, and the digital accounts around them. The
-recommended wallet is 2-of-2 keys, both held by one owner, on hardware from
-two vendors. Whether you are starting from nothing or already have a
-strategy you have never pressure-tested, the rules in [§3](#3-the-rules) and
-the failure matrix in [§10](#10-failure-mode-matrix-what-saves-you) work just
-as well as an audit of an existing setup. The job is backing those two
-cosigner seeds up: generating them is a supported action rather than a
-precondition, and [§6](#6-setup-from-zero-the-ordered-checklist) rolls them
-from dice for a reader with no wallet yet. It is written for someone who
-wants to **trust no one** and does not want to become a security expert to
-get this right.
+large. It is a complete framework for large holdings, securing a Bitcoin
+seed phrase per cosigner key, its passphrase, and the digital accounts
+around them. The recommended wallet is 2-of-2 keys, both held by one owner,
+on hardware from two vendors. Whether you are starting from nothing or
+already have a strategy you have never pressure-tested, the rules in
+[§3](#3-the-rules) and the failure matrix in
+[§10](#10-failure-mode-matrix-what-saves-you) work just as well as an audit
+of an existing setup. The job is backing those two cosigner seeds up:
+generating them is a supported action rather than a precondition, and
+[§6](#6-setup-from-zero-the-ordered-checklist) rolls them from dice for a
+reader with no wallet yet. It is written for someone who wants to **trust no
+one** and does not want to become a security expert to get this right.
 
 **Why not 2-of-3 keys?** Redundancy against a lost or dead device comes from
 the backup, which holds both cosigner seeds, so a third key adds no
