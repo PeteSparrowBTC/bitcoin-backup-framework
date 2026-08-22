@@ -68,28 +68,52 @@ should refuse this instead is an open item.
 
 ### The printable roll sheet
 
-`dice-to-seed` is to generate the sheet the rolls are written on. It does not do this today:
-nothing in the tree matches print, pdf, sheet or paper, there is no branch and no pull request
-for it, and the one changelog line about pen and paper describes the grouped rendering of the
-backup key for hand-copying. So this is designed against the intent, and the framework cannot
-instruct on it until it ships.
+`dice-to-seed` pull request 33 adds it: `printable/roll-sheet.html`, shipped as its own release
+asset under `SHA256SUMS`, open at the time of writing on `feat/check-rolls-against-paper`.
 
-Print while blank, before the offline session starts. A blank sheet is a template and carries
-nothing. A filled one is the wallet in plain text. Nothing filled ever goes near a printer,
-because a spooler, an internal disk and a network queue are all memory this framework has no
-way to audit, and a printer is not in the clean room.
+The reason for the paper is sharper than the one first written here, and the framework should
+adopt it rather than paraphrase it. Every check in this system compares the typed roll log
+against another conversion of that same typed log: a second implementation, `sha256sum`, Ian
+Coleman. None of them can see a mis-press. Press 4 where the die showed 5 and both tools agree
+perfectly, the counter still reads sixty, and the words are valid BIP-39 for a wallet the dice
+never made. The paper is the only independent record of what the dice actually showed, so
+comparing it against the screen is the only check that can catch that error.
 
-One sheet per roll session, so up to three, each pre-printed with which session it is: cosigner
-one, cosigner two, backup key. The label is a safety feature and not decoration, because the
-whole no-reuse rule depends on the reader knowing which sheet is which. A numbered box per
-throw also makes an undercount visible, which is the failure NUMBERS exists to explain and the
-best argument for having the sheet at all.
+That exposes the same defect in this framework's own instructions. START-HERE tells the reader
+to write each digit down as it lands, gives no reason, and then presents two tools agreeing as
+the proof. So the document asks for a second plaintext copy of the seed and never asks for the
+comparison that would justify the risk. It is the criticism the tool's changelog makes of
+itself, and it applies here word for word. The comparison becomes a numbered step immediately
+before deriving, and the document says why the paper exists.
 
-Destruction becomes countable, which is the real gain. Three sheets in, three sheets destroyed,
-in the sitting that made them. That is a checklist line rather than a sentence of prose.
+What the sheet is, as built: one page, plain HTML with no script and no external reference,
+blank so it carries nothing until written on, rows of ten numbered by the position of the first
+roll so the comparison is a row-by-row read rather than a hunt through undifferentiated digits,
+heavier rules after rolls 50 and 60 with a legend, and 240mm of content against 275mm on A4. It
+says destroy twice in the largest type on the page, says why, and says plainly that it is not a
+backup. Its row labels are asserted against the app's arithmetic by a test, because a reader
+already holding a printed copy cannot reprint it.
 
-The trap to name is photographing or scanning the filled sheet, which is exactly what a careful
-person does when they want a copy of something important.
+Printing happens on an ordinary networked machine during preparation, before booting, because an
+amnesic offline session is the wrong place to be arranging a printer. So this belongs in step 1
+of the doing page, the only step that happens online, and not in step 2 where the rolling is.
+
+The sheet deliberately has no place to write which wallet it is: no name, no date, no label, no
+amount. The exception is two tick boxes for the sheet's purpose, seed or backup key, which earn
+their place because one log used for both makes the key derivable from the wallet it protects.
+
+That exception was designed for one seed and one key. This framework has three sheets, two of
+which tick the same box, and nothing on either says which cosigner it made. Both filled seed
+sheets also exist at once, because sheets survive until the dry run proves the backup. Recovery
+from a mixup is real but tedious: derive from a sheet and see whose words come out. Two ways to
+close it, and only the first needs the tool.
+
+1. Ordinal tick boxes, one of two and two of two. They carry no identity, and they arguably help
+   the owner more than a finder, since a finder learns that the sheet alone cannot spend.
+2. Table discipline alone: never two filled seed sheets in one place, with the words card
+   carrying the association rather than the sheet.
+
+Open item 5.
 
 ## 4. What two vendors buys, once you bring your own dice
 
@@ -155,14 +179,14 @@ scope and therefore cannot be left alone.
 | --- | --- |
 | README preamble | Audience is someone postponing custody who is told that a password manager and two-factor authentication equip them for everything below. Two makers and a recovery-critical descriptor is a different reader |
 | README one-sentence version | Written for a single root of trust |
-| Section 2 | Single-seed framing throughout; vendor diversity's rationale per section 4 above; the second-implementation check becomes a requirement rather than advice once there is more than one seed |
+| Section 2 | Single-seed framing throughout; vendor diversity's rationale per section 4 above; the second-implementation check becomes a requirement rather than advice once there is more than one seed, and gains the caveat that it is blind to a mis-press |
 | Section 3 | Rule 0 audits how the seed was generated, singular, and assumes real entropy at one root. Two cosigner seeds means two audits and two roots |
 | Section 6 | The worked example is one seed and one key. Needs the second cosigner seed, the clear-the-rolls step, and a labelled exit for the generation-only journey |
 | Section 7 | The one-seed-many-passphrases trap stays and gains a sibling: two cosigner seeds from one sheet |
 | Section 10 | Three rows assume one seed and one key: the defective-generator row, where vendor diversity is now the premise rather than a mitigation; the surviving-roll-log row, which names log one as the seed and log two as the key; and the reused-log row, which needs a sibling for two cosigner seeds sharing one sheet |
 | Section 11 | Loses its centrepiece, since multisig is now the premise. Keeps involving people, gains the third disjoint list |
 | Section 12 | The complexity-budget and no-theater argument now has to say which side of that line a two-maker quorum sits on, and who this document is not for |
-| START-HERE | Opens with the fork; step 2 becomes conditional and rolls twice for seeds; the kit list gains sheets printed before the session begins; stays one ordered list rather than splitting in two |
+| START-HERE | Opens with the fork; step 1 gains printing the roll sheet, since that is the online step; step 2 becomes conditional, rolls twice for seeds, and gains the paper-against-screen comparison before deriving; stays one ordered list rather than splitting in two |
 | NUMBERS | Roll counts are per sheet, and there are now up to three sheets |
 
 ## 9. Relationship to seed-generation, and what stays out
@@ -211,5 +235,7 @@ a defect. The backup tool's own default is 3-of-5 cards, so the instruction to c
 3. Whether the framework keeps recommending a BIP-39 passphrase per cosigner, which section 2
    argues for at length in single-seed terms and which interacts with a two-key quorum
    differently.
-4. The printable roll sheet does not exist yet. The generation instructions depend on it, and
-   the fallback if it does not ship is plain paper with the count drawn by hand.
+4. The roll sheet arrives with `dice-to-seed` pull request 33, which is open. The generation
+   instructions depend on it landing.
+5. Whether to ask for ordinal tick boxes on the roll sheet, so two seed sheets stay apart
+   without either becoming identifiable.
