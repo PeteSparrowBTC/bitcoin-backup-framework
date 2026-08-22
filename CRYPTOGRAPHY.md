@@ -16,8 +16,8 @@ arithmetic behind the counts below (bits, iterations, word counts) lives on
 repeating it.
 
 You do not need this page to follow the framework's instructions. It exists
-so the framework can say "SHA-256" or "threshold" without stopping to
-explain itself.
+so the framework's own sections can use "SHA-256" or "threshold" and move
+straight on, rather than pausing to define them each time.
 
 <!-- revision:start -->
 **Revised 2026-08-22.** This page is new, written alongside the change that
@@ -180,6 +180,13 @@ outer layer would close a theoretical gap below at the cost of turning
 recovery from typing one secret twice into a derivation step no ordinary
 tool performs.
 
+Nesting the two locks also buys a concrete margin against a future quantum
+computer. age's own file key is 128 bits, and Grover's algorithm, the best
+known quantum attack against a key of that kind, would cut the effective
+search down to 64 bits. AES-256 in the layer wrapped around it restores
+that headroom back to 128 bits, which is the structural reason for this
+particular pairing rather than only for having two locks in general.
+
 That shared key is what fixes what the second lock actually buys, and it is
 narrower than "an attacker needs to break two things." A break in either
 layer's cipher or file format leaves the cascade standing: breaking age's
@@ -196,14 +203,15 @@ ASCII armor is a separate property from either encryption layer: it
 re-encodes the ciphertext as text, which is why `payload.age.gpg.asc` can
 live inside a password manager note, an email, or a printed page rather than
 needing to be handled as a binary file. Armor also carries a **CRC-24**
-checksum over that text, which catches an ordinary mangled copy, a bad
-paste, a scanning error, though not with certainty: a 24-bit checksum makes
-an accidental corruption very unlikely to pass, not impossible. Deliberate
-tampering with the ciphertext itself is a different question, and both
-layers catch it independently: OpenPGP is written with its own integrity
-packet and checks it on decryption, and ChaCha20-Poly1305 does the same
-inside age, so an alteration to either layer is detected there rather than
-producing a wrong but plausible result.
+checksum over that text, which catches accidental corruption such as a bad
+paste. A 24-bit checksum makes an accidental change unlikely to produce a
+matching checksum by chance, but it does not catch a deliberate change made
+by someone who recomputes the checksum after editing the text, so it is a
+transcription check rather than a security one. Deliberate tampering with
+the ciphertext itself is caught by the layers underneath instead: OpenPGP is
+written with its own integrity packet and checks it on decryption, and
+ChaCha20-Poly1305 does the same inside age, so an alteration to either layer
+is detected there rather than producing a wrong but plausible result.
 
 ## Checksums and signatures: what each one proves
 
@@ -234,10 +242,11 @@ mis-press.
 Every primitive on this page protects something specific, and none of them
 protect the following.
 
-- **Weak entropy at the root.** SHA-256, BIP-39, BIP-32, SLIP-39, age and
-  OpenPGP all transform what they are given; none of them manufactures
-  randomness. A seed built from a defective generator produces a
-  cryptographically well-formed backup of a weak secret
+- **Weak entropy at the root.** SHA-256 compresses what it is given,
+  BIP-39 and BIP-32 derive from it, SLIP-39 splits it, and age and OpenPGP
+  lock it away; none of them manufactures randomness. A seed built from a
+  defective generator produces a cryptographically well-formed backup of a
+  weak secret
   ([§2](README.md#2-before-you-back-it-up-is-the-secret-worth-protecting)).
 - **Trust in a random number generator, even after rolling your own key.**
   Dice give `k` an origin the reader can recompute, but `k` never touches

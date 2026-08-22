@@ -34,12 +34,11 @@ never goes back online.
 [The exit for this journey](README.md#if-you-are-stopping-after-generating)
 is in the framework's setup checklist.
 
-This page does not survey the other ways to generate a seed: coins, cards,
-device generators, or verifying an existing one. That survey lives at
-[seed-generation](https://github.com/PeteSparrowBTC/seed-generation), which
-is deliberately neutral about vendors and methods. This framework is not: it
-recommends dice, two named tools, and two vendors, and says so once rather
-than surveying the alternatives.
+This page does not survey the other ways to generate a seed. That survey
+lives at [seed-generation](https://github.com/PeteSparrowBTC/seed-generation),
+which is deliberately neutral about vendors and methods. This framework is
+not: it recommends dice, two named tools, and two vendors, and says so once
+rather than surveying the alternatives.
 
 ## Backing seeds up
 
@@ -62,7 +61,7 @@ for the backup key, and no two are ever the same sheet
 | Journey | What it is | Framework sections | Sheets |
 | --- | --- | --- | --- |
 | Both actions, one sitting | No wallet yet | [§1](README.md#1-what-you-are-protecting-and-the-two-ways-you-lose) through [§11](README.md#11-involving-others-later-the-upgrade-path), in order; [§6](README.md#6-setup-from-zero-the-ordered-checklist) is the checklist itself | Three |
-| Backing up only | Arrives holding two cosigner seeds already trusted | [§1](README.md#1-what-you-are-protecting-and-the-two-ways-you-lose), [§2](README.md#2-before-you-back-it-up-is-the-secret-worth-protecting) to decide whether the seeds you hold are worth backing up, [§3](README.md#3-the-rules), [§4](README.md#4-inventory-the-secrets-you-actually-hold), [§5](README.md#5-the-architecture-three-layers), all of [§6](README.md#6-setup-from-zero-the-ordered-checklist) starting at Phase A, which builds the password manager the payload lives in, [§7](README.md#7-known-traps-each-has-bitten-real-people) through [§11](README.md#11-involving-others-later-the-upgrade-path) | One, for the key |
+| Backing up only | Arrives holding two cosigner seeds already trusted | [§1](README.md#1-what-you-are-protecting-and-the-two-ways-you-lose), [§2](README.md#2-before-you-back-it-up-is-the-secret-worth-protecting) to decide whether the seeds you hold are worth backing up, [§3](README.md#3-the-rules), [§4](README.md#4-inventory-the-secrets-you-actually-hold), [§5](README.md#5-the-architecture-three-layers), all of [§6](README.md#6-setup-from-zero-the-ordered-checklist) starting at Phase A, which builds both the password manager the payload lives in and the Recovery Sheet its storage depends on, [§7](README.md#7-known-traps-each-has-bitten-real-people) through [§11](README.md#11-involving-others-later-the-upgrade-path) | One, for the key |
 | Generating only | Wants keys it can vouch for, not ready to build the backup | [§1](README.md#1-what-you-are-protecting-and-the-two-ways-you-lose), [§2](README.md#2-before-you-back-it-up-is-the-secret-worth-protecting), [§3](README.md#3-the-rules) for rule 0, [§6](README.md#6-setup-from-zero-the-ordered-checklist) as far as [the generation exit](README.md#if-you-are-stopping-after-generating) | Two, one per cosigner seed |
 
 **One owner, two vendors.** The recommended wallet is 2-of-2 keys, both

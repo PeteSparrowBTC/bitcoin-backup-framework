@@ -371,8 +371,9 @@ for section in sections:
         promote_headings(retarget(section["body"], from_depth=2, current_slug=section["slug"])),
     )
 
-# The standalone pages, each beside the framework rather than inside it, because
-# each is referenced from the quickstart and from several sections.
+# The standalone pages, each beside the framework rather than inside it, so
+# that any of them can be linked from the quickstart or from the framework's
+# sections without living inside either one's folder.
 STANDALONE = [
     ("ACTIONS.md", "actions", "Generate, back up, or both", 2),
     ("NUMBERS.md", "numbers", "How the numbers work", 4),
