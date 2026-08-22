@@ -265,7 +265,7 @@ NUMBERS, and the two pages cross-link rather than repeat.
 | Subject | What the page has to settle |
 | --- | --- |
 | One-way functions and SHA-256 | Dice string in, 32 bytes out, no way back. Same input gives the same output, which is what lets you recompute a seed from a sheet and is also why reusing a sheet makes the backup key the wallet it protects |
-| BIP-39 | Entropy plus checksum becomes words; the words plus an optional passphrase become the seed through PBKDF2-HMAC-SHA512 at 2048 iterations, with the passphrase as salt. Why a wrong passphrase opens a valid empty wallet instead of reporting an error |
+| BIP-39 | Entropy plus checksum becomes words; the words plus an optional passphrase become the seed through PBKDF2-HMAC-SHA512 at 2048 iterations. The salt is the string `mnemonic` with the passphrase appended, not the passphrase alone, which is why an absent passphrase still salts the derivation. Why a wrong passphrase opens a valid empty wallet instead of reporting an error |
 | BIP-32 | One seed, many keys, and why the descriptor and the fingerprint are recovery-critical while an xpub is a privacy leak rather than a spending risk |
 | SLIP-39 | Shamir's threshold sharing: threshold-many cards reconstruct, and fewer reveal nothing at all rather than revealing a little. What it protects here is the backup key only, never the seed |
 | age with scrypt | The backup key used as a passphrase, scrypt's work factor, and ChaCha20-Poly1305's authentication, which means tampering is detected rather than silently decrypted into something wrong |
