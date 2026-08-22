@@ -213,34 +213,40 @@ Since the output tells you nothing, only the process is auditable:
 
 ### Two roll logs, and both are plaintext secrets
 
-Dice produce two secrets in this framework, not one. The first log becomes the
-wallet seed. The second becomes `k`, the key that encrypts the backup payload
+Dice produce three secrets in the recommended shape, not two: one log per
+cosigner seed, and one log for `k`, the key that encrypts the backup payload
 ([§4](#4-inventory-the-secrets-you-actually-hold)), which otherwise comes from
 the backup machine's generator and would be the one number in the design with
-no origin you can account for. Roll the same count for both.
+no origin you can account for. One log each, and no two logs are ever the
+same log. Roll the same count for every log.
 
 **They must be separate logs.** On a twenty-four-word seed the BIP-39 entropy
 is SHA-256 of your rolls, and `k` is SHA-256 of your rolls: same function, same
-input, same output. Reuse one log and the key protecting the backup *is* the
-wallet it protects, so the shares stop protecting anything and the two-layer
-design collapses to one layer
+input, same output. Reuse a seed's log for the key and the key protecting the
+backup *is* the wallet it protects, so the shares stop protecting anything and
+the two-layer design collapses to one layer
 ([the arithmetic](NUMBERS.md#what-the-hash-does-and-the-one-thing-it-cannot-do)).
 A twelve-word seed takes the first half of the same hash, which is no better.
 Both tools enforce this rather than warning about it: `dice-to-seed` clears
 your rolls when you change mode, and `slip39-backup` recovers the entropy of
 every seed in the form and refuses a key that matches one.
 
-**One die for both is correct.** A die has no memory, so two sessions are two
-independent sets of rolls, and a bias does not couple them: an attacker who
-exploits it still has to search each secret separately. A second die adds
-nothing except another object whose fairness you have not considered. What has
-to be fresh is the log ([why one die rather than a handful](NUMBERS.md#why-this-guide-says-one-die)).
+Reusing a log between the two cosigner seeds is the sibling mistake: the keys
+it derives are not independent, so a 2-of-2 keys wallet built this way fails
+as one unit rather than two. A seed sharing a log with the key is refused by
+both tools; two cosigner seeds sharing a log is refused by nothing.
 
-**Destroy both logs once the backup verifies.** This is the step people leave
-until later, and later is the problem. Until it is burned, log one is a
+**One die for every log is correct.** A die has no memory, so separate
+sessions are independent sets of rolls, and a bias does not couple them: an
+attacker who exploits it still has to search each secret separately. A
+second die adds nothing except another object whose fairness you have not
+considered. What has to be fresh is each log ([why one die rather than a handful](NUMBERS.md#why-this-guide-says-one-die)).
+
+**Destroy every log once the backup verifies.** This is the step people leave
+until later, and later is the problem. Until it is burned, each seed log is a
 plaintext seed in your own handwriting, sitting outside every protection this
-document builds, and log two opens the payload without any share at all. They
-are the two artifacts [§7](#7-known-traps-each-has-bitten-real-people) forbids
+document builds, and the key log opens the payload without any share at all.
+They are the artifacts [§7](#7-known-traps-each-has-bitten-real-people) forbids
 in every other form, created by the guide's own first instruction. Keep them
 only as long as it takes to run the dry run
 ([Phase B](#phase-b-back-up-the-seed-one-offline-session)), then destroy them
