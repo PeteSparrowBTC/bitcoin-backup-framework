@@ -104,16 +104,19 @@ their place because one log used for both makes the key derivable from the walle
 
 That exception was designed for one seed and one key. This framework has three sheets, two of
 which tick the same box, and nothing on either says which cosigner it made. Both filled seed
-sheets also exist at once, because sheets survive until the dry run proves the backup. Recovery
-from a mixup is real but tedious: derive from a sheet and see whose words come out. Two ways to
-close it, and only the first needs the tool.
+sheets also exist at once, because sheets survive until the dry run proves the backup.
 
-1. Ordinal tick boxes, one of two and two of two. They carry no identity, and they arguably help
-   the owner more than a finder, since a finder learns that the sheet alone cannot spend.
-2. Table discipline alone: never two filled seed sheets in one place, with the words card
-   carrying the association rather than the sheet.
+Asking the tool for ordinal boxes, one of two and two of two, was considered and rejected. The
+owner-side benefit is small, since a mixup is undone by deriving from a sheet and seeing whose
+words come out. The cost is not small and it lands in the same window: both sheets exist only
+during one sitting, on one table, so they are together for their whole life. Two unmarked sheets
+found together are two unrelated piles of digits and a finder has to work out whether they
+relate. Two sheets marked one of two and two of two announce that they are a pair and that the
+pair is a wallet. The mark pays off exactly when it is most expensive.
 
-Open item 5.
+So this is an instruction here rather than a request to the tool. One sheet in front of the
+machine at a time, the other face down and out of the way, and the words card carries which
+cosigner is which, because the card is the artifact designed to be kept.
 
 ## 4. What two vendors buys, once you bring your own dice
 
@@ -237,5 +240,3 @@ a defect. The backup tool's own default is 3-of-5 cards, so the instruction to c
    differently.
 4. The roll sheet arrives with `dice-to-seed` pull request 33, which is open. The generation
    instructions depend on it landing.
-5. Whether to ask for ordinal tick boxes on the roll sheet, so two seed sheets stay apart
-   without either becoming identifiable.
