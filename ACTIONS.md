@@ -28,9 +28,9 @@ because you rolled them yourself before, or you audited how they were made
 and are satisfied, there is nothing to generate. Go straight to backing up.
 
 Stopping after generating is supported. You end the sitting holding two
-seeds on paper and no backup of either, which is a real position with a real
-cost stated plainly: do not fund the wallet beyond pocket change until the
-backup exists, and the machine that has held the seeds never goes back online.
+seeds on paper and no backup of either. Do not fund the wallet beyond pocket
+change until the backup exists, and the machine that has held the seeds
+never goes back online.
 [The exit for this journey](README.md#if-you-are-stopping-after-generating)
 is in the framework's setup checklist.
 
@@ -55,14 +55,14 @@ themselves, an optional passphrase per cosigner, and the wallet descriptor.
 
 Three journeys arrive at this document, and each needs a different slice of
 the framework and a different number of dice sheets. A sheet is one printed
-roll log; the recommended shape takes up to three, one per cosigner seed and
-one for the backup key, and no two are ever the same sheet
+roll log; the recommended shape takes three, one per cosigner seed and one
+for the backup key, and no two are ever the same sheet
 ([why](NUMBERS.md#why-99-rolls-is-not-256-bits)).
 
 | Journey | What it is | Framework sections | Sheets |
 | --- | --- | --- | --- |
 | Both actions, one sitting | No wallet yet | [§1](README.md#1-what-you-are-protecting-and-the-two-ways-you-lose) through [§11](README.md#11-involving-others-later-the-upgrade-path), in order; [§6](README.md#6-setup-from-zero-the-ordered-checklist) is the checklist itself | Three |
-| Backing up only | Arrives holding two cosigner seeds already trusted | [§1](README.md#1-what-you-are-protecting-and-the-two-ways-you-lose), [§2](README.md#2-before-you-back-it-up-is-the-secret-worth-protecting) to decide whether the seeds you hold are worth backing up, [§3](README.md#3-the-rules), [§4](README.md#4-inventory-the-secrets-you-actually-hold), [§5](README.md#5-the-architecture-three-layers), [§6](README.md#6-setup-from-zero-the-ordered-checklist) from Phase B onward, [§7](README.md#7-known-traps-each-has-bitten-real-people) through [§11](README.md#11-involving-others-later-the-upgrade-path) | One, for the key |
+| Backing up only | Arrives holding two cosigner seeds already trusted | [§1](README.md#1-what-you-are-protecting-and-the-two-ways-you-lose), [§2](README.md#2-before-you-back-it-up-is-the-secret-worth-protecting) to decide whether the seeds you hold are worth backing up, [§3](README.md#3-the-rules), [§4](README.md#4-inventory-the-secrets-you-actually-hold), [§5](README.md#5-the-architecture-three-layers), all of [§6](README.md#6-setup-from-zero-the-ordered-checklist) starting at Phase A, which builds the password manager the payload lives in, [§7](README.md#7-known-traps-each-has-bitten-real-people) through [§11](README.md#11-involving-others-later-the-upgrade-path) | One, for the key |
 | Generating only | Wants keys it can vouch for, not ready to build the backup | [§1](README.md#1-what-you-are-protecting-and-the-two-ways-you-lose), [§2](README.md#2-before-you-back-it-up-is-the-secret-worth-protecting), [§3](README.md#3-the-rules) for rule 0, [§6](README.md#6-setup-from-zero-the-ordered-checklist) as far as [the generation exit](README.md#if-you-are-stopping-after-generating) | Two, one per cosigner seed |
 
 **One owner, two vendors.** The recommended wallet is 2-of-2 keys, both

@@ -372,7 +372,7 @@ for section in sections:
     )
 
 # The standalone pages, each beside the framework rather than inside it, because
-# both are referenced from the quickstart and from several sections.
+# each is referenced from the quickstart and from several sections.
 STANDALONE = [
     ("ACTIONS.md", "actions", "Generate, back up, or both", 2),
     ("NUMBERS.md", "numbers", "How the numbers work", 4),

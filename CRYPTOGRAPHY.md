@@ -1,24 +1,23 @@
 # How the cryptography works
 
-This framework names several cryptographic primitives without pausing to
-explain them: SHA-256, BIP-39, BIP-32, SLIP-39, age, OpenPGP. This page is
-where that explaining happens, once, so the framework itself can keep using
-the names.
-
-For each primitive: what goes in, what comes out, what makes it hard to
+This framework names several cryptographic primitives without stopping to
+explain them: SHA-256, BIP-39, BIP-32, SLIP-39, age, OpenPGP. For each one,
+this page states what goes in, what comes out, what makes it hard to
 reverse, what it guarantees, what it does not, and why this framework relies
-on it. Not how it works inside. No compression functions, no round structure,
-no field arithmetic: those are a cryptography course, and this framework
-treats complexity itself as a risk ([§12](README.md#12-what-this-framework-deliberately-does-not-do)).
-Understanding what a lock does and does not do is enough to use it correctly;
-opening the lock is a different skill and not one this document teaches. The
+on it.
+
+Not how it works inside. No compression functions, no round structure, no
+field arithmetic: those belong to a cryptography course, and
+[§12](README.md#12-what-this-framework-deliberately-does-not-do) already
+treats complexity itself as a risk. Knowing what a lock does and does not do
+is enough to use it correctly; opening the lock is a different skill. The
 arithmetic behind the counts below (bits, iterations, word counts) lives on
 [the numbers page](NUMBERS.md); this page cross-links it rather than
 repeating it.
 
 You do not need this page to follow the framework's instructions. It exists
-so the framework can say "SHA-256" or "threshold" without stopping to explain
-itself, and so a reader who wants to know why a step is trusted can find out.
+so the framework can say "SHA-256" or "threshold" without stopping to
+explain itself.
 
 <!-- revision:start -->
 **Revised 2026-08-22.** This page is new, written alongside the change that
@@ -48,23 +47,27 @@ uncertainty ([why 99 rolls is not 256 bits](NUMBERS.md#why-99-rolls-is-not-256-b
 the 256-bit output is still only 255.9 bits uncertain. Hashing compresses and
 fixes the length; it does not add randomness that was not already there.
 
-This framework uses SHA-256 twice, on two different roll logs, for two
-different purposes that must never share an input. One log's digits become a
-cosigner seed's entropy. A different log's digits become the 32-byte backup
-key `k`, computed as `SHA-256(the roll digits, joined by nothing)`, which is
-why the key is reproducible with one shell command:
-`printf '%s' "$ROLLS" | sha256sum`. Feed the same function the same log twice
-and you get the seed and the key from one root, which is exactly the
-collapse [rule 0](README.md#3-the-rules) forbids: the key protecting the
-backup becomes derivable from the wallet it protects
+SHA-256 shows up in several places in this framework's own tools, including
+inside the BIP-39 checksum and inside the release checksum files described
+below. The place this page is about is the dice: one roll log's digits
+become a cosigner seed's entropy, and a different roll log's digits become
+the 32-byte backup key `k`, computed as
+`SHA-256(the roll digits, joined by nothing)`, which is why the key is
+reproducible with one shell command: `printf '%s' "$ROLLS" | sha256sum`. Feed
+the same function the same log for both and you get the seed and the key
+from one root, which is exactly the collapse
+[rule 0](README.md#3-the-rules) forbids: the key protecting the backup
+becomes derivable from the wallet it protects
 ([the arithmetic](NUMBERS.md#what-the-hash-does-and-the-one-thing-it-cannot-do)).
 
 ## BIP-39: words from entropy, and a seed from words
 
 BIP-39 does two conversions, not one.
 
-**Entropy to words.** Input: 128 or 256 bits of entropy, plus a checksum
-derived from it. Output: 12 or 24 words from a fixed list of 2,048, chosen so
+**Entropy to words.** Input: entropy in one of five sizes the standard
+allows, 128 to 256 bits; this framework only ever uses the two ends of that
+range, for a 12-word or a 24-word seed. A checksum derived from the entropy
+travels with it. Output: 12 or 24 words from a fixed list of 2,048, chosen so
 each word carries a whole number of bits
 ([the arithmetic](NUMBERS.md#from-256-bits-to-24-words)). The checksum is
 what lets a wallet tell you that a word was mistyped rather than silently
@@ -73,12 +76,13 @@ in both directions: the words carry exactly the entropy, no more, no less.
 
 **Words to seed.** Input: the words, plus an optional passphrase you supply.
 Output: a 512-bit seed, produced by PBKDF2-HMAC-SHA512 run for 2,048
-iterations with the passphrase used as salt
-([why that count is small](NUMBERS.md#where-every-number-in-this-guide-comes-from)).
-Running the words through this step many times, rather than once, is what
-makes guessing passphrases against known words at least somewhat costly,
-though 2,048 iterations is a low cost by modern standards, which is why the
-passphrase itself has to be strong.
+iterations ([why that count is small](NUMBERS.md#where-every-number-in-this-guide-comes-from)).
+The salt is not the passphrase alone: it is the fixed string `mnemonic` with
+the passphrase appended, which is why the derivation is salted at all even
+when no passphrase is set. Running the words through this step many times,
+rather than once, is what makes guessing passphrases against known words at
+least somewhat costly, though 2,048 iterations is a low cost by modern
+standards, which is why the passphrase itself has to be strong.
 
 What this guarantees: the same words and the same passphrase always produce
 the same seed, on any correct implementation, which is why a seed phrase
@@ -114,25 +118,34 @@ spending risk.
 
 ## SLIP-39: splitting the backup key
 
-Input: one short secret, 16 or 32 bytes. In this framework, that secret is
-the 32-byte backup key `k`, never the seed itself
+Input: one short secret, 16 or 32 bytes in every interoperable
+implementation. In this framework, that secret is the 32-byte backup key
+`k`, never the seed itself
 ([why not the seed](README.md#4-inventory-the-secrets-you-actually-hold)).
 Output: a set of word-list shares, built so that any threshold-many of them
 reconstruct the secret exactly, and the framework's recommendation is 2-of-3
 cards rather than the tool's own default of 3-of-5 cards.
 
-What it guarantees is the shape of an all-or-nothing scheme: threshold-many
-shares reconstruct the whole secret, and fewer than threshold reveal nothing
-at all about it, not a partial answer and not a narrowed set of guesses. What
-it does not guarantee is anything once threshold-many shares are actually
-together: at that point the secret is fully reconstructed, so shares held
-together are exactly as sensitive as the secret they protect.
+SLIP-39 implements **Shamir's secret sharing**, named for its designer. Each
+share by itself is consistent with every value the secret could possibly be,
+not with a narrowed set of candidates, and only combining threshold-many
+shares picks out the one true value. That is what it guarantees: fewer than
+threshold shares reveal nothing at all, and threshold-many reconstruct the
+secret exactly. What it does not guarantee is anything once threshold-many
+shares are actually together: at that point the secret is fully
+reconstructed, so shares held together are exactly as sensitive as the
+secret they protect.
 
-This framework relies on that all-or-nothing property to make one location
-holding one card useless on its own. It never asks SLIP-39 to protect the
-seed directly, because the standard encodes a single short secret and has no
-defined place for a passphrase, a descriptor, or notes; the two-layer design
-here exists to give those a home as well.
+This framework relies on the below-threshold guarantee to make one location
+holding one card useless on its own. It does not ask SLIP-39 to protect the
+seed directly, and it does not use SLIP-39's own passphrase either. The
+standard defines one: SLIP-0039 encrypts the master secret with a passphrase
+before splitting it. This tool passes an empty string for that passphrase,
+so there is no SLIP-39 passphrase for the reader to remember, a choice the
+tool makes rather than a concept the standard lacks. What the standard has
+no place for regardless is a BIP-39 passphrase, a wallet descriptor, or
+notes: it splits one short secret and nothing else, which is why the
+two-layer design here exists, to give those a home.
 
 ## age with scrypt: locking the payload
 
@@ -160,19 +173,37 @@ tamper-evidence, not authorship.
 ## OpenPGP and ASCII armor: the second lock
 
 Input: the age ciphertext from the step above. Output: that ciphertext,
-encrypted again with AES-256, then ASCII-armored into printable text.
+encrypted again with AES-256, then ASCII-armored into printable text. Both
+layers take the same key, `k`, the tool's armor header says so in plain
+words, and that reuse is a deliberate choice: an independent key for the
+outer layer would close a theoretical gap below at the cost of turning
+recovery from typing one secret twice into a derivation step no ordinary
+tool performs.
 
-The second encryption is a second lock rather than a stronger version of the
-first: an attacker who somehow predicted age's key still has OpenPGP's AES-256
-standing between them and the payload, and a break in one format leaves the
-wallet protected by the other. ASCII armor is a separate property from the
-encryption itself: it re-encodes the ciphertext as text, which is why
-`payload.age.gpg.asc` can live inside a password manager note, an email, or a
-printed page rather than needing to be handled as a binary file. Armor also
-carries a **CRC-24** checksum, so a mangled copy, a bad paste, a scanning
-error, is caught rather than silently accepted. That checksum guards against
-accidental corruption; it is not what catches deliberate tampering, which is
-ChaCha20-Poly1305's job in the layer underneath.
+That shared key is what fixes what the second lock actually buys, and it is
+narrower than "an attacker needs to break two things." A break in either
+layer's cipher or file format leaves the cascade standing: breaking age's
+internals does not hand over `k`, because `k` enters age only through
+scrypt, which is one-way, so an attacker who somehow broke age's cipher
+would still face OpenPGP's AES-256 guarding the same key from the other
+side. What does collapse the cascade is recovering `k` itself, by inverting
+scrypt or by inverting OpenPGP's passphrase-to-key derivation: either one
+opens both layers, since both were locked with the same key. So the two
+locks are independent against a break in the cipher, not against a break
+that recovers the shared key.
+
+ASCII armor is a separate property from either encryption layer: it
+re-encodes the ciphertext as text, which is why `payload.age.gpg.asc` can
+live inside a password manager note, an email, or a printed page rather than
+needing to be handled as a binary file. Armor also carries a **CRC-24**
+checksum over that text, which catches an ordinary mangled copy, a bad
+paste, a scanning error, though not with certainty: a 24-bit checksum makes
+an accidental corruption very unlikely to pass, not impossible. Deliberate
+tampering with the ciphertext itself is a different question, and both
+layers catch it independently: OpenPGP is written with its own integrity
+packet and checks it on decryption, and ChaCha20-Poly1305 does the same
+inside age, so an alteration to either layer is detected there rather than
+producing a wrong but plausible result.
 
 ## Checksums and signatures: what each one proves
 
@@ -201,22 +232,31 @@ mis-press.
 ## What none of this protects
 
 Every primitive on this page protects something specific, and none of them
-protect these three things:
+protect the following.
 
 - **Weak entropy at the root.** SHA-256, BIP-39, BIP-32, SLIP-39, age and
-  OpenPGP all compress, split, lock, or derive from what they are given; none
-  of them manufactures randomness. A seed built from a defective generator
-  produces a cryptographically well-formed backup of a weak secret
+  OpenPGP all transform what they are given; none of them manufactures
+  randomness. A seed built from a defective generator produces a
+  cryptographically well-formed backup of a weak secret
   ([§2](README.md#2-before-you-back-it-up-is-the-secret-worth-protecting)).
+- **Trust in a random number generator, even after rolling your own key.**
+  Dice give `k` an origin the reader can recompute, but `k` never touches
+  the payload directly. age generates its own random file key on the
+  machine running the tool, using that machine's random number generator,
+  encrypts the payload under that file key, and only then locks the file
+  key itself with `k` through scrypt. Rolling `k` from dice does not remove
+  the machine's random number generator from the design; it makes the
+  wrapper around that generator's output accountable, not the generator
+  ([the same point in the failure matrix](README.md#10-failure-mode-matrix-what-saves-you)).
 - **A filled roll sheet left in a drawer.** A sheet with the dice results
   written on it is a seed or a key in plain text. No cryptography on this
   page defends paper; destroying the sheet once the backup is proven is what
   does.
-- **Threshold-many cards sitting in the same place as the payload.** SLIP-39
-  reveals nothing below threshold, and age plus OpenPGP reveal nothing without
-  `k`, but both properties depend on the shares and the payload being apart.
-  Threshold-many cards next to the file they unlock is the whole secret,
-  assembled, wherever that place is.
+- **Threshold-many cards sitting in the same place as the payload.** Below
+  threshold, SLIP-39 reveals nothing; without `k`, age and OpenPGP reveal
+  nothing. Both guarantees assume the shares and the payload are apart. Put
+  threshold-many cards next to the file they unlock and the whole secret is
+  assembled in one place.
 
 ---
 
