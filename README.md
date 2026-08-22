@@ -838,7 +838,13 @@ backup key before deciding to stop, destroy that sheet too, along with
 wherever you wrote `k` down: a key protects nothing without a payload to
 lock. Keep the cosigner cards for now: they are all you hold until you
 come back to build the backup, and step 11 destroys them once that
-backup is proved. Do not fund the wallet beyond pocket change until the
+backup is proved. Keep the two of them apart while they wait, each
+sealed in its own envelope in a different one of the places
+[§8](#8-storing-the-shares-the-object-and-where-it-goes) lists. One
+card is one cosigner seed and cannot spend by itself; the two in one
+drawer are the wallet in plain text, which is the artifact
+[§7](#7-known-traps-each-has-bitten-real-people) forbids in every
+other form. Do not fund the wallet beyond pocket change until the
 backup in the rest of this phase exists. And the machine that has held
 a cosigner seed in memory still never connects to a network again.
 

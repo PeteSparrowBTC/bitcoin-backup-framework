@@ -180,10 +180,12 @@ backup gets built from it today. If you rolled the key sheet before changing
 your mind about stopping, destroy it too, and whatever you wrote the key
 onto; a key protects nothing without a payload to lock. Keep the value
 cards for now: they are all you have until you come back to build the
-backup, and step 5 destroys them once that backup is proved. Do not fund
-the wallet beyond pocket change until that backup exists, and the
-machine that has held a cosigner seed in memory still never connects to a
-network again
+backup, and step 5 destroys them once that backup is proved. Keep the two
+apart while they wait, each sealed in its own envelope in a different
+place: one card is one cosigner seed and cannot spend by itself, and the
+two in one drawer are the wallet in plain text. Do not fund the wallet
+beyond pocket change until that backup exists, and the machine that has
+held a cosigner seed in memory still never connects to a network again
 ([the full version of this exit](README.md#if-you-are-stopping-after-generating)).
 
 ---
@@ -304,6 +306,7 @@ backup sitting in one place.
 | `payload.age.gpg.asc` | Password manager attachment, in its own entry |
 | The same file again | Both payload USB sticks: one in the bank box, one in the home pouch. Replicate freely; it is ciphertext behind two locks |
 | At least one payload copy | Somewhere holding no share card |
+| `verification-record.txt` | The password-manager entry with the payload, and both payload USB sticks: it is what a recovery is checked against, in the annual drill as much as in the dry run |
 
 Seal each card in an envelope with your signature across the flap, so you can
 tell if a location was opened. Label it so it survives a house move: "important
