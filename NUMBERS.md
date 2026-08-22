@@ -13,7 +13,7 @@ should be.
 <!-- revision:start -->
 **Revised 2026-08-12.** This page ages better than the rest of the guide,
 because arithmetic does not move. What can move is which counts the tools
-recommend, so check those against the tools rather than against this page.
+recommend, and when those move this page is changed with them.
 <!-- revision:end -->
 
 ---

@@ -26,7 +26,10 @@ two and keep postponing it, this document is for you. It is a complete
 framework for securing a Bitcoin seed phrase, its passphrase, and the digital
 accounts around them, whether you are starting from nothing or already have
 a strategy you have never pressure-tested (the rules in [§3](#3-the-rules) and the failure
-matrix in [§10](#10-failure-mode-matrix-what-saves-you) work just as well as an audit of an existing setup). It is
+matrix in [§10](#10-failure-mode-matrix-what-saves-you) work just as well as an audit of an existing setup). The job
+is backing a seed up rather than making one: if you have no wallet yet,
+[§6](#6-setup-from-zero-the-ordered-checklist) rolls a seed from dice, and if you
+already have one you start from it. It is
 written for someone who wants to **trust no one** and does not want to become
 a security expert to get this right. If you already use a password manager
 and two-factor authentication, you are equipped for everything below.
@@ -72,10 +75,13 @@ issue; the repository is public and nothing about a page needs them.
 <!-- revision:start -->
 **Revised 2026-08-12.** Rule 7 says an undated artifact cannot be told apart
 from a current one, and that applies to this document as much as to a share
-card. Most of what is written here is a claim about something else: what the
-backup tool emits and calls it, what it defaults to, what other projects offer.
-If the date above is old, check the tool's own output before trusting the
-filenames on this page.
+card. The date says when a person last checked the claims, and most of what is
+written here is a claim about something else: what the backup tool emits and
+calls it, what it defaults to, what other projects offer. The tool is
+maintained with this document, so its filenames are changed here in the same
+release. The claims about other projects are the ones that go out of date on
+their own, which is what the dates in
+[what else is out there](LANDSCAPE.md) are for.
 <!-- revision:end -->
 
 ---
@@ -593,7 +599,7 @@ step below happens in one. This is what it is and why nothing else in this
 document is as non-negotiable.
 
 **Tails is an operating system on a USB stick that runs entirely in memory and
-forgets everything when you shut it down.** It is free, about 1.8 GB, and
+forgets everything when you shut it down.** It is free and
 maintained by a project whose only product is this property. You boot the spare
 computer from the stick, do the work, and shut down; nothing was written to the
 computer's disk because nothing is ever written to the computer's disk.
@@ -612,6 +618,15 @@ nothing is the default and persistence is the thing you would have to switch on.
 It also means the spare computer never has to be trusted with anything. It lends
 a processor and a screen for an evening. The property you depend on lives on the
 stick, and the same stick behaves the same way on any machine you boot it from.
+
+**The machine is still retired from the network afterwards.** Amnesia is a
+property of Tails, not of the hardware underneath it. Firmware, an internal disk
+you never took out, and any peripheral that can read memory directly all sit
+outside what the stick controls, and none of them can be inspected on the kind of
+old laptop this is likely to be. So the rule is the blunt one rather than the
+clever one: once a machine has had your seed in memory, it never connects to a
+network again. The cost is one old laptop, and it removes a class of question you
+would otherwise have to keep answering.
 
 **Three things to get right at the Welcome Screen**, which is the setup dialog
 before the desktop appears:
@@ -1269,6 +1284,13 @@ any order, years apart, as trust arrives.
   attempting it are *more* likely to lose funds than to gain security.
   Complexity is itself a risk axis; this framework spends its complexity
   budget only where a named failure mode demands it.
+- **No requirement that the seed was made here.** The framework backs a seed up,
+  and where yours came from is your business.
+  [§6](#6-setup-from-zero-the-ordered-checklist) rolls one from dice for readers
+  who have no wallet yet, and a reader arriving with a hardware wallet's seed
+  skips that and loses nothing else. What does not change is rule 0: a backup
+  cannot repair a seed that was weak when you brought it
+  ([§2](#2-before-you-back-it-up-is-the-secret-worth-protecting)).
 - **No claim that solo covers everything.** Death (beyond a thread for your
   estate), incapacity (for the coins), and duress are open items until [§11](#11-involving-others-later-the-upgrade-path),
   written down as open items because a known gap beats a false sense of

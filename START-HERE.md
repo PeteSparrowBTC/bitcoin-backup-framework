@@ -4,18 +4,25 @@ This is the short version: what to do, in order. Every step links to the
 reasoning in [the framework](README.md), and you can ignore those links until
 something surprises you. Read this page through once before you begin anything.
 
-**What you end up with.** A wallet whose seed phrase you generated yourself and
-can prove was not chosen for you, backed up so that no single place holds enough
-to steal it and no single loss destroys it, plus written instructions a
+**What you end up with.** A backup where no single place holds enough to steal
+your coins and no single loss destroys them, plus written instructions a
 non-technical person could follow.
+
+**Where the seed comes from.** Yours, from any wallet. This is a framework for
+backing up a seed rather than for making one, and it does not care where yours
+came from. If you have no wallet yet, [step 2](#2-roll-the-dice-twice) rolls one
+from dice so you can prove it was not chosen for you. Skip that half of the step
+if you already have a wallet you intend to keep.
 
 **What it costs.** Two evenings, a week of errands in between, and about an hour
 a year afterwards.
 
 <!-- revision:start -->
-**Revised 2026-08-12.** These steps name files and screens in two tools that
-change. If that date is old, read the tools' own instructions alongside this
-page rather than instead of it.
+**Revised 2026-08-12.** These steps name files and screens in tools that change.
+The tools and this page are maintained together, so when one of them renames a
+file, the step that names it is changed in the same release. If you ever find
+the two disagreeing, the tool is the one in front of you: follow it, and treat
+the page as the thing that needs fixing.
 <!-- revision:end -->
 
 **What it does not do.** It is not an inheritance plan, and by default your coins
@@ -29,11 +36,11 @@ when you are ready to involve people.
 
 | | |
 | --- | --- |
-| **Dice** | One ordinary six-sided die, used for both roll sessions. Casino dice are not needed, and neither is a handful ([why one](NUMBERS.md#why-this-guide-says-one-die)) |
+| **Dice** | One ordinary six-sided die, used for both roll sessions. Casino dice are not needed, and one is enough ([why one](NUMBERS.md#why-this-guide-says-one-die)) |
 | **Paper and a pen** | Pencil or a pigment pen. Not a thermal printer receipt |
-| **A spare computer** | Anything that boots from USB. It never goes online during any of this |
+| **A spare computer** | Anything that boots from USB. It is offline for all of this, and once it has met the seed it never connects to a network again, ever |
 | **Three USB sticks** | One for Tails, and two for payload copies, because one goes in the bank box and one stays home |
-| **[Tails](https://tails.net)** | An operating system that runs from the USB stick and forgets everything when you shut down. 1.8 GB, free, and the one piece of software here that is not optional ([why](README.md#the-clean-room-tails)) |
+| **[Tails](https://tails.net)** | An operating system that runs from the USB stick and forgets everything when you shut down. Free, and the one piece of software here that is not optional ([why](README.md#the-clean-room-tails)) |
 | **A password manager** | Bitwarden or equivalent, with two-factor authentication |
 | **Three storage places** | Home, a bank deposit box, and one more that is yours rather than borrowed. Pick them now, because step 6 is errands ([which places](README.md#8-storing-the-shares-the-object-and-where-it-goes)) |
 | **A fireproof document pouch** | The kind sold for passports |
@@ -42,8 +49,7 @@ when you are ready to involve people.
 
 ## 1. Download Tails and the tools, and check what you got
 
-**An hour, most of it a 1.8 GB download. This is the only step that happens
-online.**
+**This is the only step that happens online.**
 
 **Tails first.** Everything after this happens on it, and it is the one download
 here that can be verified properly rather than approximately. Follow
@@ -56,30 +62,16 @@ do](README.md#the-clean-room-tails)).
 **Then the two tools.** From the releases pages of
 [dice-to-seed](https://github.com/PeteSparrowBTC/dice-to-seed/releases) and
 [slip39-backup](https://github.com/PeteSparrowBTC/slip39-backup/releases), take
-each AppImage **together with its checksum file**, and copy both onto a second
-USB stick. `dice-to-seed` also publishes a `-tails.zip` containing the AppImage,
-its checksum and a `start-here.sh` that does the check for you and refuses to
-open the app if it fails. Take that one if you would rather not use a terminal.
+everything each release publishes rather than only the app, and copy it onto a
+second USB stick. `dice-to-seed` offers a `-tails.zip` that checks itself and
+will not open the app if the check fails, so take that one and there is nothing
+left for you to do by hand.
 
-**The check happens on Tails, not here.** A checksum file travels with the file
-it describes, so carrying both to the offline machine proves exactly as much
-there as it would prove now:
-
-```bash
-sha256sum -c --ignore-missing SHA256SUMS
-```
-
-What you cannot do offline is compare that hash against anywhere else. If you
-want that, do it now while you have a network: open the release's build log and
-check that the hash it recorded is the hash you hold. That is the difference
-between "this file is intact" and "this file is the one that was built", and
-only the second one needs to happen today.
-
-**Why bother at all, if it runs offline anyway.** Tails and the checksum answer
-different questions. Tails decides whether your seed can get out. The checksum
-decides whether the program deriving it is the one that was published. A
-tampered build needs no network to hurt you, only words its author can also
-compute, and an offline session will run it perfectly faithfully.
+**The one part that has to happen while you have a network.** Open each release's
+build log and confirm that the fingerprint recorded there is the one you are
+holding. Every other check works as well later on the offline machine. This one
+needs somewhere else to compare against, so it does not
+([what each check proves, and what it does not](README.md#phase-b-back-up-the-seed-one-offline-session)).
 
 ---
 
@@ -96,6 +88,12 @@ seed phrase and tell whether it was random
    Write each digit down as it lands.
 2. **Log two, for the backup key.** Roll the same number again, on a **fresh
    log**. This is a different secret and must not reuse log one.
+
+**If you already have a wallet, roll log two only.** Log one makes a seed, and
+making one is optional here; backing one up is the whole point of the guide. Step
+3 then has only log two to convert, and at step 4 you type your own words in
+where the tool would otherwise have handed them to you. Bring them written down,
+and bring them into the offline session and nowhere else.
 
 **Why two logs, and why they must not be shared.** The wallet seed is one
 secret; the key that encrypts your backup file is another. On a 24-word seed the
@@ -190,8 +188,13 @@ mode ([full instructions](https://github.com/PeteSparrowBTC/slip39-backup/blob/m
    *is* your backup key, and until they are burned they are the only unprotected
    copies of either. You have the words and the hex now, and the dry run has just
    proved it ([why this is the trap it is](README.md#7-known-traps-each-has-bitten-real-people)).
-3. **Test spend**, once the wallet holds anything. Send a small amount in, then
+3. **Retire the spare computer from the network.** It has had your seed in
+   memory, and that is the end of its online life. Shut it down, put it away,
+   and do not connect it to anything again
+   ([why, given that Tails forgets](README.md#the-clean-room-tails)).
+4. **Test spend**, once the wallet holds anything. Send a small amount in, then
    send it out again. Receiving proves nothing; spending proves the whole path.
+   This happens on your everyday machine, not the one you just retired.
 
 **Why this comes before the errands rather than after.** Shares you have already
 placed in three locations are a working backup forever. Find a fault after the
