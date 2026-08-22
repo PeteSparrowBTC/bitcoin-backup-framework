@@ -728,16 +728,15 @@ destroys logs inside the session rather than saving work for later.
    one that was published. A tampered build needs no network to hurt you, only
    words its author can also compute, and an offline session runs it faithfully.
 
-   **Print the roll sheet now, too.** `dice-to-seed` publishes
-   `roll-sheet.html` as its own release asset, covered by the same
-   `SHA256SUMS` as the AppImage and the `-tails.zip`. Verify it against that
-   checksum here, on this networked machine, before you print it: paper
-   cannot go through the check that runs on Tails for the tools themselves,
-   so this is the one place the sheet's own checksum gets used. If you would
-   rather not print from a browser, the same source also carries a PDF
-   generated from that HTML, with its own record of which HTML it came
-   from; the HTML stays the artifact `SHA256SUMS` covers, so it is what you
-   verify either way. It is blank, so printing it now carries nothing;
+   **Print the roll sheet now, too.** `dice-to-seed` publishes the sheet in
+   two forms as its own release assets, `roll-sheet.pdf` to print and
+   `roll-sheet.html` as the same sheet in readable markup for anyone who
+   would rather see what they are printing. Both are covered by the same
+   `SHA256SUMS` as the AppImage and the `-tails.zip`, so verify whichever
+   one you print against that checksum here, on this networked machine,
+   before printing it: paper cannot go through the check that runs on Tails
+   for the tools themselves, so this is the one place the sheet's own
+   checksum gets used. The sheet is blank, so printing it now carries nothing;
    nothing filled in ever goes near a printer, because a spooler, an
    internal disk and a network queue are all memory this framework cannot
    audit. Print one sheet for every roll you will make: one for each
