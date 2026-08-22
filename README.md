@@ -958,6 +958,19 @@ seed in memory still never connects to a network again.
   search costs add instead of multiplying. A 2-of-2 built this way is worth
   about what its stronger passphrase is worth alone
   ([§2](#2-before-you-back-it-up-is-the-secret-worth-protecting)).
+- **Two cosigner seeds sharing one sheet, or one uncleared log.** Roll both
+  cosigner seeds from the same sheet and the two seeds are drawn from the
+  same digits, so the keys they produce are not independent: the 2-of-2 keys
+  quorum fails as one unit rather than two. Roll the second seed onto its own
+  sheet but without clearing the log first, and the seeds come out unrelated,
+  so that collapse does not happen; `dice-to-seed` clears the log on a mode
+  change, and rolling a second cosigner seed while still in seed mode is not
+  one, so the second seed is a hash of both sheets rather than the second
+  sheet alone. It cannot be recomputed from the sheet that appears to have
+  produced it, and nothing on screen shows that it happened. Both tools
+  refuse a seed sharing a log with the key
+  ([§2](#2-before-you-back-it-up-is-the-secret-worth-protecting)); nothing
+  refuses either version of two cosigner seeds sharing a sheet.
 - **Splitting the master password with SLIP-39.** Tempting symmetry, wrong
   tool: the master password is a *revocable* secret whose dominant risk is
   forgetting, and SLIP-39 wants a small binary secret, not text. A plaintext
@@ -1310,10 +1323,12 @@ belief.
 
 | Scenario | What saves you |
 |---|---|
-| Your device's random number generator was defective | **nothing in this framework; a perfect backup preserves the flaw.** [§2](#2-before-you-back-it-up-is-the-secret-worth-protecting) is the only defence: your own dice entropy, vendor diversity in multisig, and rotation when a defect is disclosed |
+| Your device's random number generator was defective | **nothing in this framework; the dice are the defence.** Rolling your own entropy bypasses the device generator, so the flaw never reaches the seed, on hardware from either vendor ([§2](#2-before-you-back-it-up-is-the-secret-worth-protecting)) |
+| A vendor's firmware, signing path, or screen lies to you | **nothing a backup can reach; the second vendor is the defence.** Dice supply the entropy, not the rest of the device's behaviour, and a defect there reaches every key that vendor's hardware holds. Two cosigner keys on hardware from two vendors is what stops one vendor's defect from satisfying the 2-of-2 keys quorum alone ([§2](#2-before-you-back-it-up-is-the-secret-worth-protecting)) |
 | The **backup machine's** generator was defective | the second lock, partially, and nothing else. Each format keys itself from that machine, so a predictable key opens the payload with no share at all and every card you placed is beside the point. An attacker who predicts age's key still has to break OpenPGP to reach what it protects, which is the defence-in-depth argument doing real work ([§4](#4-inventory-the-secrets-you-actually-hold)). Dice give `k` an origin you can recompute; they do not reach this |
-| A roll log survives in a drawer | **nothing.** Log one is the seed in plain text; log two is `k`, which opens the payload without any share. Destroying both in the session that made them is the whole of the defence ([§2](#2-before-you-back-it-up-is-the-secret-worth-protecting)) |
+| A roll sheet survives in a drawer | **nothing.** Each cosigner's sheet is a seed in plain text, and the key's sheet is `k`, which opens the payload without any share. Destroying every sheet in the session that made it is the whole of the defence ([§2](#2-before-you-back-it-up-is-the-secret-worth-protecting)) |
 | You reused one roll log for the seed and the key | **nothing, and the shares were never protecting anything.** Same hash, same input, so `k` is derivable from the wallet it encrypts. Both tools refuse this, which is the only reason it is unlikely rather than common |
+| You used one sheet for two cosigner seeds | **nothing, and no tool refuses it.** The two seeds are drawn from the same digits, so the keys they produce are not independent: the 2-of-2 keys quorum fails as one unit rather than two ([§7](#7-known-traps-each-has-bitten-real-people)) |
 | Forgotten master password | Recovery Sheet (Layer 0) |
 | Lost phone / 2FA device | 2FA recovery code on the sheet |
 | House fire destroys home pouch + devices | bank-box sheet copy; 2-of-3 tolerates the lost share; cloud vault intact |
