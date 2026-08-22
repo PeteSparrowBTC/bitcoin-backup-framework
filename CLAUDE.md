@@ -97,12 +97,31 @@ Tested behaviour: a push targeting `main` exits 1 with instructions, a feature b
 
 ## Writing style
 
-Rules the README follows, and any edit to it must keep:
+Rules every page here follows, and any edit must keep:
 
 - **No em dashes.** Use a colon, semicolon, comma, parentheses, or a sentence break.
 - **No self-describing rhetoric.** The document states what is true; it does not praise its
   own candour. Avoid "honest", "pretend", and atmospheric adverbs such as "quietly".
+- **No en dashes either**, and no curly quotes. The box-drawing and arrow characters in
+  §5's diagram are neither, and they stay.
 - **Jargon is glossed at first use** and the register stays jurisdiction-neutral: the reader
   is a smart non-specialist, not a bitcoin native.
+- **No diff-anchored writing.** Describe what is true, never what changed. "Now", "no longer"
+  and "previously" are defects when they refer to these documents, and correct when they
+  refer to the world. "This page is new" dates itself the moment it is written.
+- **Every threshold carries its noun.** 2-of-2 keys to spend, 2-of-3 cards to recover; the
+  backup tool's own default is 3-of-5 cards. A bare "2-of-3" is a defect, because two
+  different numbers of two different things appear in one document.
+- **A vendor, never a maker.**
+- **Bold lead-in bullets are the house convention**, not a defect. Keep them.
+- Prose tells, each a defect: the rule of three used as padding; inflated significance;
+  promotional adjectives; empty participle tails; copula avoidance where "is" is meant;
+  negative parallelism ("not x, but y") and clipped tailing negations; vague attribution;
+  filler; aphorism formulas; signposting; a heading restated by the sentence beneath it;
+  emoji.
+- **Sentence-case headings.**
 - Section cross-references are clickable anchor links. If you add or retitle a section,
   re-check the anchors.
+- Each page carries a hand-written date inside `<!-- revision:start -->` markers, and it
+  means the day a person last checked the page's claims. Move it when the claims move, and
+  re-read the note itself while you are there.
