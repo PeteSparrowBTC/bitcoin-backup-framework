@@ -980,7 +980,8 @@ seed in memory still never connects to a network again.
   produced it, and nothing on screen shows that it happened. Both tools
   refuse a seed sharing a log with the key
   ([§2](#2-before-you-back-it-up-is-the-secret-worth-protecting)); nothing
-  refuses either version of two cosigner seeds sharing a sheet.
+  refuses sharing a sheet between the two seeds, and nothing refuses rolling
+  the second one without clearing the log.
 - **Splitting the master password with SLIP-39.** Tempting symmetry, wrong
   tool: the master password is a *revocable* secret whose dominant risk is
   forgetting, and SLIP-39 wants a small binary secret, not text. A plaintext
