@@ -22,17 +22,31 @@
 <!-- site-banner:end -->
 
 If you have been meaning to take real custody of your bitcoin for a year or
-two and keep postponing it, this document is for you. It is a complete
-framework for securing a Bitcoin seed phrase, its passphrase, and the digital
-accounts around them, whether you are starting from nothing or already have
-a strategy you have never pressure-tested (the rules in [§3](#3-the-rules) and the failure
-matrix in [§10](#10-failure-mode-matrix-what-saves-you) work just as well as an audit of an existing setup). The job
-is backing a seed up rather than making one: if you have no wallet yet,
-[§6](#6-setup-from-zero-the-ordered-checklist) rolls a seed from dice, and if you
-already have one you start from it. It is
-written for someone who wants to **trust no one** and does not want to become
-a security expert to get this right. If you already use a password manager
-and two-factor authentication, you are equipped for everything below.
+two and keep postponing it, this document is for you, if the holding is
+large. It is a complete framework for large holdings: a Bitcoin seed phrase
+per cosigner key, its passphrase, and the digital accounts around them. The
+recommended wallet is 2-of-2 keys, both held by one owner, on hardware from
+two vendors. Whether you are starting from nothing or already have a
+strategy you have never pressure-tested, the rules in [§3](#3-the-rules) and
+the failure matrix in [§10](#10-failure-mode-matrix-what-saves-you) work just
+as well as an audit of an existing setup. The job is backing those two
+cosigner seeds up: generating them is a supported action rather than a
+precondition, and [§6](#6-setup-from-zero-the-ordered-checklist) rolls them
+from dice for a reader with no wallet yet. It is written for someone who
+wants to **trust no one** and does not want to become a security expert to
+get this right.
+
+**Why not 2-of-3 keys?** Redundancy against a lost or dead device comes from
+the backup, which holds both cosigner seeds, so a third key adds no
+protection and costs a third secret and a wider spending surface, since any
+two of three can spend. 2-of-2 keys is the tightest spending rule and the
+fewest secrets, and it pairs one to one with two vendors.
+
+**What a dead device costs.** One offline session, not the coins. Take the
+payload and enough cards to the retired machine, restore that cosigner seed,
+and load it onto a new device. The machine this framework retires from the
+network is exactly the machine a restore needs, so retiring it keeps the
+spare part rather than spending one. A dead device is not a loss.
 
 **This is not an inheritance plan.** It is built for one living individual,
 and it trusts no one. That has a price: **by default, if you die, your
@@ -49,9 +63,10 @@ principles are tool-agnostic; the worked example uses the
 [SLIP-39 + age backup tool](https://github.com/PeteSparrowBTC/slip39-backup)
 plus the Bitwarden password manager.
 
-> **The one-sentence version:** everything digital hangs off a small physical
-> root of trust that only you control; nothing online is ever *sufficient* to
-> spend your bitcoin, and nothing single is ever *necessary* to recover it.
+> **The one-sentence version:** everything digital hangs off two small
+> physical roots of trust that only you control; nothing online, and neither
+> root alone, is ever *sufficient* to spend your bitcoin, and nothing single
+> is ever *necessary* to recover it.
 
 **About this document.** It is an open collaboration between a human,
 **Pete Sparrow**, and an AI, **Claude** (Anthropic's Fable model). The
@@ -1283,7 +1298,8 @@ any order, years apart, as trust arrives.
   protocol ([§13](#13-what-we-read-and-what-each-source-changed)) runs 93 pages and its own community notes that most people
   attempting it are *more* likely to lose funds than to gain security.
   Complexity is itself a risk axis; this framework spends its complexity
-  budget only where a named failure mode demands it.
+  budget only where a named failure mode demands it, and the second vendor is
+  spent on exactly one: a maker's defect satisfying the quorum alone.
 - **No requirement that the seed was made here.** The framework backs a seed up,
   and where yours came from is your business.
   [§6](#6-setup-from-zero-the-ordered-checklist) rolls one from dice for readers
@@ -1291,6 +1307,12 @@ any order, years apart, as trust arrives.
   skips that and loses nothing else. What does not change is rule 0: a backup
   cannot repair a seed that was weak when you brought it
   ([§2](#2-before-you-back-it-up-is-the-secret-worth-protecting)).
+- **Not for modest holdings.** A single-key wallet, backed up with the same
+  tool and the same rules, is a reasonable thing to want and is not what this
+  document describes: it is written for large holdings, where a second
+  vendor's hardware wallet is worth its cost. A reader whose holding does not
+  justify a second device can run the same backup tool against a single seed
+  and skip everything here that assumes a second cosigner.
 - **No claim that solo covers everything.** Death (beyond a thread for your
   estate), incapacity (for the coins), and duress are open items until [§11](#11-involving-others-later-the-upgrade-path),
   written down as open items because a known gap beats a false sense of
