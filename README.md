@@ -989,12 +989,15 @@ seed in memory still never connects to a network again.
   Your words, your shares and your payload are the other thing entirely, and no
   question about this document requires them.
 - **Keeping the dice logs.** This is the previous trap wearing a disguise the
-  guide handed you. A roll log is not working paper: log one *is* the seed and
-  log two *is* `k`, and either one alone defeats the whole design, `k` without
-  needing a single share. They are the only unprotected copies you will ever
-  make of those secrets, they look like scratch paper, and they are the thing
-  most likely to still be in a drawer a year later. Burn both in the session
-  that made them ([§2](#2-before-you-back-it-up-is-the-secret-worth-protecting)).
+  guide handed you. A roll sheet is not working paper: the recommended shape
+  produces three, one per cosigner seed and one for the backup key if you are
+  going on to build it, and each is a bearer secret until it is destroyed. A
+  cosigner's sheet alone hands over that seed; the key's sheet alone hands
+  over `k`, which opens the payload without needing a single share. They are
+  the only unprotected copies you will ever make of those secrets, they look
+  like scratch paper, and a sheet still in a drawer a year later is a wallet
+  in plain text. Destroy each one in the sitting that made it
+  ([§2](#2-before-you-back-it-up-is-the-secret-worth-protecting)).
 - **Recovering on a daily-use computer.** The reconstruction moment is when
   the whole seed exists in one place; on an everyday machine that is exactly
   where malware waits (rule 8). Recovery happens on offline Tails, full stop.
@@ -1327,7 +1330,7 @@ belief.
 | A vendor's firmware, signing path, or screen lies to you | **nothing a backup can reach; the second vendor is the defence.** Dice supply the entropy, not the rest of the device's behaviour, and a defect there reaches every key that vendor's hardware holds. Two cosigner keys on hardware from two vendors is what stops one vendor's defect from satisfying the 2-of-2 keys quorum alone ([§2](#2-before-you-back-it-up-is-the-secret-worth-protecting)) |
 | The **backup machine's** generator was defective | the second lock, partially, and nothing else. Each format keys itself from that machine, so a predictable key opens the payload with no share at all and every card you placed is beside the point. An attacker who predicts age's key still has to break OpenPGP to reach what it protects, which is the defence-in-depth argument doing real work ([§4](#4-inventory-the-secrets-you-actually-hold)). Dice give `k` an origin you can recompute; they do not reach this |
 | A roll sheet survives in a drawer | **nothing.** Each cosigner's sheet is a seed in plain text, and the key's sheet is `k`, which opens the payload without any share. Destroying every sheet in the session that made it is the whole of the defence ([§2](#2-before-you-back-it-up-is-the-secret-worth-protecting)) |
-| You reused one roll log for the seed and the key | **nothing, and the shares were never protecting anything.** Same hash, same input, so `k` is derivable from the wallet it encrypts. Both tools refuse this, which is the only reason it is unlikely rather than common |
+| You reused one roll log for a cosigner seed and the key | **nothing, and the shares were never protecting anything.** Same hash, same input, so `k` is derivable from the wallet that seed opens. Both tools refuse this, which is the only reason it is unlikely rather than common |
 | You used one sheet for two cosigner seeds | **nothing, and no tool refuses it.** The two seeds are drawn from the same digits, so the keys they produce are not independent: the 2-of-2 keys quorum fails as one unit rather than two ([§7](#7-known-traps-each-has-bitten-real-people)) |
 | Forgotten master password | Recovery Sheet (Layer 0) |
 | Lost phone / 2FA device | 2FA recovery code on the sheet |
