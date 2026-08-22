@@ -49,6 +49,16 @@ and load it onto a new device. The machine this framework retires from the
 network is exactly the machine a restore needs, so retiring it keeps the
 spare part rather than spending one. A dead device is not a loss.
 
+**Why multisig, on top of the backup.** The security literature's strongest
+criticism of share-based backups ([§13](#13-what-we-read-and-what-each-source-changed))
+is that the shares must be recombined in one place to spend; a multisig
+wallet never assembles a complete secret anywhere, because each cosigner key
+signs independently, on its own device. The two protect different things,
+so they compose rather than compete: multi-vendor multisig protects the
+*use* of the keys, and this framework protects the *backup* of each key.
+The vendor split is what makes the quorum mean anything; two keys from one
+vendor share whatever that vendor gets wrong.
+
 **This is not an inheritance plan.** It is built for one living individual,
 and it trusts no one. That has a price: **by default, if you die, your
 bitcoin is lost.** [Phase C](#phase-c-the-access-plan-without-trusting-anyone-an-evening)
@@ -1405,15 +1415,6 @@ redone:
   the plan works without you (rule 6).
 - **Tell your executor the access plan exists.** Existence, not contents:
   minimal disclosure, zero access granted.
-- **For large holdings, graduate the wallet itself to multisig.** The
-  security literature's strongest criticism of share-based backups ([§13](#13-what-we-read-and-what-each-source-changed)) is
-  that shares must be recombined in one place to spend; a multisig wallet
-  (e.g. 2-of-3 keys, each on its own hardware, each signing independently)
-  never assembles a complete secret anywhere. The two compose cleanly:
-  **multisig protects the *use* of keys; this framework protects the
-  *backup* of each key.** The backup tool already supports per-cosigner
-  seeds and stores the descriptor (which multisig makes truly
-  recovery-critical) inside `payload.age.gpg.asc`.
 
 **Keep the two lists disjoint.** The steps above grant two different things:
 a route to the payload (the full Recovery Sheet, Emergency Access, a Layer 2
@@ -1424,6 +1425,14 @@ the two grants drift onto the same name, because each was reasonable on the
 day you made it, so re-read the list rather than trusting your memory of it
 ([§8](#8-storing-the-shares-the-object-and-where-it-goes)). The executor is
 the deliberate exception, gated by death rather than by trust.
+
+**A third list, disjoint from both.** If another person holds a cosigner
+key, that person runs this document themselves, for their own key. The two
+backups never touch: no payload of yours holds their seed, no payload of
+theirs holds yours, and neither of you holds the other's cards. This cuts
+against the direction of everything else in this section, which is about
+gradually letting people into what stays yours; that is exactly why it has
+to be said here rather than assumed.
 
 Each step is independently revocable and independently useful. Take them in
 any order, years apart, as trust arrives.
@@ -1497,8 +1506,9 @@ and adjusted the design where the evidence pushed back:
   a design like ours, namely that share-based backups must reconstruct the
   secret in one place. It produced **rule 8** (clean-room-only recovery),
   the explicit framing that reconstruction risk is mitigated rather than
-  eliminated, and the **multisig graduation path** in [§11](#11-involving-others-later-the-upgrade-path) (multisig
-  protects use; this framework protects backup; compose them).
+  eliminated, and the **multi-vendor multisig premise** stated at the
+  outset (multisig protects use; this framework protects backup; compose
+  them).
 - **Jameson Lopp's security research** (lopp.net): the field's best
   curated index, and the source of the **metal share plate** guidance in
   [§8](#8-storing-the-shares-the-object-and-where-it-goes). His independent stress tests (fire, crush, corrosion) of commercial
