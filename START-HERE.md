@@ -214,17 +214,24 @@ value card you held back for exactly this, before continuing.
 Run [slip39-backup](https://github.com/PeteSparrowBTC/slip39-backup) in Owner
 mode ([full instructions](https://github.com/PeteSparrowBTC/slip39-backup/blob/main/TAILS_INSTRUCTIONS.md)).
 
-1. Enter both cosigner seeds' words, your BIP-39 passphrase if you use one,
-   and **the wallet descriptor**, which is the text telling wallet software
-   how your addresses are derived. Do not skip the descriptor
-   ([why](README.md#4-inventory-the-secrets-you-actually-hold)). A passphrase is
-   optional here, and if you are inventing one on the spot, do not: it has to be
-   generated and it has to be written down somewhere that is not beside the seed
+1. **Leave the top-level seed-words field empty** and enter both cosigner
+   seeds' words in the per-cosigner fields beneath it. The top field is there
+   for a single-sig or shared-seed backup, and filling it builds a different
+   wallet from the one you rolled. Each cosigner has its own passphrase
+   field, so enter the BIP-39 passphrase belonging to that seed if it has
+   one: a passphrase that does not reach the payload is not backed up, and
+   nothing reports that to you later. Then **the wallet descriptor**, which
+   is the text telling wallet software how your addresses are derived. Do not
+   skip the descriptor
+   ([why](README.md#4-inventory-the-secrets-you-actually-hold)). A passphrase
+   is optional here, and if you are inventing one on the spot, do not: it has
+   to be generated and it has to be written down somewhere that is not beside
+   the seed
    ([what makes one good](README.md#the-passphrase-strength-you-can-actually-assess)).
 2. **Paste the backup key you rolled**, rather than letting the tool generate
    one. Otherwise the key protecting every copy of your backup comes from a
    generator you cannot check.
-3. Set the shape to **2-of-3 shares**, meaning three shares of which any two recover.
+3. Set the shape to **2-of-3 cards**, meaning three cards of which any two recover.
 4. **Write the three share cards.** Each share is 33 words. Print the words and
    the supplied `share-qr.png` together, on a printer that has never been on a
    network, or copy the words by hand. Put on each card: the words, which share
