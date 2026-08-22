@@ -130,17 +130,18 @@ One die removes the rule instead of asking you to keep it at roll eighty. It
 costs about a quarter of an hour per log. If you do use several, the count is
 yours to choose and the condition is the same at any count.
 
-## The same die for both logs
+## The same die for every sheet
 
-Use one die for every sheet: each seed's log and the key's log alike. A die has
-no memory, so each session is its own independent set of rolls, and a second
-die adds nothing except another object whose fairness you have not considered.
+Use one die for every sheet: a cosigner seed's sheet and the key's sheet
+alike. A die has no memory, so each sheet is its own independent set of
+rolls, and a second die adds nothing except another object whose fairness
+you have not considered.
 
-A bias does not couple them either. If your die favours 6, every log is
+A bias does not couple them either. If your die favours 6, every sheet is
 weakened in the same way and remains independent of the others: an attacker
 who exploits the bias still has to search each secret separately, and knowing
-one tells them nothing about another. What must not be shared is the **log**,
-and that is a different failure, described next.
+one tells them nothing about another. What must not be shared is the **roll
+log**, and that is a different failure, described next.
 
 ## What the hash does, and the one thing it cannot do
 
