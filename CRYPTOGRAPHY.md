@@ -20,8 +20,9 @@ so the framework's own sections can use "SHA-256" or "threshold" and move
 straight on, rather than pausing to define them each time.
 
 <!-- revision:start -->
-**Revised 2026-08-22.** This page is new, written alongside the change that
-gave the framework two named tools and a fixed set of primitives to explain.
+**Revised 2026-08-22.** The primitives described here are fixed by published
+standards and do not move. What can move is which of them the tools use, so
+the date says when a person last checked this page against those tools.
 <!-- revision:end -->
 
 ---
@@ -123,8 +124,8 @@ implementation. In this framework, that secret is the 32-byte backup key
 `k`, never the seed itself
 ([why not the seed](README.md#4-inventory-the-secrets-you-actually-hold)).
 Output: a set of word-list shares, built so that any threshold-many of them
-reconstruct the secret exactly, and the framework's recommendation is 2-of-3
-cards rather than the tool's own default of 3-of-5 cards.
+reconstruct the secret exactly, and the framework's recommendation is
+2-of-3 cards rather than the tool's own default of 3-of-5 cards.
 
 SLIP-39 implements **Shamir's secret sharing**, named for its designer. Each
 share by itself is consistent with every value the secret could possibly be,

@@ -99,7 +99,7 @@ one that should replace it. Never put a seed word, a share or a passphrase in an
 issue; the repository is public and nothing about a page needs them.
 
 <!-- revision:start -->
-**Revised 2026-08-12.** Rule 7 says an undated artifact cannot be told apart
+**Revised 2026-08-22.** Rule 7 says an undated artifact cannot be told apart
 from a current one, and that applies to this document as much as to a share
 card. The date says when a person last checked the claims, and most of what is
 written here is a claim about something else: what the backup tool emits and
@@ -336,7 +336,7 @@ security. It does not. The risk vectors:
    no error shown on a wrong entry, is a durable way to lose funds with no
    attacker involved at all.
 
-**The specific case: same seed, 2-of-2, `Barcelona2019!` and `Cat2025`.**
+**The specific case: same seed, 2-of-2 keys, `Barcelona2019!` and `Cat2025`.**
 
 If the mnemonic never leaks, both wallets rest on the mnemonic, and the
 passphrases are not doing the work you imagine. If the mnemonic does leak,
@@ -344,9 +344,9 @@ which is the exact scenario passphrases exist for, the attacker needs both
 keys, tests each passphrase separately against its own public key, and pays
 the *sum* of the two costs. Sums are dominated by their largest term.
 Generously calling `Barcelona2019!` 25 bits and `Cat2025` 20 bits, the pair is
-worth log2(2^25 + 2^20), or about 25 bits: **the 2-of-2 is worth roughly what
-its stronger passphrase is worth alone.** The second passphrase bought a
-rounding error, and 2^25 guesses is a few seconds of GPU time.
+worth log2(2^25 + 2^20), or about 25 bits: **the 2-of-2 keys wallet is worth
+roughly what its stronger passphrase is worth alone.** The second passphrase
+bought a rounding error, and 2^25 guesses is a few seconds of GPU time.
 
 Even in the attacker's worst case, where the public keys are somehow unknown
 and the search really is multiplicative, 45 bits is hours on rented hardware.
@@ -395,8 +395,8 @@ below assumes real entropy at both roots.
    hold adds places it can be taken from without adding anything an attacker
    has to defeat, which is the same trade a plaintext seed forces on you
    ([§4](#4-inventory-the-secrets-you-actually-hold)) reappearing inside a
-   threshold scheme. Six locations holding a duplicated 2-of-3 still fall to
-   two break-ins; six holding a 3-of-6 need three
+   threshold scheme. Six locations holding duplicated 2-of-3 cards still fall
+   to two break-ins; six holding 3-of-6 cards need three
    ([§8](#8-storing-the-shares-the-object-and-where-it-goes)).
 5. **Ciphertext is cheap; keys are precious.** Encrypted blobs
    (`payload.age.gpg.asc`, encrypted vault exports) may be replicated freely:
@@ -475,10 +475,10 @@ framework's default answer is mostly no, for reasons set out in
 [§8](#8-storing-the-shares-the-object-and-where-it-goes). Adding shares while the threshold
 stays put does still help an attacker, who needs the same number and now has more
 places to take them from. The difference is that the threshold moves too. Going
-from 2-of-3 to 3-of-5 survives two lost shares instead of one *and* demands three
-compromised locations instead of two: better in both directions at once, paid for
-in locations to set up and check rather than in security. A plaintext backup has
-no such dial, because its threshold is permanently one.
+from 2-of-3 cards to 3-of-5 cards survives two lost shares instead of one *and*
+demands three compromised locations instead of two: better in both directions at
+once, paid for in locations to set up and check rather than in security. A
+plaintext backup has no such dial, because its threshold is permanently one.
 
 Two lesser advantages. A plaintext seed announces itself, since a list of
 twenty-four words is recognisable to anyone who has heard of bitcoin, which is
@@ -565,10 +565,10 @@ the text alone in a password manager is not holding an anonymous block.
  LAYER 0 - PHYSICAL ROOT OF TRUST (depends on nothing, held only by you)
  ┌───────────────────────────────────────────────────────────────┐
  │  SLIP-39 share cards (33 words)   Recovery Sheet (×2 copies)  │
- │  2-of-3, three locations you      • PM master password        │
- │  alone control (home fireproof    • PM 2FA recovery code      │
- │  pouch / bank box / one more)     • vault-export password     │
- │                                   • access plan (bank box)    │
+ │  2-of-3 cards, three locations    • PM master password        │
+ │  you alone control (home          • PM 2FA recovery code      │
+ │  fireproof pouch / bank box /     • vault-export password     │
+ │  one more)                        • access plan (bank box)    │
  └───────────────┬───────────────────────────┬───────────────────┘
                  │ threshold of shares → k   │ unlocks the account
                  ▼                           ▼
@@ -598,7 +598,7 @@ Check the design against the rules:
 - **Vault compromised** (malware, phishing): attacker gets `payload.age.gpg.asc`
   (ciphertext), xpubs (privacy leak), and your logins (rotate them). No `k`,
   no coins. Rule 3 holds.
-- **Any one share location burns**: 2-of-3 still recovers `k`. Rule 4 holds.
+- **Any one share location burns**: 2-of-3 cards still recover `k`. Rule 4 holds.
 - **You forget the master password**: Recovery Sheet. Rule 4 holds.
 - **Password manager company disappears**: Layer 2 export + `payload.age.gpg.asc`
   copy. Rule 4 holds.
@@ -852,9 +852,9 @@ a cosigner seed in memory still never connects to a network again.
    generator you cannot check. If you skipped the key sheet in step 7
    because you meant to stop there, roll it now, the same way, on the
    spare sheet and card step 6 told you to hold back,
-   before continuing. Set the group shape to **2-of-3** (the tool defaults
-   to 3-of-5, which assumes five homes; three locations you alone control
-   is realistic, five rarely is).
+   before continuing. Set the group shape to **2-of-3 cards** (the tool
+   defaults to 3-of-5 cards, which assumes five homes; three locations you
+   alone control is realistic, five rarely is).
 9. **Dry-run the recovery before anything leaves this room.** Open a second
    copy of the tool in Recoverer mode, feed it threshold-many shares and
    `payload.age.gpg.asc`, and check the result against
@@ -968,8 +968,8 @@ a cosigner seed in memory still never connects to a network again.
 - **One seed, several passphrases, called multisig.** Deriving several
   cosigners from a single mnemonic produces a quorum that fails as one unit,
   and because each passphrase can be tested against its own public key the
-  search costs add instead of multiplying. A 2-of-2 built this way is worth
-  about what its stronger passphrase is worth alone
+  search costs add instead of multiplying. A 2-of-2 keys quorum built this way
+  is worth about what its stronger passphrase is worth alone
   ([§2](#2-before-you-back-it-up-is-the-secret-worth-protecting)).
 - **Two cosigner seeds sharing one sheet, or one uncleared log.** Roll both
   cosigner seeds from the same sheet and the two seeds are drawn from the
@@ -1039,12 +1039,12 @@ stick is a storage decision with a shelf life, not the default.
 
 Two ways to get the words out of the offline session:
 
-- **Copy them by hand.** Thirty-three words per share, ninety-nine for a 2-of-3,
-  about an hour done carefully. No device joins the trusted set, so rule 8 holds
-  without an exception. SLIP-39 words carry a checksum, so a miscopied word is
-  refused at recovery rather than silently yielding the wrong key, and the dry
-  run (Phase B, step 9) is what proves your copies while it is still cheap to
-  find out.
+- **Copy them by hand.** Thirty-three words per share, ninety-nine for
+  2-of-3 cards, about an hour done carefully. No device joins the trusted set,
+  so rule 8 holds without an exception. SLIP-39 words carry a checksum, so a
+  miscopied word is refused at recovery rather than silently yielding the wrong
+  key, and the dry run (Phase B, step 9) is what proves your copies while it is
+  still cheap to find out.
 - **Print them, on a printer kept for this.** Faster, and printing the words
   and the QR together removes transcription risk in both directions: none
   going onto the card, none coming off it at recovery. The cost is that the
@@ -1109,14 +1109,14 @@ re-split rather than copy another.
 
 **One location, one share. Never two.** Two different cards in one envelope,
 one drawer, or one deposit box is a spendable quorum sitting in a single
-place, and it turns your 2-of-3 into a 1-of-2 while everything still looks
-correct from the outside. This is the one error in this section that costs
-you the whole design, and it happens by drift rather than by decision: the
-bank box already holds the access plan and a Recovery Sheet copy, so it is
-the natural place for a second card to end up "for now". Check the box, not
-your intentions.
+place, and it turns your 2-of-3 cards into 1-of-2 cards while everything
+still looks correct from the outside. This is the one error in this section
+that costs you the whole design, and it happens by drift rather than by
+decision: the bank box already holds the access plan and a Recovery Sheet
+copy, so it is the natural place for a second card to end up "for now".
+Check the box, not your intentions.
 
-For 2-of-3, pick three homes such that:
+For 2-of-3 cards, pick three homes such that:
 
 - **No two share a disaster domain**: not all in one building or flood
   plain. Home + a bank box across town + an office is a workable minimum;
@@ -1226,7 +1226,7 @@ boundary is threshold-many cards **and** the payload, and one card is not
 threshold-many. Whoever empties that location holds one card and a file that
 decrypts nothing, and still needs a second card from somewhere else.
 
-**The payload is not a second geographic factor, though.** For a 2-of-3 any
+**The payload is not a second geographic factor, though.** For 2-of-3 cards, any
 two locations already yield a quorum, so if the payload sits in any share
 location at all, at least one pair of raids is complete on its own. The
 default layout does exactly that: Layer 2 sticks live in the bank box and the
@@ -1237,7 +1237,7 @@ threshold was met. The payload's job is to make cards alone worthless, and it
 does that job wherever it sits.
 
 **If you want a physical-only attacker to need something beyond your
-locations**, the condition for 2-of-3 is strict: keep the payload *and* the
+locations**, the condition for 2-of-3 cards is strict: keep the payload *and* the
 Recovery Sheet out of all three share locations. Two raids then yield two
 cards and nothing to decrypt them with. The default declines this on rule 4
 grounds: with no local payload copy, a password-manager failure combined with
@@ -1256,10 +1256,11 @@ only to be somewhere your cards are not.
 > **The short version: copy at most one card, and never all of them.** A copy
 > does not raise the threshold, so it adds a place to steal from without
 > adding anything an attacker must defeat (rule 4). If you have five or six
-> locations worth using, re-split to 3-of-5 or 3-of-6 rather than copying:
-> better in both directions at once, and nothing extra to keep track of.
+> locations worth using, re-split to 3-of-5 cards or 3-of-6 cards rather than
+> copying: better in both directions at once, and nothing extra to keep track
+> of.
 
-A tempting shortcut: keep the 2-of-3 and store a second copy of one card
+A tempting shortcut: keep the 2-of-3 cards and store a second copy of one card
 somewhere, rather than generating a new split. It is a real option with a
 measurable cost, and there is one version of it you should not do.
 
@@ -1269,11 +1270,11 @@ work, meaning how much choice the attacker has about which two:
 
 | Scheme | Locations | Break-ins for theft | Losses survived | Do the extra copies form a quorum alone? |
 | --- | --- | --- | --- | --- |
-| 2-of-3, distinct | 3 | 2 | any 1 | no |
-| 2-of-3, one card duplicated | 4 | 2 | any 2 but one combination | no |
-| 2-of-3, **every** card duplicated | 6 | 2 | any 3 | **yes** |
-| 3-of-5, distinct | 5 | 3 | any 2 | no |
-| 3-of-6, distinct | 6 | 3 | any 3 | no |
+| 2-of-3 cards, distinct | 3 | 2 | any 1 | no |
+| 2-of-3 cards, one duplicated | 4 | 2 | any 2 but one combination | no |
+| 2-of-3 cards, **every** one duplicated | 6 | 2 | any 3 | **yes** |
+| 3-of-5 cards, distinct | 5 | 3 | any 2 | no |
+| 3-of-6 cards, distinct | 6 | 3 | any 3 | no |
 
 Read the last column first. **Duplicating every card builds a second complete
 backup**, because the three spare copies hold one of each between them and
@@ -1285,9 +1286,9 @@ attacker takes the easy copy while your bank box goes untouched. Duplicating
 *one* card does not do this, because someone holding the spare still has to
 reach a strong location for a second, different card.
 
-At the same number of locations, re-splitting dominates. 3-of-6 survives the
-same three losses as full duplication while demanding three break-ins instead
-of two, and leaves no weak subset that recovers on its own. There is no
+At the same number of locations, re-splitting dominates. 3-of-6 cards survive
+the same three losses as full duplication while demanding three break-ins
+instead of two, and leave no weak subset that recovers on its own. There is no
 trade-off to weigh between those two; one is better in every direction.
 
 Against that, keep the count small for a reason that has nothing to do with
@@ -1299,14 +1300,14 @@ The annual drill ([§9](#9-the-annual-drill)) grows the same way.
 
 So, in order of preference:
 
-- **Three good locations: 2-of-3, distinct.** The default, and right for most
-  people.
+- **Three good locations: 2-of-3 cards, distinct.** The default, and right for
+  most people.
 - **A fourth location that is weaker than the others: duplicate one card into
   it**, choosing the card whose location is most likely to be *lost* rather
   than robbed. Bounded cost, real gain, and the pair counts as one location
   when you re-check the disaster-domain and reach-in-time rules above.
-- **Five or six locations you would genuinely trust: re-split to 3-of-5 or
-  3-of-6.** Better in both directions, and nothing to keep track of.
+- **Five or six locations you would genuinely trust: re-split to 3-of-5 cards
+  or 3-of-6 cards.** Better in both directions, and nothing to keep track of.
 - **Never duplicate every card**, at any location count.
 - **Duplicate `payload.age.gpg.asc` freely** before you consider duplicating any card
   at all. It is ciphertext (rule 5), it costs nothing, it adds no theft risk,
@@ -1348,16 +1349,16 @@ belief.
 | You used one sheet for two cosigner seeds | **nothing, and no tool refuses it.** The two seeds are drawn from the same digits, so the keys they produce are not independent: the 2-of-2 keys quorum fails as one unit rather than two ([§7](#7-known-traps-each-has-bitten-real-people)) |
 | Forgotten master password | Recovery Sheet (Layer 0) |
 | Lost phone / 2FA device | 2FA recovery code on the sheet |
-| House fire destroys home pouch + devices | bank-box sheet copy; 2-of-3 tolerates the lost share; cloud vault intact |
+| House fire destroys home pouch + devices | bank-box sheet copy; 2-of-3 cards tolerate the lost share; cloud vault intact |
 | Bitwarden outage / account loss / company failure | Layer 2 export + `payload.age.gpg.asc` copy |
 | Vault fully compromised (malware, phishing) | rule 3: attacker holds ciphertext + logins → rotate; coins untouched |
 | Malware on the machine you recover with | rule 8: you never recover on an online machine, so this scenario is designed out |
 | Recovery Sheet stolen | rotate master password, export password, re-secure; coins untouched |
-| One share location destroyed | threshold margin; re-split to a fresh 2-of-3 promptly, you are now at zero margin |
-| **Two share locations destroyed at once** | **nothing. This is the limit of 2-of-3; geographic separation is what makes it unlikely, and [§11](#11-involving-others-later-the-upgrade-path) is what fixes it properly** |
+| One share location destroyed | threshold margin; re-split to fresh 2-of-3 cards promptly, you are now at zero margin |
+| **Two share locations destroyed at once** | **nothing. This is the limit of 2-of-3 cards; geographic separation is what makes it unlikely, and [§11](#11-involving-others-later-the-upgrade-path) is what fixes it properly** |
 | A share is found by a stranger | reveals nothing alone (and even all shares yield only `k` without `payload.age.gpg.asc`); re-split at leisure |
-| A share-holder is also on the payload list (full Recovery Sheet, Emergency Access, a Layer 2 USB) | the threshold, and nothing else. The second layer was the whole reason a holder's share was safe to give, so once it is gone you are relying on a plain 3-of-5: three such holders can spend. Keep the two lists disjoint ([§11](#11-involving-others-later-the-upgrade-path)) |
-| **You copied every share, so six locations hold your 2-of-3** | **nothing, and you are now weaker than you were with three.** The spare copies hold one of each between them, so they recover the wallet on their own: a second complete backup built from your three weakest locations. Two break-ins still do it and the attacker picks the easiest two of six. Six locations are enough for a 3-of-6, which needs three break-ins and survives the same losses (rule 4, [§8](#8-storing-the-shares-the-object-and-where-it-goes)) |
+| A share-holder is also on the payload list (full Recovery Sheet, Emergency Access, a Layer 2 USB) | the threshold, and nothing else. The second layer was the whole reason a holder's share was safe to give, so once it is gone you are relying on plain 3-of-5 cards: three such holders can spend. Keep the two lists disjoint ([§11](#11-involving-others-later-the-upgrade-path)) |
+| **You copied every share, so six locations hold your 2-of-3 cards** | **nothing, and you are now weaker than you were with three.** The spare copies hold one of each between them, so they recover the wallet on their own: a second complete backup built from your three weakest locations. Two break-ins still do it and the attacker picks the easiest two of six. Six locations are enough for 3-of-6 cards, which need three break-ins and survive the same losses (rule 4, [§8](#8-storing-the-shares-the-object-and-where-it-goes)) |
 | `payload.age.gpg.asc` lost everywhere | **unrecoverable. This is the artifact to replicate generously (rule 5)** |
 | You are incapacitated | Emergency Access (vault: bills, email, accounts) after the waiting period; **coins wait**, no solo mechanism covers them ([§11](#11-involving-others-later-the-upgrade-path)) |
 | You die | **by default: the coins are lost.** This framework is not an inheritance plan. The access plan in the bank box gives your estate a chance (a diligent executor, the will breadcrumb, the legal process); [§11](#11-involving-others-later-the-upgrade-path) is the real fix |
@@ -1409,11 +1410,11 @@ redone:
   chain when combined with the estate-reachable bank box. (Cost: the master
   password then exists in only one physical copy plus your memory, a
   conscious loss-resilience trade.)
-- **Re-split shares to 3-of-5** and hand one or two shares to holders in
+- **Re-split to 3-of-5 cards** and hand one or two shares to holders in
   other cities, chosen from people who are *not* on the payload list above.
   Tell them it is one useless-alone piece of a backup, so they guard it
   without being able to spend, and without panic. Collect and destroy the
-  superseded 2-of-3 artifacts (rule 7).
+  superseded 2-of-3 cards (rule 7).
 - **Have them execute a dry run** of the access plan while you watch and
   say nothing. That, not your own re-reading, is the real test of whether
   the plan works without you (rule 6).

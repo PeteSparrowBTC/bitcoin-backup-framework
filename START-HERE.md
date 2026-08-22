@@ -19,7 +19,7 @@ each.
 a year afterwards.
 
 <!-- revision:start -->
-**Revised 2026-08-12.** These steps name files and screens in tools that change.
+**Revised 2026-08-22.** These steps name files and screens in tools that change.
 The tools and this page are maintained together, so when one of them renames a
 file, the step that names it is changed in the same release. If you ever find
 the two disagreeing, the tool is the one in front of you: follow it, and treat
@@ -115,7 +115,7 @@ Every sheet follows the same cycle:
 
 1. Roll **111** times for a 24-word seed, or **60** for 12 words ([where those
    counts come from](NUMBERS.md#why-99-rolls-is-not-256-bits)); the backup
-   key's sheet takes the same count as your seed and derives 64 hex
+   key's sheet takes the same count as your seeds and derives 64 hex
    characters and a four-character check code ([what those are
    worth](NUMBERS.md#bytes-and-why-a-hex-character-is-half-a-byte)). Write
    each throw onto the sheet **as it lands**: not copied off the screen
@@ -261,7 +261,7 @@ mode ([full instructions](https://github.com/PeteSparrowBTC/slip39-backup/blob/m
    keeps the value cards for the time being, because the backup does not
    exist yet; finishing the backup does not, because the payload is what
    survives from here on.
-3. **Retire the spare computer from the network.** It has had your seed in
+3. **Retire the spare computer from the network.** It has had your seeds in
    memory, and that is the end of its online life. Shut it down, put it away,
    and do not connect it to anything again
    ([why, given that Tails forgets](README.md#the-clean-room-tails)).

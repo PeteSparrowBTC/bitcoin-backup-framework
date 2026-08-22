@@ -11,7 +11,7 @@ that when a tool shows you a number you can check whether it is the number it
 should be.
 
 <!-- revision:start -->
-**Revised 2026-08-12.** This page ages better than the rest of the guide,
+**Revised 2026-08-22.** This page ages better than the rest of the guide,
 because arithmetic does not move. What can move is which counts the tools
 recommend, and when those move this page is changed with them.
 <!-- revision:end -->

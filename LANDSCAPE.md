@@ -5,7 +5,7 @@ before you commit to this one. This page is a map: what each project is, where
 to find it, and how it relates to the choices made here.
 
 <!-- revision:start -->
-**Revised 2026-08-12.** This is the page that rots fastest here. Projects
+**Revised 2026-08-22.** This is the page that rots fastest here. Projects
 release, change licence and get abandoned, so treat every entry as true on that
 date and confirm at the source before relying on it.
 <!-- revision:end -->
@@ -33,8 +33,8 @@ were alternatives:
 
 Most projects are one of these. A few are several, and the useful question
 about any of them is which part you are actually short of. If you do not know
-whether a 2-of-3 fits your life, no tool will tell you and a procedure will
-just answer for you.
+whether 2-of-3 cards fit your life, no tool will tell you and a procedure
+will just answer for you.
 
 **Where this framework sits on that axis:** it is a procedure plus the tools to
 execute it, and it is deliberately not a method. It picks the scheme, the
@@ -195,9 +195,9 @@ into overlapping groups of words is not Shamir, and a single piece reveals most
 of the words rather than nothing at all.
 
 **Their sharding guidance, where they do shard,** lands close to this framework:
-2-of-3 across home, work and a bank deposit box, with 3-of-5 and 4-of-9 for
-people who have more locations or want to involve others, and group-of-groups
-configurations beyond that.
+2-of-3 shares across home, work and a bank deposit box, with 3-of-5 shares
+and 4-of-9 shares for people who have more locations or want to involve
+others, and group-of-groups configurations beyond that.
 
 **And their warning, which is aimed squarely at designs like this one.** Their
 SSKR-Dangers document says that "reconstructing a seed using a secret-sharing

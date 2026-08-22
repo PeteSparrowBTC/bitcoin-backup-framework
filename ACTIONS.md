@@ -9,9 +9,9 @@ action produces, which one you need, and how much of [the framework](README.md)
 each combination reads.
 
 <!-- revision:start -->
-**Revised 2026-08-22.** This page is new. It exists because the framework now
-supports three distinct starting points, and a reader arriving at any of them
-needs to know which parts apply before opening the framework itself.
+**Revised 2026-08-22.** What this page says about which steps each journey
+needs is a claim about the framework beside it, and the two are maintained
+together, so a step that moves there is moved here in the same change.
 <!-- revision:end -->
 
 ---
