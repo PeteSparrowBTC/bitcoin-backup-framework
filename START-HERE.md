@@ -8,11 +8,12 @@ something surprises you. Read this page through once before you begin anything.
 your coins and no single loss destroys them, plus written instructions a
 non-technical person could follow.
 
-**Where the seed comes from.** Yours, from any wallet. This is a framework for
-backing up a seed rather than for making one, and it does not care where yours
-came from. If you have no wallet yet, [step 2](#2-roll-the-dice-twice) rolls one
-from dice so you can prove it was not chosen for you. Skip that half of the step
-if you already have a wallet you intend to keep.
+**Which journey is yours.** This framework covers two actions, generating
+seeds and backing seeds up, and either is useful without the other. You might
+be doing both in one sitting, backing up two cosigner seeds you already hold,
+or generating yours and stopping before the backup. [Which parts you
+need](ACTIONS.md) names the three journeys and which steps below belong to
+each.
 
 **What it costs.** Two evenings, a week of errands in between, and about an hour
 a year afterwards.
@@ -36,7 +37,8 @@ when you are ready to involve people.
 
 | | |
 | --- | --- |
-| **Dice** | One ordinary six-sided die, used for both roll sessions. Casino dice are not needed, and one is enough ([why one](NUMBERS.md#why-this-guide-says-one-die)) |
+| **Dice** | One ordinary six-sided die, used for all three roll sessions. Casino dice are not needed, and one is enough ([why one](NUMBERS.md#why-this-guide-says-one-die)) |
+| **Printed roll sheets** | `roll-sheet.html`, printed blank before you start: one per roll session, three for the recommended shape ([step 1](#1-download-tails-and-the-tools-and-check-what-you-got) covers printing it) |
 | **Paper and a pen** | Pencil or a pigment pen. Not a thermal printer receipt |
 | **A spare computer** | Anything that boots from USB. It is offline for all of this, and once it has met the seed it never connects to a network again, ever |
 | **Three USB sticks** | One for Tails, and two for payload copies, because one goes in the bank box and one stays home |
@@ -67,6 +69,14 @@ second USB stick. `dice-to-seed` offers a `-tails.zip` that checks itself and
 will not open the app if the check fails, so take that one and there is nothing
 left for you to do by hand.
 
+**Print the roll sheets now, while a network and a printer are both easy to
+reach.** `dice-to-seed` publishes `roll-sheet.html` as its own release asset,
+covered by the same `SHA256SUMS` as the tools themselves. Print one blank
+sheet for each roll session ahead of you, on this ordinary networked machine,
+before you boot Tails: an amnesic offline session is the wrong place to be
+arranging a printer. It prints blank, so nothing filled in ever goes near a
+printer.
+
 **The one part that has to happen while you have a network.** Open each release's
 build log and confirm that the fingerprint recorded there is the one you are
 holding. Every other check works as well later on the offline machine. This one
@@ -75,37 +85,67 @@ needs somewhere else to compare against, so it does not
 
 ---
 
-## 2. Roll the dice, twice
+## 2. Roll the dice
 
-**30 to 45 minutes. You end with two roll logs on paper.**
+**20 to 60 minutes, depending on how many sheets you need. You end with each
+value written on its card.**
+
+Boot Tails on the spare computer, **with networking off**. Everything from
+here through step 5 happens in this one offline sitting.
 
 You are producing randomness you can account for, because you cannot look at a
 seed phrase and tell whether it was random
 ([why this matters](README.md#2-before-you-back-it-up-is-the-secret-worth-protecting)).
 
-1. **Log one, for the seed.** Roll **111** times for a 24-word seed, or **60**
-   for 12 words ([where those counts come from](NUMBERS.md#why-99-rolls-is-not-256-bits)).
-   Write each digit down as it lands.
-2. **Log two, for the backup key.** Roll the same number again, on a **fresh
-   log**. This is a different secret and must not reuse log one.
+**Which sheets you roll depends on your journey.** Roll a fresh sheet for each
+cosigner seed you are generating, and for the backup key too if you are
+building the backup in this sitting. If you already hold both cosigner seeds,
+bring them written down into this session and nowhere else, and roll the key
+sheet alone. If you are generating seeds and stopping there, skip the key
+sheet.
 
-**If you already have a wallet, roll log two only.** Log one makes a seed, and
-making one is optional here; backing one up is the whole point of the guide. Step
-3 then has only log two to convert, and at step 4 you type your own words in
-where the tool would otherwise have handed them to you. Bring them written down,
-and bring them into the offline session and nowhere else.
+Every sheet follows the same cycle:
 
-**Why two logs, and why they must not be shared.** The wallet seed is one
-secret; the key that encrypts your backup file is another. On a 24-word seed the
-seed's entropy *is* the SHA-256 of your rolls, so reusing the same log would make
-your backup key derivable from the wallet it is protecting. Both tools defend
-this: `dice-to-seed` clears your rolls when you switch modes, and `slip39-backup`
-compares the key against your seed and refuses if they match.
+1. Roll **111** times for a 24-word seed, or **60** for 12 words ([where those
+   counts come from](NUMBERS.md#why-99-rolls-is-not-256-bits)); the backup
+   key's sheet takes the same count as your seed and derives 64 hex
+   characters and a four-character check code ([what those are
+   worth](NUMBERS.md#bytes-and-why-a-hex-character-is-half-a-byte)). Write
+   each throw onto the sheet **as it lands**: not copied off the screen
+   afterward, because a sheet is only an independent record of what the dice
+   showed if it came from the dice rather than the app.
+2. **Compare the sheet against the screen, row by row, before deriving
+   anything.** The app shows the rolls in rows of ten, numbered by the
+   position of the first roll, and the printed sheet numbers its own rows the
+   same way, so this is a row-by-row read rather than a hunt through
+   undifferentiated digits. It is the only check in the whole system that can
+   catch a mis-press: every other check compares the typed log against
+   another conversion of that same typed log
+   ([why this matters](README.md#2-before-you-back-it-up-is-the-secret-worth-protecting)).
+3. Derive the value, write it onto its card, and verify what you wrote
+   against the screen too.
+4. Clear the log before you move to the next sheet.
 
-**The same die for both logs is correct.** A die has no memory, so two sessions
-with one die are two independent sets of rolls, and a second die would add
-nothing except a second object whose fairness you have not thought about. What
-has to be fresh is the log, not the dice.
+Keep one sheet in front of the machine at a time, and turn any other face
+down and out of the way. The words card carries which cosigner is which; the
+sheet never does.
+
+**Why separate sheets, and why they must not be shared.** Each cosigner seed
+is its own secret, and the key that encrypts the backup payload is a third.
+On a 24-word seed the seed's entropy *is* the SHA-256 of your rolls, so
+reusing a seed's sheet for the key would make the key derivable from the
+wallet it is protecting; both tools defend this, `dice-to-seed` clears your
+rolls when you switch modes and `slip39-backup` refuses a key that matches a
+seed in the form. Sharing a sheet between the two cosigner seeds is the
+sibling mistake and nothing refuses it: the seeds it produces are not
+independent, so a 2-of-2 keys wallet built this way fails as one unit instead
+of two. Clearing the log before the next sheet is what keeps them apart.
+
+**The same die for every sheet is correct.** A die has no memory, so each
+sheet's rolls are independent of the others, and a second die would add
+nothing except another object whose fairness you have not thought about. What
+has to be fresh is the sheet, not the dice
+([why one die for every sheet](NUMBERS.md#the-same-die-for-every-sheet)).
 
 **One die, not a handful.** Throwing several at once and reading them in one go
 is faster, and it adds a rule: the reading order has to be fixed before the
@@ -113,32 +153,25 @@ throw, because an order that depends on what the dice show is not random. The
 rule is easy to state and easy to forget at roll eighty, the penalty for
 forgetting is invisible in the result, and it grows with the number of dice
 ([the arithmetic](NUMBERS.md#why-this-guide-says-one-die)). One die has no rule
-to forget. The cost is about a quarter of an hour per log.
+to forget. The cost is about a quarter of an hour per sheet.
 
-**Do not re-roll a log because it looks wrong.** Fifty 1s is exactly as likely as
-any other fifty rolls, and discarding logs narrows the set your seed is drawn
-from. Discard a roll only when the die is cocked or leaves the table, which is a
-question about the throw and not about the number.
+**Do not re-roll a sheet because it looks wrong.** A run of 1s is exactly as
+likely as any other sequence of the same length, and discarding a sheet
+narrows the set your value is drawn from. Discard a roll only when the die is
+cocked or leaves the table, which is a question about the throw and not about
+the number.
 
 ---
 
-## 3. Convert the rolls, and check the answer
+## 3. Check the answer
 
-**20 minutes. You end with a seed phrase and a 32-byte key, both confirmed by
-two independent tools.**
+**A few minutes per value, confirming what step 2 already derived.**
 
-Boot Tails on the spare computer, **with networking off**.
-
-1. Run [dice-to-seed](https://github.com/PeteSparrowBTC/dice-to-seed) and enter
-   log one. It gives you your seed words.
-2. Switch to **Rolling for a backup key** and enter log two. It gives you 64 hex
-   characters and a four-character check code
-   ([why 64, and what the check code is worth](NUMBERS.md#bytes-and-why-a-hex-character-is-half-a-byte)).
-3. **Check both against a second implementation.** The conversion is
-   deterministic, so any correct tool produces the same answer from the same
-   rolls. Two tools agreeing is the proof; which one you ran first does not
-   matter. The key is reproducible with one command:
-   `printf '%s' "$ROLLS" | sha256sum`.
+**Check every derived value against a second implementation.** The conversion
+is deterministic, so any correct tool produces the same answer from the same
+rolls. Two tools agreeing is the proof; which one you ran first does not
+matter. The key is reproducible with one command:
+`printf '%s' "$ROLLS" | sha256sum`.
 
 If two tools disagree, stop and find out why before going further.
 
@@ -159,10 +192,10 @@ mode ([full instructions](https://github.com/PeteSparrowBTC/slip39-backup/blob/m
    optional here, and if you are inventing one on the spot, do not: it has to be
    generated and it has to be written down somewhere that is not beside the seed
    ([what makes one good](README.md#the-passphrase-strength-you-can-actually-assess)).
-2. **Paste the backup key from step 3**, rather than letting the tool generate
+2. **Paste the backup key from step 2**, rather than letting the tool generate
    one. Otherwise the key protecting every copy of your backup comes from a
    generator you cannot check.
-3. Set the shape to **2-of-3**, meaning three shares of which any two recover.
+3. Set the shape to **2-of-3 cards**, meaning three shares of which any two recover.
 4. **Write the three share cards.** Each share is 33 words. Print the words and
    the supplied `share-qr.png` together, on a printer that has never been on a
    network, or copy the words by hand. Put on each card: the words, which share
@@ -184,10 +217,11 @@ mode ([full instructions](https://github.com/PeteSparrowBTC/slip39-backup/blob/m
    the payload file, run Recoverer mode, and check the result against
    `verification-record.txt`. This is what proves your handwriting as much as it
    proves the tool.
-2. **Destroy both roll logs.** Log one *is* your seed in plain text and log two
-   *is* your backup key, and until they are burned they are the only unprotected
-   copies of either. You have the words and the hex now, and the dry run has just
-   proved it ([why this is the trap it is](README.md#7-known-traps-each-has-bitten-real-people)).
+2. **Destroy every roll sheet from this session.** Each cosigner's sheet is a
+   seed in plain text, and the key's sheet is the backup key; until they are
+   burned they are the only unprotected copies of either. You have the words
+   and the hex now, and the dry run has just proved it
+   ([why this is the trap it is](README.md#7-known-traps-each-has-bitten-real-people)).
 3. **Retire the spare computer from the network.** It has had your seed in
    memory, and that is the end of its online life. Shut it down, put it away,
    and do not connect it to anything again
