@@ -21,20 +21,21 @@
 > cannot disagree. The site fetches nothing from any other host.
 <!-- site-banner:end -->
 
-If you have been meaning to take real custody of your bitcoin for a year or
-two and keep postponing it, this document is for you, if the holding is
-large. It is a complete framework for large holdings, securing a Bitcoin
-seed phrase per cosigner key, its passphrase, and the digital accounts
-around them. The recommended wallet is 2-of-2 keys, both held by one owner,
-on hardware from two vendors. Whether you are starting from nothing or
-already have a strategy you have never pressure-tested, the rules in
-[§3](#3-the-rules) and the failure matrix in
-[§10](#10-failure-mode-matrix-what-saves-you) work just as well as an audit
-of an existing setup. The job is backing those two cosigner seeds up:
-generating them is a supported action rather than a precondition, and
-[§6](#6-setup-from-zero-the-ordered-checklist) rolls them from dice for a
-reader with no wallet yet. It is written for someone who wants to **trust no
-one** and does not want to become a security expert to get this right.
+If you have been meaning to take real custody of a large bitcoin holding for
+a year or two and keep postponing it, this document is for you. It is a
+complete framework for large holdings, securing a Bitcoin seed phrase per
+cosigner key, its passphrase, and the digital accounts around them. The
+recommended wallet is 2-of-2 keys, both held by one owner, on hardware from
+two vendors. Whether you are starting from nothing or already have a
+strategy you have never pressure-tested, the rules in [§3](#3-the-rules) and
+the failure matrix in [§10](#10-failure-mode-matrix-what-saves-you) work just
+as well as an audit of an existing setup. The job is backing those two
+cosigner seeds up: generating them is a supported action rather than a
+precondition, and [§6](#6-setup-from-zero-the-ordered-checklist) rolls them
+from dice for a reader with no wallet yet, and a reader who already holds
+both cosigner seeds starts from them. It is written for someone who wants to
+**trust no one** and does not want to become a security expert to get this
+right.
 
 **Why not 2-of-3 keys?** Redundancy against a lost or dead device comes from
 the backup, which holds both cosigner seeds, so a third key adds no
@@ -1299,7 +1300,7 @@ any order, years apart, as trust arrives.
   attempting it are *more* likely to lose funds than to gain security.
   Complexity is itself a risk axis; this framework spends its complexity
   budget only where a named failure mode demands it, and the second vendor is
-  spent on exactly one: a maker's defect satisfying the quorum alone.
+  spent on exactly one: a vendor's defect satisfying the quorum alone.
 - **No requirement that the seed was made here.** The framework backs a seed up,
   and where yours came from is your business.
   [§6](#6-setup-from-zero-the-ordered-checklist) rolls one from dice for readers
