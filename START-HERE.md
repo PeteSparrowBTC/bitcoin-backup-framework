@@ -37,8 +37,9 @@ when you are ready to involve people.
 
 | | |
 | --- | --- |
-| **Dice** | One ordinary six-sided die, used for all three roll sessions. Casino dice are not needed, and one is enough ([why one](NUMBERS.md#why-this-guide-says-one-die)) |
-| **Printed roll sheets** | `roll-sheet.html`, printed blank before you start: one per roll session, three for the recommended shape ([step 1](#1-download-tails-and-the-tools-and-check-what-you-got) covers printing it) |
+| **Dice** | One ordinary six-sided die, used for every roll session. Casino dice are not needed, and one is enough ([why one](NUMBERS.md#why-this-guide-says-one-die)) |
+| **Printed roll sheets** | `roll-sheet.html`, verified and printed blank before you start: one per roll session, three for the recommended shape, plus a spare ([step 1](#1-download-tails-and-the-tools-and-check-what-you-got) covers it) |
+| **Value cards** | Blank card stock, one for each value you expect to derive, plus a spare: up to three for the recommended shape, set aside in [step 1](#1-download-tails-and-the-tools-and-check-what-you-got). Not the share cards step 4 makes later |
 | **Paper and a pen** | Pencil or a pigment pen. Not a thermal printer receipt |
 | **A spare computer** | Anything that boots from USB. It is offline for all of this, and once it has met the seed it never connects to a network again, ever |
 | **Three USB sticks** | One for Tails, and two for payload copies, because one goes in the bank box and one stays home |
@@ -69,13 +70,15 @@ second USB stick. `dice-to-seed` offers a `-tails.zip` that checks itself and
 will not open the app if the check fails, so take that one and there is nothing
 left for you to do by hand.
 
-**Print the roll sheets now, while a network and a printer are both easy to
-reach.** `dice-to-seed` publishes `roll-sheet.html` as its own release asset,
-covered by the same `SHA256SUMS` as the tools themselves. Print one blank
-sheet for each roll session ahead of you, on this ordinary networked machine,
-before you boot Tails: an amnesic offline session is the wrong place to be
-arranging a printer. It prints blank, so nothing filled in ever goes near a
-printer.
+**Verify, then print the roll sheets, while a network and a printer are both
+easy to reach.** `dice-to-seed` publishes `roll-sheet.html` as its own release
+asset, covered by the same `SHA256SUMS` as the tools themselves: check it
+against that checksum before you print anything from it. Print one blank
+sheet for each roll session ahead of you, plus a spare, on this ordinary
+networked machine, before you boot Tails: the machine is offline from here
+on, so the spare is the only second chance a spoiled sheet gets. Set aside a
+blank value card for every value you expect to derive, plus a spare, for the
+same reason. It prints blank, so nothing filled in ever goes near a printer.
 
 **The one part that has to happen while you have a network.** Open each release's
 build log and confirm that the fingerprint recorded there is the one you are
@@ -85,13 +88,15 @@ needs somewhere else to compare against, so it does not
 
 ---
 
-## 2. Roll the dice
+## 2. Roll the dice, and derive each value
 
-**20 to 60 minutes, depending on how many sheets you need. You end with each
-value written on its card.**
+**20 to 90 minutes, depending on how many sheets you need. You end with each
+value written on its value card.**
 
 Boot Tails on the spare computer, **with networking off**. Everything from
-here through step 5 happens in this one offline sitting.
+here through step 5 happens in this one offline sitting, other than the test
+spend at the end of step 5, which waits for a funded wallet and a different
+machine.
 
 You are producing randomness you can account for, because you cannot look at a
 seed phrase and tell whether it was random
@@ -122,13 +127,28 @@ Every sheet follows the same cycle:
    catch a mis-press: every other check compares the typed log against
    another conversion of that same typed log
    ([why this matters](README.md#2-before-you-back-it-up-is-the-secret-worth-protecting)).
-3. Derive the value, write it onto its card, and verify what you wrote
+3. Derive the value, write it onto its value card, and verify what you wrote
    against the screen too.
-4. Clear the log before you move to the next sheet.
+4. Clear the log. Do this whether or not another sheet follows; it is also
+   what makes the next one safe to roll.
 
 Keep one sheet in front of the machine at a time, and turn any other face
-down and out of the way. The words card carries which cosigner is which; the
+down and out of the way. The value card carries which cosigner is which; the
 sheet never does.
+
+**If you are stopping after generating.** Do step 3 first: checking what you
+rolled against a second implementation matters whether or not you build the
+backup today. Then you hold a value card for each cosigner seed you rolled
+or brought here, and no backup of either yet.
+Destroy every sheet you rolled in this sitting regardless: a sheet is a seed
+in plain text whether or not a backup gets built from it today. If you
+rolled the key sheet before changing your mind about stopping, destroy it
+too, and whatever you wrote the key onto; a key protects nothing without a
+payload to lock. Keep the value cards: until you come back to build the
+backup, they are all you have. Do not fund the wallet beyond pocket change
+until that backup exists, and the machine that has held a cosigner seed in
+memory still never connects to a network again
+([the full version of this exit](README.md#if-you-are-stopping-after-generating)).
 
 **Why separate sheets, and why they must not be shared.** Each cosigner seed
 is its own secret, and the key that encrypts the backup payload is a third.
@@ -139,7 +159,7 @@ rolls when you switch modes and `slip39-backup` refuses a key that matches a
 seed in the form. Sharing a sheet between the two cosigner seeds is the
 sibling mistake and nothing refuses it: the seeds it produces are not
 independent, so a 2-of-2 keys wallet built this way fails as one unit instead
-of two. Clearing the log before the next sheet is what keeps them apart.
+of two. Clearing the log after every sheet is what keeps them apart.
 
 **The same die for every sheet is correct.** A die has no memory, so each
 sheet's rolls are independent of the others, and a second die would add
@@ -165,11 +185,13 @@ the number.
 
 ## 3. Check the answer
 
-**A few minutes per value, confirming what step 2 already derived.**
+**A few minutes per value. The rolls come back off the sheet, which is not
+destroyed yet.**
 
-**Check every derived value against a second implementation.** The conversion
+**Check every derived value against a second implementation.** Read the
+rolls back off the sheet and run them through a second tool. The conversion
 is deterministic, so any correct tool produces the same answer from the same
-rolls. Two tools agreeing is the proof; which one you ran first does not
+rolls, and two tools agreeing is the proof; which one you ran first does not
 matter. The key is reproducible with one command:
 `printf '%s' "$ROLLS" | sha256sum`.
 
@@ -185,9 +207,9 @@ payload file.**
 Run [slip39-backup](https://github.com/PeteSparrowBTC/slip39-backup) in Owner
 mode ([full instructions](https://github.com/PeteSparrowBTC/slip39-backup/blob/main/TAILS_INSTRUCTIONS.md)).
 
-1. Enter the seed words, your BIP-39 passphrase if you use one, and **the wallet
-   descriptor**, which is the text telling wallet software how your addresses
-   are derived. Do not skip the descriptor
+1. Enter both cosigner seeds' words, your BIP-39 passphrase if you use one,
+   and **the wallet descriptor**, which is the text telling wallet software
+   how your addresses are derived. Do not skip the descriptor
    ([why](README.md#4-inventory-the-secrets-you-actually-hold)). A passphrase is
    optional here, and if you are inventing one on the spot, do not: it has to be
    generated and it has to be written down somewhere that is not beside the seed
@@ -195,7 +217,7 @@ mode ([full instructions](https://github.com/PeteSparrowBTC/slip39-backup/blob/m
 2. **Paste the backup key from step 2**, rather than letting the tool generate
    one. Otherwise the key protecting every copy of your backup comes from a
    generator you cannot check.
-3. Set the shape to **2-of-3 cards**, meaning three shares of which any two recover.
+3. Set the shape to **2-of-3 shares**, meaning three shares of which any two recover.
 4. **Write the three share cards.** Each share is 33 words. Print the words and
    the supplied `share-qr.png` together, on a printer that has never been on a
    network, or copy the words by hand. Put on each card: the words, which share
@@ -217,11 +239,15 @@ mode ([full instructions](https://github.com/PeteSparrowBTC/slip39-backup/blob/m
    the payload file, run Recoverer mode, and check the result against
    `verification-record.txt`. This is what proves your handwriting as much as it
    proves the tool.
-2. **Destroy every roll sheet from this session.** Each cosigner's sheet is a
-   seed in plain text, and the key's sheet is the backup key; until they are
-   burned they are the only unprotected copies of either. You have the words
-   and the hex now, and the dry run has just proved it
+2. **Destroy every roll sheet and value card from this session, and any
+   paper you brought a cosigner seed's words on.** Each is a seed or the
+   backup key in plain text, and until burned they are the only unprotected
+   copies of either. You have the words and the hex safely in the payload
+   now, and the dry run has just proved it
    ([why this is the trap it is](README.md#7-known-traps-each-has-bitten-real-people)).
+   This goes further than the exit in step 2: stopping after generating
+   keeps the value cards, because they are all you have; finishing the
+   backup does not, because the payload is what survives now.
 3. **Retire the spare computer from the network.** It has had your seed in
    memory, and that is the end of its online life. Shut it down, put it away,
    and do not connect it to anything again
