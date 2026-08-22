@@ -195,13 +195,12 @@ Since the output tells you nothing, only the process is auditable:
   counterfeit or lying device. **None of them detect weak entropy**, because a
   weak seed derives addresses perfectly correctly. Do them anyway; just do not
   read a passing check as evidence of randomness.
-- **Diversify vendors, for a different reason now.** Two cosigner keys on
-  hardware from the same vendor are not protected against that vendor's
-  defect: one flaw reaches both, so the 2-of-2 keys threshold buys nothing.
-  Supplying your own entropy, above, is the first leg of the guard against
-  this, and it already removes the Coldcard event, a random-number-generator
-  regression, from every cosigner at once. Vendor diversity is the second
-  leg, and it still matters: firmware, the signing path, and whether the
+- **Diversify vendors.** Two cosigner keys on hardware from the same vendor
+  are not protected against that vendor's defect: one flaw reaches both, so
+  the 2-of-2 keys threshold buys nothing. Supplying your own entropy, above,
+  is the first leg of the guard against this: it removes the Coldcard event,
+  a random-number-generator regression, from every cosigner at once. Vendor
+  diversity is the second leg: firmware, the signing path, and whether the
   screen tells the truth about an address are per-vendor risks no amount of
   dice-rolling touches.
 - **Rotate on disclosure, before you protect.** When a defect affecting your
