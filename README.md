@@ -723,51 +723,64 @@ destroys logs inside the session rather than saving work for later.
    `SHA256SUMS` as the AppImage and the `-tails.zip`. Verify it against that
    checksum here, on this networked machine, before you print it: paper
    cannot go through the check that runs on Tails for the tools themselves,
-   so this is the one place the sheet's own checksum gets used. It is blank,
-   so printing it now carries nothing; nothing filled in ever goes near a
-   printer, because a spooler, an internal disk and a network queue are all
-   memory this framework cannot audit. Print one sheet per roll session:
-   three for the recommended shape, one per cosigner seed and one for the
-   backup key.
+   so this is the one place the sheet's own checksum gets used. If you would
+   rather not print from a browser, the same source also carries a PDF
+   generated from that HTML, with its own record of which HTML it came
+   from; the HTML stays the artifact `SHA256SUMS` covers, so it is what you
+   verify either way. It is blank, so printing it now carries nothing;
+   nothing filled in ever goes near a printer, because a spooler, an
+   internal disk and a network queue are all memory this framework cannot
+   audit. Print one sheet per roll session: three for the recommended
+   shape, one per cosigner seed and one for the backup key.
 7. Boot Tails **offline**, and roll the dice now if you have not
-   ([§2](#2-before-you-back-it-up-is-the-secret-worth-protecting)). The same
-   sequence applies to each of the three sheets in turn: roll it, writing
-   each throw down on the sheet as it lands rather than copying it from the
-   screen afterward, because a sheet is only an independent record of what
-   the dice showed if it was written from the dice and not from the app;
-   before deriving, compare the filled sheet against the on-screen log, row
-   by row (the app shows the log in rows of ten, numbered by the position of
-   the first roll, and the printed sheet numbers its own rows the same way,
-   so this is a row-by-row read rather than a hunt through undifferentiated
-   digits, and it is the only check here that can catch a mis-press); then
-   derive.
+   ([§2](#2-before-you-back-it-up-is-the-secret-worth-protecting)). Each
+   sheet you roll follows the same cycle: roll it, compare it against the
+   screen, derive from it, record what you derived, then clear before
+   moving to the next sheet.
 
-   - **Cosigner seed one.** Run `dice-to-seed` to derive its seed words.
-   - **Cosigner seed two.** Clear the roll log, or restart the app, before
-     rolling this one onto its own fresh sheet: the tool clears the log
-     when you change mode and deliberately keeps it when the mode you ask
-     for is the one you are already in, so that pressing the button you are
-     on cannot destroy the **60** (or **111**, for a twenty-four-word seed)
-     rolls you just made. Rolling a second cosigner seed is not a mode
-     change, so without clearing, the second seed would come from a hash of
-     both sheets and could not be recomputed from the sheet that appears to
-     have produced it.
+   - **Cosigner seed one.** Roll the die and write each throw onto the
+     sheet as it lands. Do not copy it from the screen afterward: a sheet
+     is only an independent record of what the dice showed if it was
+     written from the dice, not from the app. Before deriving, compare the
+     filled sheet against the on-screen log, row by row. The app shows the
+     log in rows of ten, numbered by the position of the first roll. The
+     printed sheet numbers its own rows the same way, so this is a
+     row-by-row read rather than a hunt through undifferentiated digits.
+     It is the only check in the system that can catch a mis-press
+     ([§2](#2-before-you-back-it-up-is-the-secret-worth-protecting)). Run
+     `dice-to-seed` to derive its seed words, and write them onto that
+     cosigner's card; verify what you wrote against the screen. Only then
+     clear the roll log, or restart the app: clearing is what makes the
+     next sheet safe to roll, and there is no way back to words you did
+     not write down.
+   - **Cosigner seed two.** The same cycle, on its own fresh sheet: roll
+     and write, compare, derive, record onto its card, verify, then clear.
+     Clearing matters here for a specific reason: the tool clears the log
+     when you change mode, and deliberately keeps it when the mode you
+     ask for is the one you are already in. That is so pressing the
+     button you are on cannot destroy the **60** (or **111**, for a
+     twenty-four-word seed) rolls you just made. Rolling a second cosigner
+     seed is not a mode change. Without clearing, the second seed would
+     come from a hash of both sheets and could not be recomputed from the
+     sheet that appears to have produced it.
    - **The backup key, `k`.** Needed only if you are going on to build the
      backup in this sitting; skip it if you plan to stop after generating.
-     Otherwise, clear or restart again, switch modes, and roll a third sheet
-     to derive 64 hex characters and a four-character check code
-     ([what those counts mean](NUMBERS.md#bytes-and-why-a-hex-character-is-half-a-byte)).
+     Otherwise, switch modes and roll a third sheet the same way: derive
+     64 hex characters and a four-character check code
+     ([what those counts mean](NUMBERS.md#bytes-and-why-a-hex-character-is-half-a-byte)),
+     write it down, verify it against the screen, then clear.
 
    Check every derived value against a second implementation before going
    on.
 
    **Work from one sheet at a time.** Once cosigner seed two exists, two
-   filled seed sheets are in the room together, and by design neither carries
-   a name, a date or a label; both stay in the room until the dry run proves
-   the backup. Keep the one you are using in front of you and turn the other
-   face down and out of the way. Which cosigner is which is not something to
-   record on the sheet: that distinction is written down later, once the
-   shares are copied onto cards.
+   filled seed sheets are in the room together, and by design neither
+   carries a name, a date or a label. If you go on to build the backup,
+   both stay in the room until the dry run proves it; if you stop at the
+   exit below instead, both are destroyed there. Keep the one you are
+   using in front of you and turn the other face down and out of the way.
+   Which cosigner is which is not something to record on the sheet: that
+   distinction is written down later, on the share cards made in step 11.
 
    **If you are backing up a cosigner seed you already hold**, you have no
    dice log for it and cannot acquire one, so rule 0 is answered by how that
@@ -782,24 +795,27 @@ destroys logs inside the session rather than saving work for later.
 
 If you stop here, you rolled two sheets, one per cosigner seed, and you
 hold two cosigner seeds written on paper, in one place, with none of it
-backed up. Destroy both sheets in this same sitting regardless: a sheet is
-a seed in plain text, whether or not a backup gets built from it today. If
-you already rolled a third sheet for the backup key before deciding to
-stop, destroy that one too; it protects nothing without a payload to lock.
-Do not fund the wallet beyond pocket change until the backup in the rest of
-this phase exists. And the machine that has now held two seeds in memory
-still never connects to a network again.
+backed up. Destroy both dice sheets in this same sitting regardless: a
+sheet is a seed in plain text, whether or not a backup gets built from it
+today. If you already rolled a third sheet for the backup key before
+deciding to stop, destroy that one too, along with wherever you wrote `k`
+down: a key protects nothing without a payload to lock. Do not fund the
+wallet beyond pocket change until the backup in the rest of this phase
+exists. And the machine that has now held two seeds in memory still never
+connects to a network again.
 
-8. Run `slip39-backup` in Owner mode: enter both cosigner seeds' words, an
-   optional BIP-39 passphrase (generated, never invented,
+8. Run `slip39-backup` in Owner mode: enter both cosigner seeds' words from
+   their cards, an optional BIP-39 passphrase (generated, never invented,
    [§2](#2-before-you-back-it-up-is-the-secret-worth-protecting)), and
    (**do not skip this**) the wallet descriptor. For multisig, the descriptor
    is as recovery-critical as the seeds. **Paste `k` and its check code** into
    the backup-key fields rather than letting the tool generate one; leave them
    empty and the key protecting every copy of your backup comes from a
-   generator you cannot check. Set the group shape to **2-of-3** (the tool
-   defaults to 3-of-5, which assumes five homes; three locations you alone
-   control is realistic, five rarely is).
+   generator you cannot check. If you skipped the key sheet in step 7
+   because you meant to stop there, go back and roll it now, the same way,
+   before continuing. Set the group shape to **2-of-3** (the tool defaults
+   to 3-of-5, which assumes five homes; three locations you alone control
+   is realistic, five rarely is).
 9. **Dry-run the recovery before anything leaves this room.** Open a second
    copy of the tool in Recoverer mode, feed it threshold-many shares and
    `payload.age.gpg.asc`, and check the result against
@@ -808,12 +824,12 @@ still never connects to a network again.
    are a working backup forever, so a fault found later costs you a trip to
    every one of them, and the trap at the end of
    [§7](#7-known-traps-each-has-bitten-real-people) is exactly this mistake.
-10. **Destroy all three sheets**, in this session, once the dry run has
-    passed. Two are cosigner seeds in plain text and the third is `k`; you
-    hold the words and the hex, and the sheets are now the only unprotected
-    copies of any of them
-    ([§2](#2-before-you-back-it-up-is-the-secret-worth-protecting)). Three
-    sheets went into this sitting; three sheets come out of it destroyed.
+10. **Destroy every sheet you rolled, and everything you wrote a derived
+    value onto**, once the dry run has passed. Each one is a seed or `k`
+    in plain text; the backup you just proved is what protects them now,
+    and these are the only copies left unprotected
+    ([§2](#2-before-you-back-it-up-is-the-secret-worth-protecting)).
+    Whatever went into this sitting comes out of it destroyed.
 11. Only now, from the generated `output.zip`, split the contents:
     - **shares → three self-controlled homes** ([§8](#8-storing-the-shares-the-object-and-where-it-goes)): copy each
       share's 33 words onto a card *before you leave the offline session*, then
