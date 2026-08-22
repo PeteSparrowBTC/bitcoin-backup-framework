@@ -735,16 +735,24 @@ destroys logs inside the session rather than saving work for later.
    sitting, two if you are generating the seeds alone, one if you already
    hold both seeds and are only rolling for the backup key. A spare blank
    sheet costs nothing if you print one you do not end up using. Set aside
-   a blank card for each cosigner seed you expect to derive, too: step 7
-   writes each one down before it clears the roll log, and there is
-   nothing to write on if you arrive without them.
+   a blank card for every value you expect to derive, too: one per
+   cosigner seed, plus one for the backup key if you are rolling for it.
+   Step 7 writes each value onto its card before it clears the roll log,
+   and there is nothing to write on if you arrive without them. Step 11
+   makes a separate set of cards for the shares.
 7. Boot Tails **offline**. **If you already hold both cosigner seeds,
    skip the seed rolls**: roll one sheet only, for the backup key, using
-   the same cycle described below. Otherwise, roll the dice now if you
-   have not ([§2](#2-before-you-back-it-up-is-the-secret-worth-protecting)).
-   Each sheet you roll follows the same cycle: roll it, compare it against
-   the screen, derive from it, record what you derived, then clear before
-   moving to the next sheet.
+   the same cycle described below. Seeds you bring have no dice log and
+   cannot be given one, so rule 0 is answered by how each of them was
+   made rather than by anything you do here: a backup preserves exactly
+   the strength a seed had when it was made, and cannot add any. Read
+   [§2](#2-before-you-back-it-up-is-the-secret-worth-protecting) and
+   decide, for each seed you brought, whether to back it up or generate a
+   fresh one and move the coins first. **If you are generating the seeds
+   here**, roll the dice now if you have not. Each sheet you roll follows
+   the same cycle: roll it, compare it against the screen, derive from
+   it, record what you derived, then clear before moving to the next
+   sheet.
 
    - **Cosigner seed one.** Roll the die and write each throw onto the
      sheet as it lands. Do not copy it from the screen afterward: a sheet
@@ -773,10 +781,14 @@ destroys logs inside the session rather than saving work for later.
      have produced it.
    - **The backup key, `k`.** Needed only if you are going on to build the
      backup in this sitting; skip it if you plan to stop after generating.
-     Otherwise, switch modes and roll a third sheet the same way: derive
-     64 hex characters and a four-character check code
+     Otherwise, put the app into its backup-key mode and roll one sheet
+     for `k`, following the same cycle: derive 64 hex characters and a
+     four-character check code
      ([what those counts mean](NUMBERS.md#bytes-and-why-a-hex-character-is-half-a-byte)),
-     write it down, verify it against the screen, then clear.
+     write them onto the card you set aside for the key, verify what you
+     wrote against the screen, then clear. `k` is a new secret, so dice
+     are available to it even when they are not available to a seed you
+     brought with you.
 
    Check every derived value against a second implementation before going
    on.
@@ -787,19 +799,15 @@ destroys logs inside the session rather than saving work for later.
    both stay in the room until the dry run proves it; if you stop at the
    exit below instead, both are destroyed there. Keep the one you are
    using in front of you and turn the other face down and out of the way.
-   Which cosigner is which is not something to record on the sheet, by
-   design; each card carries that label instead, written when you make it
+   Which cosigner is which is not something to record on the sheet; each
+   cosigner card carries that label instead, written when you make it
    above.
 
-   **If you are backing up a cosigner seed you already hold**, you have no
-   dice log for it and cannot acquire one, so rule 0 is answered by how that
-   seed was made rather than by anything you do here. Read
-   [§2](#2-before-you-back-it-up-is-the-secret-worth-protecting) and decide
-   whether to back it up or generate a fresh one and move the coins first.
-   If you are going on to build the backup, also roll for `k` on its own
-   sheet, the same way as above: it is a new secret, and dice are
-   available to it even when they are not available to a seed you brought
-   with you.
+   **If you are backing up one cosigner seed you already hold and
+   generating the other here**, rule 0 is answered two different ways in
+   one sitting: by the dice for the seed you roll, and by how the seed you
+   brought was made. Roll one sheet for the seed you are generating, and
+   one for `k` if you are going on to build the backup.
 
 #### If you are stopping after generating
 
@@ -836,14 +844,15 @@ connects to a network again.
    [§7](#7-known-traps-each-has-bitten-real-people) is exactly this mistake.
 10. **Destroy every sheet and card this session produced**, once the dry
     run has passed. That means the dice sheets you rolled and whatever
-    you wrote a derived value onto; it never means a cosigner seed you
+    this sitting wrote a derived value onto: the cosigner cards it made,
+    and the card you wrote `k` onto. It never means a cosigner seed you
     arrived already holding, which has no sheet or card from this cycle
     and is not touched by this step. Each sheet or card here is a seed or
     `k` in plain text, and the backup you just proved is what protects
     them now ([§2](#2-before-you-back-it-up-is-the-secret-worth-protecting)).
 11. Only now, from the generated `output.zip`, split the contents:
-    - **shares → three self-controlled homes** ([§8](#8-storing-the-shares-the-object-and-where-it-goes)): copy each
-      share's 33 words onto a card *before you leave the offline session*, then
+    - **shares → three self-controlled homes** ([§8](#8-storing-the-shares-the-object-and-where-it-goes)): copy the 33 words of
+      each share onto a share card *before you leave the offline session*, then
       place the cards: home pouch, bank box, and one more that is yours rather
       than borrowed. **One location, one card**, and [§8](#8-storing-the-shares-the-object-and-where-it-goes)
       has the full list of homes, including the ones to avoid. The zips are
