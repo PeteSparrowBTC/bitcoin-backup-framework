@@ -220,7 +220,7 @@ Since the output tells you nothing, only the process is auditable:
   distributing first means travelling to every location later to destroy what
   you left there.
 
-### Two roll logs, and both are plaintext secrets
+### Every roll log is a plaintext secret
 
 Dice produce three secrets in the recommended shape, not two: one log per
 cosigner seed, and one log for `k`, the key that encrypts the backup payload
@@ -426,7 +426,7 @@ Before placing anything, list what exists. For a typical self-custody setup:
 
 | # | Secret | Kind | Sufficient to spend BTC? | Where it will live |
 |---|---|---|---|---|
-| 1 | BIP-39 seed words (+ optional BIP-39 passphrase) | bearer | yes | **only inside `payload.age.gpg.asc`**, never stored raw |
+| 1 | Both cosigner seeds' BIP-39 words (+ each seed's optional BIP-39 passphrase) | bearer | yes | **only inside `payload.age.gpg.asc`**, never stored raw |
 | 2 | SLIP-39 shares (protecting random key `k`) | bearer (threshold) | only threshold-many **+** `payload.age.gpg.asc` | Layer 0: separate locations you alone control |
 | 3 | `payload.age.gpg.asc` (encrypted wallet payload) | ciphertext | no (useless without `k`) | replicated: vault attachment + offline copies |
 | 4 | Wallet descriptor / xpubs | recovery-critical metadata | no (privacy leak only) | inside `payload.age.gpg.asc`; copy in vault |
@@ -501,8 +501,8 @@ not metal; it is a readable seed sitting in one place.
 
 Note what this table achieves: **row 1 never exists in storable form.** The
 [SLIP-39 + age tool](https://github.com/PeteSparrowBTC/slip39-backup)
-encrypts the seed, passphrase, descriptor, and notes into `payload.age.gpg.asc` using
-a random 32-byte key `k` ([what a byte is, and why 32 of them](NUMBERS.md#bytes-and-why-a-hex-character-is-half-a-byte)),
+encrypts both cosigner seeds, their passphrases, the descriptor and the notes
+into `payload.age.gpg.asc` using a random 32-byte key `k` ([what a byte is, and why 32 of them](NUMBERS.md#bytes-and-why-a-hex-character-is-half-a-byte)),
 and SLIP-39 splits only `k`. The security boundary
 is *possession of threshold-many shares AND the `payload.age.gpg.asc` file*: no
 single artifact anywhere is sufficient. This is also what makes the solo
@@ -575,6 +575,7 @@ the text alone in a password manager is not holding an anonymous block.
  LAYER 1 - PASSWORD MANAGER (online, zero-knowledge)
  ┌───────────────────────────────────────────────────────────────┐
  │  payload.age.gpg.asc  ← ciphertext only; k is NOT here        │
+ │  (both cosigner seeds, their passphrases, descriptor, notes)  │
  │  verification-record.txt, descriptor copy, all daily logins,  │
  │  email credentials; Emergency Access dead-man switch (Phase A)│
  └───────────────┬───────────────────────────────────────────────┘

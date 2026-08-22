@@ -150,10 +150,10 @@ two-layer design here exists, to give those a home.
 
 ## age with scrypt: locking the payload
 
-Input: the wallet payload (seed, passphrase, descriptor, notes), plus the
-backup key `k`, used as a passphrase in age's passphrase mode. The
-implementation wraps `AgeSharp`'s `ScryptRecipient`, handing it `k` as a hex
-string. Output: an encrypted file.
+Input: the wallet payload (both cosigner seeds, their passphrases, the
+descriptor, notes), plus the backup key `k`, used as a passphrase in age's
+passphrase mode. The implementation wraps `AgeSharp`'s `ScryptRecipient`,
+handing it `k` as a hex string. Output: an encrypted file.
 
 Turning the passphrase into an encryption key goes through **scrypt**, whose
 purpose is to make that step deliberately slow to compute, so that trying
