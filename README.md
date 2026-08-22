@@ -745,7 +745,7 @@ destroys logs inside the session rather than saving work for later.
    you are building the backup in this sitting. Set aside a blank card for
    every value you will derive, which is the same count. Step 7 writes
    each value onto its card before it clears the roll log, and there is
-   nothing to write on if you arrive without them. Step 11 makes a
+   nothing to write on if you arrive without them. Step 9 makes a
    separate set of cards for the shares. Print one spare sheet and hold
    back one spare card as well: printing happens here and the session
    that follows is offline, so that spare pair is what you roll the key
@@ -837,33 +837,59 @@ whether or not a backup gets built from it today. If you rolled for the
 backup key before deciding to stop, destroy that sheet too, along with
 wherever you wrote `k` down: a key protects nothing without a payload to
 lock. Keep the cosigner cards for now: they are all you hold until you
-come back to build the backup, and step 10 destroys them once that
+come back to build the backup, and step 11 destroys them once that
 backup is proved. Do not fund the wallet beyond pocket change until the
 backup in the rest of this phase exists. And the machine that has held
 a cosigner seed in memory still never connects to a network again.
 
-8. Run `slip39-backup` in Owner mode: enter both cosigner seeds' words, an
-   optional BIP-39 passphrase (generated, never invented,
+8. Run `slip39-backup` in Owner mode: enter both cosigner seeds' words, each
+   seed's own optional BIP-39 passphrase (generated, never invented,
    [§2](#2-before-you-back-it-up-is-the-secret-worth-protecting)), and
    (**do not skip this**) the wallet descriptor. For multisig, the descriptor
-   is as recovery-critical as the seeds. **Paste `k` and its check code** into
-   the backup-key fields rather than letting the tool generate one; leave them
-   empty and the key protecting every copy of your backup comes from a
-   generator you cannot check. If you skipped the key sheet in step 7
-   because you meant to stop there, roll it now, the same way, on the
-   spare sheet and card step 6 told you to hold back,
+   is as recovery-critical as the seeds. The tool takes one passphrase field
+   per cosigner rather than one for the pair, so a passphrase set on a device
+   and not entered in that cosigner's field is absent from the backup, and no
+   wrong-passphrase error exists later to tell you so. **Leave the top-level
+   seed-words field empty.** It is there for a single-sig or shared-seed
+   backup, and a multisig backup goes in the per-cosigner fields beneath it;
+   fill the top-level field and you have built one seed behind several
+   passphrases, which is the trap
+   [§7](#7-known-traps-each-has-bitten-real-people) names. **Paste `k` and its
+   check code** into the backup-key fields rather than letting the tool
+   generate one; leave them empty and the key protecting every copy of your
+   backup comes from a generator you cannot check. If you skipped the key
+   sheet in step 7 because you meant to stop there, roll it now, the same
+   way, on the spare sheet and card step 6 told you to hold back,
    before continuing. Set the group shape to **2-of-3 cards** (the tool
    defaults to 3-of-5 cards, which assumes five homes; three locations you
    alone control is realistic, five rarely is).
-9. **Dry-run the recovery before anything leaves this room.** Open a second
-   copy of the tool in Recoverer mode, feed it threshold-many shares and
-   `payload.age.gpg.asc`, and check the result against
-   `verification-record.txt`. Rules 6 and 8. Doing it now rather than after
-   the errands is rule 7: shares you have already placed in three locations
-   are a working backup forever, so a fault found later costs you a trip to
-   every one of them, and the trap at the end of
-   [§7](#7-known-traps-each-has-bitten-real-people) is exactly this mistake.
-10. **Destroy every roll sheet, and every card this procedure told you
+9. **Write the three share cards, before anything is tested or destroyed.**
+   From the generated `output.zip`, copy the 33 words of each share onto its
+   own card, and write on each one which share it is, how many are needed,
+   and the date
+   ([§8](#8-storing-the-shares-the-object-and-where-it-goes) has what goes on
+   a card, what must not, and when printing the words with `share-qr.png`
+   beats copying them by hand). Take the files worth keeping out of the zip
+   as well, onto both payload USB sticks: `payload.age.gpg.asc`,
+   `verification-record.txt`, `MANUAL-RECOVERY.txt` and
+   `VERIFY-THIS-BACKUP.txt`. Then delete `output.zip` and the share zips.
+   They are a distribution package rather than a keepsake, and everything in
+   them worth keeping is somewhere else by then. Nothing leaves the room at
+   this point: the cards you have just written are what step 10 tests and
+   step 12 places.
+10. **Dry-run the recovery from the cards you wrote, before anything leaves
+    this room.** Open a second copy of the tool in Recoverer mode, feed it
+    two of the three handwritten cards and `payload.age.gpg.asc`, and check
+    the result against `verification-record.txt`. Rules 6 and 8. The cards
+    are the artifacts that travel, so the cards are what the recovery has to
+    be executed from: run it against the tool's own output and you have
+    tested the tool while your handwriting, which is the part that reaches
+    three cities, goes untested. Doing it before the errands rather than
+    after is rule 7: cards already placed in three locations are a working
+    backup forever, so a fault found later costs you a trip to every one of
+    them, and the trap at the end of
+    [§7](#7-known-traps-each-has-bitten-real-people) is exactly this mistake.
+11. **Destroy every roll sheet, and every card this procedure told you
     to write a value onto, whichever sitting you wrote it in**, once the
     dry run has passed. That reaches the cosigner cards from a generating
     sitting days or weeks before this one, not only what this sitting
@@ -873,13 +899,11 @@ a cosigner seed in memory still never connects to a network again.
     outside this procedure is never touched by any instruction here: that
     paper is the backup-only reader's own, and it stays theirs
     ([§2](#2-before-you-back-it-up-is-the-secret-worth-protecting)).
-11. Only now, from the generated `output.zip`, split the contents:
-    - **shares → three self-controlled homes** ([§8](#8-storing-the-shares-the-object-and-where-it-goes)): copy the 33 words of
-      each share onto a share card *before you leave the offline session*, then
-      place the cards: home pouch, bank box, and one more that is yours rather
-      than borrowed. **One location, one card**, and [§8](#8-storing-the-shares-the-object-and-where-it-goes)
-      has the full list of homes, including the ones to avoid. The zips are
-      transport; the cards are the backup.
+12. Only with the dry run behind you does anything leave the room:
+    - **The three share cards → three self-controlled homes** ([§8](#8-storing-the-shares-the-object-and-where-it-goes)):
+      home pouch, bank box, and one more that is yours rather than
+      borrowed. **One location, one card**, and [§8](#8-storing-the-shares-the-object-and-where-it-goes)
+      has the full list of homes, including the ones to avoid.
     - **`MANUAL-RECOVERY.txt` → printed, one copy per location.** It is the
       tool-independent recovery manual, and the tool puts it in every share zip
       for a reason: whoever ends up holding a card years from now needs the
@@ -891,16 +915,16 @@ a cosigner seed in memory still never connects to a network again.
       together with `verification-record.txt`. It is armored text, so it can go
       in a note as easily as an attachment
       ([§4](#4-inventory-the-secrets-you-actually-hold)).
-    - **The same file → Layer 2 USB stick(s)** as well. Bitwarden's export does
-      **not** include attachments ([§7](#7-known-traps-each-has-bitten-real-people)), and shares alone cannot recover
-      without it. Replicate it generously: it is ciphertext behind two locks,
-      and copies of it cost you nothing (rule 5).
-    - Delete `output.zip`. It is a distribution package, not a keepsake, and
-      everything in it worth keeping is now somewhere else.
+    - **The Layer 2 USB sticks → one to the bank box, one to the home
+      pouch.** Bitwarden's export does **not** include attachments
+      ([§7](#7-known-traps-each-has-bitten-real-people)), and cards alone
+      cannot recover without the payload. Replicate the payload generously:
+      it is ciphertext behind two locks, and copies of it cost you nothing
+      (rule 5).
 
 ### Phase C: the access plan, without trusting anyone (an evening)
 
-12. Write the **access plan** and put it **in the bank box**. This is more
+13. Write the **access plan** and put it **in the bank box**. This is more
     than a note about the coins; it is the document that answers the fear
     every parent holding bitcoin has: *"if I'm gone, my family has no idea
     what a seed phrase is."* It contains:
@@ -920,7 +944,7 @@ a cosigner seed in memory still never connects to a network again.
     - **A date, and a promise to re-date it.** Update it on life events:
       move, new wallet, marriage or divorce, a location change. A stale
       access plan fails exactly when it is needed.
-13. This grants **nothing while you live**; nobody knows the plan exists.
+14. This grants **nothing while you live**; nobody knows the plan exists.
     But a bank box is reachable by your estate's executor through the legal
     process that settles an estate (probate, in many jurisdictions), so the
     plan upgrades "if I die, the coins are gone" to "my estate has a real
@@ -931,9 +955,9 @@ a cosigner seed in memory still never connects to a network again.
 
 ### Phase D: make it a system, not an event (recurring)
 
-14. Quarterly (or after significant vault changes): refresh the encrypted
+15. Quarterly (or after significant vault changes): refresh the encrypted
     vault export + `payload.age.gpg.asc` copy on the Layer 2 USB, *together*.
-15. Annually: full recovery drill ([§9](#9-the-annual-drill)). Solo systems have no second pair of
+16. Annually: full recovery drill ([§9](#9-the-annual-drill)). Solo systems have no second pair of
     eyes; the drill is the only audit you get.
 
 ## 7. Known traps (each has bitten real people)
@@ -945,7 +969,7 @@ a cosigner seed in memory still never connects to a network again.
   access plan lives *in* the box; the will only points at the box.
 - **Bitwarden exports exclude attachments.** Your vault export does *not*
   contain `payload.age.gpg.asc`. Back the file up separately
-  ([Phase B](#phase-b-back-up-the-seed-one-offline-session) step 11) or the
+  ([Phase B](#phase-b-back-up-the-seed-one-offline-session) step 12) or the
   export gives false confidence.
 - **The email ↔ vault cycle.** Without 2FA, Bitwarden's new-device login
   wants an email verification code; if your email password lives only in the
@@ -1043,7 +1067,7 @@ Two ways to get the words out of the offline session:
   2-of-3 cards, about an hour done carefully. No device joins the trusted set,
   so rule 8 holds without an exception. SLIP-39 words carry a checksum, so a
   miscopied word is refused at recovery rather than silently yielding the wrong
-  key, and the dry run (Phase B, step 9) is what proves your copies while it is
+  key, and the dry run (Phase B, step 10) is what proves your copies while it is
   still cheap to find out.
 - **Print them, on a printer kept for this.** Faster, and printing the words
   and the QR together removes transcription risk in both directions: none
