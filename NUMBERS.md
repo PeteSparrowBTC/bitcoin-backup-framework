@@ -69,6 +69,11 @@ The fix is also small: roll past the minimum. Sixty rolls instead of fifty, and
 111 instead of 99, put you clear of the target with room for a die that is not
 quite fair.
 
+Each of those counts is per sheet. A cosigner seed takes its own 111 rolls,
+and so does the backup key, so the recommended shape of two cosigner seeds
+and one backup key takes up to three sheets, each rolled and hashed on its
+own.
+
 ## Two kinds of entropy, and why the tables have three columns
 
 The 2.585 figure is the **average** surprise per roll, called Shannon entropy.
@@ -127,15 +132,15 @@ yours to choose and the condition is the same at any count.
 
 ## The same die for both logs
 
-Use one die for the seed log and the key log both. A die has no memory, so two
-sessions are two independent sets of rolls, and a second die adds nothing except
-another object whose fairness you have not considered.
+Use one die for every sheet: each seed's log and the key's log alike. A die has
+no memory, so each session is its own independent set of rolls, and a second
+die adds nothing except another object whose fairness you have not considered.
 
-A bias does not couple the two either. If your die favours 6, both logs are
-weakened in the same way and remain independent of one another: an attacker who
-exploits the bias still has to search each secret separately, and knowing one
-tells them nothing about the other. What must not be shared is the **log**, and
-that is a different failure, described next.
+A bias does not couple them either. If your die favours 6, every log is
+weakened in the same way and remains independent of the others: an attacker
+who exploits the bias still has to search each secret separately, and knowing
+one tells them nothing about another. What must not be shared is the **log**,
+and that is a different failure, described next.
 
 ## What the hash does, and the one thing it cannot do
 
@@ -166,12 +171,13 @@ printf '%s' "$ROLLS" | sha256sum
 A tool that mixed in its own randomness would produce a key nobody, including
 you, could ever recompute.
 
-**And it is why the two roll logs must be different.** On a 24-word seed the
-BIP-39 entropy is SHA-256 of your rolls, and the backup key is SHA-256 of your
-rolls. Same function, same input, same output: reuse one log for both and the
-key protecting your backup *is* the wallet it protects, so the shares stop
-protecting anything. On a 12-word seed it is the first half of the same hash,
-which is no better. Both tools enforce this rather than only warning about it:
+**And it is why a seed's roll log and the key's roll log must never be the
+same one.** On a 24-word seed the BIP-39 entropy is SHA-256 of your rolls, and
+the backup key is SHA-256 of your rolls. Same function, same input, same
+output: reuse one log for both and the key protecting your backup *is* the
+wallet it protects, so the shares stop protecting anything. On a 12-word seed
+it is the first half of the same hash, which is no better. Both tools enforce
+this rather than only warning about it:
 `dice-to-seed` clears your rolls when you change mode, and `slip39-backup`
 recovers the entropy of every seed in the form, compares it against the key, and
 refuses if they match.
