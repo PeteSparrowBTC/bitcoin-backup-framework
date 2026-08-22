@@ -752,9 +752,10 @@ destroys logs inside the session rather than saving work for later.
      change, so without clearing, the second seed would come from a hash of
      both sheets and could not be recomputed from the sheet that appears to
      have produced it.
-   - **The backup key, `k`.** Clear or restart again, switch modes, and roll
-     a third sheet to derive 64 hex characters and a four-character check
-     code
+   - **The backup key, `k`.** Needed only if you are going on to build the
+     backup in this sitting; skip it if you plan to stop after generating.
+     Otherwise, clear or restart again, switch modes, and roll a third sheet
+     to derive 64 hex characters and a four-character check code
      ([what those counts mean](NUMBERS.md#bytes-and-why-a-hex-character-is-half-a-byte)).
 
    Check every derived value against a second implementation before going
@@ -779,12 +780,15 @@ destroys logs inside the session rather than saving work for later.
 
 #### If you are stopping after generating
 
-If you stop here, you are holding two cosigner seeds, written on paper, in
-one place, and none of it is backed up. Destroy the dice sheets in this same
-sitting regardless: a sheet is a seed in plain text, whether or not a backup
-gets built from it today. Do not fund the wallet beyond pocket change until
-the backup in the rest of this phase exists. And the machine that has now
-held two seeds in memory still never connects to a network again.
+If you stop here, you rolled two sheets, one per cosigner seed, and you
+hold two cosigner seeds written on paper, in one place, with none of it
+backed up. Destroy both sheets in this same sitting regardless: a sheet is
+a seed in plain text, whether or not a backup gets built from it today. If
+you already rolled a third sheet for the backup key before deciding to
+stop, destroy that one too; it protects nothing without a payload to lock.
+Do not fund the wallet beyond pocket change until the backup in the rest of
+this phase exists. And the machine that has now held two seeds in memory
+still never connects to a network again.
 
 8. Run `slip39-backup` in Owner mode: enter both cosigner seeds' words, an
    optional BIP-39 passphrase (generated, never invented,
