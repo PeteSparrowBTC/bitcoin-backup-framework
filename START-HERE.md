@@ -38,8 +38,8 @@ when you are ready to involve people.
 | | |
 | --- | --- |
 | **Dice** | One ordinary six-sided die, used for every roll session. Casino dice are not needed, and one is enough ([why one](NUMBERS.md#why-this-guide-says-one-die)) |
-| **Printed roll sheets** | `roll-sheet.html`, verified and printed blank before you start: one per roll session, three for the recommended shape, plus a spare ([step 1](#1-download-tails-and-the-tools-and-check-what-you-got) covers it) |
-| **Value cards** | Blank card stock, one for each value you expect to derive, plus a spare: up to three for the recommended shape, set aside in [step 1](#1-download-tails-and-the-tools-and-check-what-you-got). Not the share cards step 4 makes later |
+| **Printed roll sheets** | `roll-sheet.html`, verified and printed blank before you start: one per roll session, three for the recommended shape, plus a spare for rolling the key later if you stop after generating ([step 1](#1-download-tails-and-the-tools-and-check-what-you-got) covers it) |
+| **Value cards** | Blank card stock, one for each value you expect to derive, plus a spare for that same later key roll: three for the recommended shape, set aside in [step 1](#1-download-tails-and-the-tools-and-check-what-you-got). Not the share cards step 4 makes later |
 | **Paper and a pen** | Pencil or a pigment pen. Not a thermal printer receipt |
 | **A spare computer** | Anything that boots from USB. It is offline for all of this, and once it has met the seed it never connects to a network again, ever |
 | **Three USB sticks** | One for Tails, and two for payload copies, because one goes in the bank box and one stays home |
@@ -75,10 +75,12 @@ easy to reach.** `dice-to-seed` publishes `roll-sheet.html` as its own release
 asset, covered by the same `SHA256SUMS` as the tools themselves: check it
 against that checksum before you print anything from it. Print one blank
 sheet for each roll session ahead of you, plus a spare, on this ordinary
-networked machine, before you boot Tails: the machine is offline from here
-on, so the spare is the only second chance a spoiled sheet gets. Set aside a
-blank value card for every value you expect to derive, plus a spare, for the
-same reason. It prints blank, so nothing filled in ever goes near a printer.
+networked machine, before you boot Tails. It prints blank, so nothing filled
+in here ever goes near a printer. The spare computer is offline from step 2
+onward and has no printer of its own, so this spare sheet is what you roll
+the key on later if you stop after generating today and come back to build
+the backup another time. Set aside a blank value card for every value you
+expect to derive, plus a spare, for the same reason.
 
 **The one part that has to happen while you have a network.** Open each release's
 build log and confirm that the fingerprint recorded there is the one you are
@@ -136,20 +138,6 @@ Keep one sheet in front of the machine at a time, and turn any other face
 down and out of the way. The value card carries which cosigner is which; the
 sheet never does.
 
-**If you are stopping after generating.** Do step 3 first: checking what you
-rolled against a second implementation matters whether or not you build the
-backup today. Then you hold a value card for each cosigner seed you rolled
-or brought here, and no backup of either yet.
-Destroy every sheet you rolled in this sitting regardless: a sheet is a seed
-in plain text whether or not a backup gets built from it today. If you
-rolled the key sheet before changing your mind about stopping, destroy it
-too, and whatever you wrote the key onto; a key protects nothing without a
-payload to lock. Keep the value cards: until you come back to build the
-backup, they are all you have. Do not fund the wallet beyond pocket change
-until that backup exists, and the machine that has held a cosigner seed in
-memory still never connects to a network again
-([the full version of this exit](README.md#if-you-are-stopping-after-generating)).
-
 **Why separate sheets, and why they must not be shared.** Each cosigner seed
 is its own secret, and the key that encrypts the backup payload is a third.
 On a 24-word seed the seed's entropy *is* the SHA-256 of your rolls, so
@@ -181,6 +169,20 @@ narrows the set your value is drawn from. Discard a roll only when the die is
 cocked or leaves the table, which is a question about the throw and not about
 the number.
 
+**If you are stopping after generating.** Do step 3 first: checking what you
+rolled against a second implementation matters whether or not you build the
+backup today. Then you hold a value card for each cosigner seed you
+generated here, and no backup of it yet. Destroy every sheet you rolled in
+this sitting regardless: a sheet is a seed in plain text whether or not a
+backup gets built from it today. If you rolled the key sheet before changing
+your mind about stopping, destroy it too, and whatever you wrote the key
+onto; a key protects nothing without a payload to lock. Keep the value
+cards: until you come back to build the backup, they are all you have. Do
+not fund the wallet beyond pocket change until that backup exists, and the
+machine that has held a cosigner seed in memory still never connects to a
+network again
+([the full version of this exit](README.md#if-you-are-stopping-after-generating)).
+
 ---
 
 ## 3. Check the answer
@@ -204,6 +206,10 @@ If two tools disagree, stop and find out why before going further.
 **30 minutes, same offline session. You end with three share cards and the
 payload file.**
 
+**If you skipped the key sheet because you meant to stop after
+generating**, roll it now, the same cycle as step 2, on the spare sheet and
+value card you held back for exactly this, before continuing.
+
 Run [slip39-backup](https://github.com/PeteSparrowBTC/slip39-backup) in Owner
 mode ([full instructions](https://github.com/PeteSparrowBTC/slip39-backup/blob/main/TAILS_INSTRUCTIONS.md)).
 
@@ -214,7 +220,7 @@ mode ([full instructions](https://github.com/PeteSparrowBTC/slip39-backup/blob/m
    optional here, and if you are inventing one on the spot, do not: it has to be
    generated and it has to be written down somewhere that is not beside the seed
    ([what makes one good](README.md#the-passphrase-strength-you-can-actually-assess)).
-2. **Paste the backup key from step 2**, rather than letting the tool generate
+2. **Paste the backup key you rolled**, rather than letting the tool generate
    one. Otherwise the key protecting every copy of your backup comes from a
    generator you cannot check.
 3. Set the shape to **2-of-3 shares**, meaning three shares of which any two recover.
@@ -240,10 +246,13 @@ mode ([full instructions](https://github.com/PeteSparrowBTC/slip39-backup/blob/m
    `verification-record.txt`. This is what proves your handwriting as much as it
    proves the tool.
 2. **Destroy every roll sheet and value card from this session, and any
-   paper you brought a cosigner seed's words on.** Each is a seed or the
-   backup key in plain text, and until burned they are the only unprotected
-   copies of either. You have the words and the hex safely in the payload
-   now, and the dry run has just proved it
+   transcription you made here of a seed you brought, for typing it in.**
+   A seed you arrived already holding, on paper from before this sitting,
+   has no sheet or card from this cycle and is never touched by this step;
+   it stays yours. Everything else here is a seed or the backup key in
+   plain text, and until burned they are the only unprotected copies of
+   either. You have the words and the hex
+   safely in the payload now, and the dry run has just proved it
    ([why this is the trap it is](README.md#7-known-traps-each-has-bitten-real-people)).
    This goes further than the exit in step 2: stopping after generating
    keeps the value cards, because they are all you have; finishing the
