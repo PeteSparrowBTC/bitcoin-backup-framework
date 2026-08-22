@@ -64,6 +64,7 @@ SIBLING_PAGES = {
     "NUMBERS.md": "numbers",
     "LANDSCAPE.md": "landscape",
     "ACTIONS.md": "actions",
+    "CRYPTOGRAPHY.md": "cryptography",
 }
 
 
@@ -375,7 +376,8 @@ for section in sections:
 STANDALONE = [
     ("ACTIONS.md", "actions", "Generate, back up, or both", 2),
     ("NUMBERS.md", "numbers", "How the numbers work", 4),
-    ("LANDSCAPE.md", "landscape", "What else is out there", 5),
+    ("CRYPTOGRAPHY.md", "cryptography", "How the cryptography works", 5),
+    ("LANDSCAPE.md", "landscape", "What else is out there", 6),
 ]
 
 for source, page, title, weight in STANDALONE:
