@@ -66,6 +66,31 @@ cannot be recomputed from the sheet a reader believes produced it. The generatio
 must therefore say to clear the rolls or restart the app between seeds. Whether the tool
 should refuse this instead is an open item.
 
+### The printable roll sheet
+
+`dice-to-seed` is to generate the sheet the rolls are written on. It does not do this today:
+nothing in the tree matches print, pdf, sheet or paper, there is no branch and no pull request
+for it, and the one changelog line about pen and paper describes the grouped rendering of the
+backup key for hand-copying. So this is designed against the intent, and the framework cannot
+instruct on it until it ships.
+
+Print while blank, before the offline session starts. A blank sheet is a template and carries
+nothing. A filled one is the wallet in plain text. Nothing filled ever goes near a printer,
+because a spooler, an internal disk and a network queue are all memory this framework has no
+way to audit, and a printer is not in the clean room.
+
+One sheet per roll session, so up to three, each pre-printed with which session it is: cosigner
+one, cosigner two, backup key. The label is a safety feature and not decoration, because the
+whole no-reuse rule depends on the reader knowing which sheet is which. A numbered box per
+throw also makes an undercount visible, which is the failure NUMBERS exists to explain and the
+best argument for having the sheet at all.
+
+Destruction becomes countable, which is the real gain. Three sheets in, three sheets destroyed,
+in the sitting that made them. That is a checklist line rather than a sentence of prose.
+
+The trap to name is photographing or scanning the filled sheet, which is exactly what a careful
+person does when they want a copy of something important.
+
 ## 4. What two vendors buys, once you bring your own dice
 
 Section 2 currently ties vendor diversity to the Coldcard event, which was a random number
@@ -137,7 +162,7 @@ scope and therefore cannot be left alone.
 | Section 10 | Three rows assume one seed and one key: the defective-generator row, where vendor diversity is now the premise rather than a mitigation; the surviving-roll-log row, which names log one as the seed and log two as the key; and the reused-log row, which needs a sibling for two cosigner seeds sharing one sheet |
 | Section 11 | Loses its centrepiece, since multisig is now the premise. Keeps involving people, gains the third disjoint list |
 | Section 12 | The complexity-budget and no-theater argument now has to say which side of that line a two-maker quorum sits on, and who this document is not for |
-| START-HERE | Opens with the fork; step 2 becomes conditional and rolls twice for seeds; stays one ordered list rather than splitting in two |
+| START-HERE | Opens with the fork; step 2 becomes conditional and rolls twice for seeds; the kit list gains sheets printed before the session begins; stays one ordered list rather than splitting in two |
 | NUMBERS | Roll counts are per sheet, and there are now up to three sheets |
 
 ## 9. Relationship to seed-generation, and what stays out
@@ -186,3 +211,5 @@ a defect. The backup tool's own default is 3-of-5 cards, so the instruction to c
 3. Whether the framework keeps recommending a BIP-39 passphrase per cosigner, which section 2
    argues for at length in single-seed terms and which interacts with a two-key quorum
    differently.
+4. The printable roll sheet does not exist yet. The generation instructions depend on it, and
+   the fallback if it does not ship is plain paper with the count drawn by hand.
