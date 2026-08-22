@@ -767,12 +767,11 @@ destroys logs inside the session rather than saving work for later.
    it, record what you derived, then clear before moving to the next
    sheet.
 
-   Each of the two seed bullets below carries a label. A seed you roll
-   under a bullet takes that bullet's label, and a seed you brought takes
-   the label of the bullet you skip for it. If you brought both, that
-   means settling which of the two is cosigner one and which is cosigner
-   two before step 8, and keeping that answer, because nothing further on
-   can tell your seeds apart for you.
+   Each of the two seed bullets below carries a label, and the labels are
+   yours to assign. If you brought one seed, give it either label and keep
+   that answer. If you brought both, settle which is cosigner one and
+   which is cosigner two before step 8 and keep that, because nothing
+   further on can tell your seeds apart for you.
 
    - **Cosigner seed one.** Skip the rolling here if you brought the seed
      for this label, but read the bullet either way: the cycle it spells
@@ -837,9 +836,11 @@ in this same sitting, regardless: a sheet is a seed in plain text,
 whether or not a backup gets built from it today. If you rolled for the
 backup key before deciding to stop, destroy that sheet too, along with
 wherever you wrote `k` down: a key protects nothing without a payload to
-lock. Do not fund the wallet beyond pocket change until the backup in
-the rest of this phase exists. And the machine that has held a cosigner
-seed in memory still never connects to a network again.
+lock. Keep the cosigner cards for now: they are all you hold until you
+come back to build the backup, and step 10 destroys them once that
+backup is proved. Do not fund the wallet beyond pocket change until the
+backup in the rest of this phase exists. And the machine that has held
+a cosigner seed in memory still never connects to a network again.
 
 8. Run `slip39-backup` in Owner mode: enter both cosigner seeds' words, an
    optional BIP-39 passphrase (generated, never invented,
@@ -862,14 +863,16 @@ seed in memory still never connects to a network again.
    are a working backup forever, so a fault found later costs you a trip to
    every one of them, and the trap at the end of
    [§7](#7-known-traps-each-has-bitten-real-people) is exactly this mistake.
-10. **Destroy every sheet and card this session produced**, once the dry
-    run has passed. That means the dice sheets you rolled and whatever
-    this sitting wrote a derived value onto: the cosigner cards it made,
-    and the card you wrote `k` onto. It never means a cosigner seed you
-    arrived already holding, which has no sheet or card from this cycle
-    and is not touched by this step. Each sheet or card here is a seed or
-    `k` in plain text, and the backup you just proved is what protects
-    them now ([§2](#2-before-you-back-it-up-is-the-secret-worth-protecting)).
+10. **Destroy every roll sheet, and every card this procedure told you
+    to write a value onto, whichever sitting you wrote it in**, once the
+    dry run has passed. That reaches the cosigner cards from a generating
+    sitting days or weeks before this one, not only what this sitting
+    itself produced: each of them is a seed or `k` in plain text, and the
+    payload you have just proved is the copy that survives, which is
+    exactly why the cards can go. A record of a seed you brought from
+    outside this procedure is never touched by any instruction here: that
+    paper is the backup-only reader's own, and it stays theirs
+    ([§2](#2-before-you-back-it-up-is-the-secret-worth-protecting)).
 11. Only now, from the generated `output.zip`, split the contents:
     - **shares → three self-controlled homes** ([§8](#8-storing-the-shares-the-object-and-where-it-goes)): copy the 33 words of
       each share onto a share card *before you leave the offline session*, then
