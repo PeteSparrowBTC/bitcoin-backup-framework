@@ -175,22 +175,35 @@ Since the output tells you nothing, only the process is auditable:
   ([why those counts, and why 99 is not 256 bits](NUMBERS.md#why-99-rolls-is-not-256-bits)).
   This is the only path that does not require trusting a black box you cannot
   inspect.
-- **Check the conversion in a second implementation.** Rolls to words is
-  deterministic, so any correct tool produces the same words from the same
-  rolls, and two tools agreeing is the proof. Which one you ran first does not
-  matter. [dice-to-seed](https://github.com/PeteSparrowBTC/dice-to-seed) exists
-  for this job and has no generator of its own to distrust. If two tools
-  disagree, stop and find out why before going further.
+- **Check the conversion in a second implementation, and know what it cannot
+  see.** Rolls to words is deterministic, so any correct tool produces the
+  same words from the same rolls, and two tools agreeing is the proof of a
+  correct conversion. Which one you ran first does not matter.
+  [dice-to-seed](https://github.com/PeteSparrowBTC/dice-to-seed) exists for
+  this job and has no generator of its own to distrust. If two tools
+  disagree, stop and find out why before going further. It is blind to a
+  mis-press: press 4 where the die showed 5 and both tools still agree, and
+  the result is valid BIP-39 for a wallet the dice never made. Only the paper
+  record of what the dice actually showed catches that, compared against the
+  screen before deriving. With two cosigner seeds this check stops being
+  advice and becomes a requirement: both seeds come from one tool on one
+  machine, so an unnoticed mis-press is a single flaw that can reach both
+  keys.
 - **Know what verification does and does not prove.** Checking the wallet
   fingerprint in independent software, confirming a receive address on a
   second device, and sending a small test transaction all catch a swapped,
   counterfeit or lying device. **None of them detect weak entropy**, because a
   weak seed derives addresses perfectly correctly. Do them anyway; just do not
   read a passing check as evidence of randomness.
-- **In multisig, diversify vendors.** A 2-of-3 built from two devices by the
-  same maker is not protected against that maker's defect: one flaw satisfies
-  the threshold alone. Different vendors for different cosigners is the point,
-  and it is the specific lesson of the Coldcard event.
+- **Diversify vendors, for a different reason now.** Two cosigner keys on
+  hardware from the same vendor are not protected against that vendor's
+  defect: one flaw reaches both, so the 2-of-2 keys threshold buys nothing.
+  Supplying your own entropy, above, is the first leg of the guard against
+  this, and it already removes the Coldcard event, a random-number-generator
+  regression, from every cosigner at once. Vendor diversity is the second
+  leg, and it still matters: firmware, the signing path, and whether the
+  screen tells the truth about an address are per-vendor risks no amount of
+  dice-rolling touches.
 - **Rotate on disclosure, before you protect.** When a defect affecting your
   device and firmware is announced, treat the seed as compromised and move the
   coins before building backups around it. Rule 7 is why: superseded shares
@@ -339,10 +352,10 @@ One precondition and eight rules generate the whole framework. When in doubt,
 check a decision against these.
 
 **Rule 0, the precondition: a backup cannot be stronger than the secret it
-preserves.** Audit how the seed was generated and how strong the passphrase
+preserves.** Audit how each seed was generated and how strong the passphrase
 is before investing in protecting them
 ([§2](#2-before-you-back-it-up-is-the-secret-worth-protecting)). Everything
-below assumes real entropy at the root.
+below assumes real entropy at both roots.
 
 1. **Acyclic dependencies**: no loops in "what unlocks what." No secret may
    be stored *only* inside something it unlocks. (Master password inside the
