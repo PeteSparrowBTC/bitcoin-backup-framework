@@ -10,10 +10,15 @@
 >
 > - **[Start here](https://petesparrowbtc.github.io/bitcoin-backup-framework/)**
 >   is the six-step version, for doing rather than deciding.
+> - **[Generate, back up, or both](https://petesparrowbtc.github.io/bitcoin-backup-framework/actions/)**
+>   says which of the two actions you need, and how much of the framework each
+>   journey reads.
 > - **[The framework](https://petesparrowbtc.github.io/bitcoin-backup-framework/framework/)**
 >   is this document, split into its sections.
 > - **[How the numbers work](https://petesparrowbtc.github.io/bitcoin-backup-framework/numbers/)**
 >   derives 2.585 bits a roll, 24 words, and 64 hex characters.
+> - **[How the cryptography works](https://petesparrowbtc.github.io/bitcoin-backup-framework/cryptography/)**
+>   says what SHA-256, BIP-39, SLIP-39, age and OpenPGP each guarantee.
 > - **[What else is out there](https://petesparrowbtc.github.io/bitcoin-backup-framework/landscape/)**
 >   maps the other frameworks, and where they are stronger than this one.
 >
@@ -230,9 +235,10 @@ no origin you can account for. One log each, and no two logs are ever the
 same log. Roll the same count for every log.
 
 **They must be separate logs.** On a twenty-four-word seed the BIP-39 entropy
-is SHA-256 of your rolls, and `k` is SHA-256 of your rolls: same function, same
-input, same output. Reuse a seed's log for the key and the key protecting the
-backup *is* the wallet it protects, so the shares stop protecting anything and
+is SHA-256 of your rolls ([what SHA-256 does, and what it cannot](CRYPTOGRAPHY.md#one-way-functions-and-sha-256)),
+and `k` is SHA-256 of your rolls: same function, same input, same output.
+Reuse a seed's log for the key and the key protecting the backup *is* the
+wallet it protects, so the shares stop protecting anything and
 the two-layer design collapses to one layer
 ([the arithmetic](NUMBERS.md#what-the-hash-does-and-the-one-thing-it-cannot-do)).
 A twelve-word seed takes the first half of the same hash, which is no better.
@@ -264,8 +270,10 @@ in the same session.
 ### The passphrase: strength you can actually assess
 
 BIP-39 turns your words and your passphrase into a wallet using
-PBKDF2-HMAC-SHA512 with **2,048 iterations**. That number is the entire work
-factor protecting the passphrase, and it is small. A password manager uses
+PBKDF2-HMAC-SHA512 with **2,048 iterations**
+([the two conversions BIP-39 performs](CRYPTOGRAPHY.md#bip-39-words-from-entropy-and-a-seed-from-words)).
+That number is the entire work factor protecting the passphrase, and it is
+small. A password manager uses
 something like 600,000 iterations, or Argon2id, for the same job. Each BIP-39
 guess costs roughly 4,000 SHA-512 compressions, so one modern GPU tries on the
 order of a million candidates per second and a small rack tries hundreds of
@@ -436,9 +444,11 @@ Before placing anything, list what exists. For a typical self-custody setup:
 | 8 | Email account credentials | revocable | no | vault (cycle broken by #6, see [§7](#7-known-traps-each-has-bitten-real-people)) |
 
 Jargon, once: **SLIP-39 shares** are word lists produced by splitting a
-secret so that any 2 of 3 (your choice of threshold) can rebuild it and
-fewer reveal nothing. A **wallet descriptor** is the small text that tells
-wallet software how your wallet derives its addresses. **`payload.age.gpg.asc`** is
+secret so that any 2 of 3 cards (your choice of threshold) can rebuild it and
+fewer reveal nothing
+([how the splitting works](CRYPTOGRAPHY.md#slip-39-splitting-the-backup-key)).
+A **wallet descriptor** is the small text that tells wallet software how your
+wallet derives its addresses. **`payload.age.gpg.asc`** is
 one encrypted file produced by the backup tool.
 
 Why not simply split the seed words themselves with SLIP-39 and skip the
@@ -533,12 +543,17 @@ origin you can account for and recompute, which is worth having and is a
 different claim.
 
 **The payload is one file with two locks: `payload.age.gpg.asc`.** It is the age
-ciphertext wrapped a second time in OpenPGP AES-256 and then ASCII-armored, so
+ciphertext ([what age with scrypt does](CRYPTOGRAPHY.md#age-with-scrypt-locking-the-payload))
+wrapped a second time in OpenPGP AES-256 and then ASCII-armored, so
 what you store is text rather than binary. Both locks open with the same key
 `k`, and recovery takes them off in order.
 
 Two locks rather than one because an attacker must then break both formats, and
-a break in either leaves the wallet standing. Text rather than binary because
+a break in either leaves the wallet standing. That holds for a break in a
+cipher or a file format; both layers take the same key, so recovering `k`
+itself opens both
+([what each lock buys, and what the shared key costs](CRYPTOGRAPHY.md#openpgp-and-ascii-armor-the-second-lock)).
+Text rather than binary because
 armor is a lossless re-encoding that survives every channel this file has to
 pass: a password-manager note, an email to yourself, a printed page, somebody
 retyping it. OpenPGP armor also carries a checksum, so a mangled copy is
@@ -689,8 +704,10 @@ before the desktop appears:
 
 **Verify the image, because this is the one download here that can be.** The
 tools this guide uses publish a checksum that travels beside the file it
-describes, which catches corruption and not much else. Tails publishes a real
-signature, and its installation pages verify the image in your browser or with
+describes, which catches corruption and not much else
+([what a checksum proves, and what a signature proves](CRYPTOGRAPHY.md#checksums-and-signatures-what-each-one-proves)).
+Tails publishes a real signature, and its installation pages verify the image
+in your browser or with
 OpenPGP if you prefer. A tampered Tails is a tampered everything downstream of
 it, so it is worth the extra five minutes exactly once.
 

@@ -145,7 +145,8 @@ log**, and that is a different failure, described next.
 
 ## What the hash does, and the one thing it cannot do
 
-Your roll log is a string of digits. The tools turn it into a key by hashing it:
+Your roll log is a string of digits. The tools turn it into a key by hashing
+it ([what a one-way function is](CRYPTOGRAPHY.md#one-way-functions-and-sha-256)):
 
 ```
 k = SHA-256(the roll digits, joined by nothing)
@@ -186,8 +187,9 @@ refuses if they match.
 ## From 256 bits to 24 words
 
 BIP-39, the standard behind seed phrases, turns those bits into words with a
-word list of exactly **2,048** entries. That number is chosen so each word
-carries a whole number of bits:
+word list of exactly **2,048** entries
+([what BIP-39 does with them](CRYPTOGRAPHY.md#bip-39-words-from-entropy-and-a-seed-from-words)).
+That number is chosen so each word carries a whole number of bits:
 
 ```
 2,048 = 2¹¹     so one word = 11 bits

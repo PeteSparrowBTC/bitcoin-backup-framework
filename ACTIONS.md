@@ -47,8 +47,9 @@ rather than surveying the alternatives.
 Backing up takes the seeds you hold, subject to rule 0 auditing how each one
 was made ([§2](README.md#2-before-you-back-it-up-is-the-secret-worth-protecting)),
 and produces three things: three share cards, the encrypted payload file, and
-the written recovery instructions that travel with each card. It does not
-care whether the seeds came from this sitting's dice rolls, an earlier
+the written recovery instructions that travel with each card
+([what the cards hold, and what locks the payload](CRYPTOGRAPHY.md#slip-39-splitting-the-backup-key)).
+It does not care whether the seeds came from this sitting's dice rolls, an earlier
 generation, or a wallet you already run. What it needs is the seeds
 themselves, an optional passphrase per cosigner, and the wallet descriptor.
 
