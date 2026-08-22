@@ -177,8 +177,9 @@ this sitting regardless: a sheet is a seed in plain text whether or not a
 backup gets built from it today. If you rolled the key sheet before changing
 your mind about stopping, destroy it too, and whatever you wrote the key
 onto; a key protects nothing without a payload to lock. Keep the value
-cards: until you come back to build the backup, they are all you have. Do
-not fund the wallet beyond pocket change until that backup exists, and the
+cards for now: they are all you have until you come back to build the
+backup, and step 5 destroys them once that backup is proved. Do not fund
+the wallet beyond pocket change until that backup exists, and the
 machine that has held a cosigner seed in memory still never connects to a
 network again
 ([the full version of this exit](README.md#if-you-are-stopping-after-generating)).
@@ -245,18 +246,21 @@ mode ([full instructions](https://github.com/PeteSparrowBTC/slip39-backup/blob/m
    the payload file, run Recoverer mode, and check the result against
    `verification-record.txt`. This is what proves your handwriting as much as it
    proves the tool.
-2. **Destroy every roll sheet and value card from this session, and any
-   transcription you made here of a seed you brought, for typing it in.**
-   A seed you arrived already holding, on paper from before this sitting,
-   has no sheet or card from this cycle and is never touched by this step;
-   it stays yours. Everything else here is a seed or the backup key in
-   plain text, and until burned they are the only unprotected copies of
-   either. You have the words and the hex
-   safely in the payload now, and the dry run has just proved it
+2. **Destroy every roll sheet and every value card this procedure told you
+   to write, whichever sitting you wrote it in.** That reaches the cosigner
+   cards from a generating sitting days or weeks before this one, not only
+   what this sitting itself produced: the payload is the copy that survives
+   now, which is exactly why the cards can go. A record of a seed you
+   brought from outside this procedure is never touched by any instruction
+   on this page; that is the backup-only reader's own paper, and it stays
+   theirs. Until burned, everything else here is a seed or the backup key
+   in plain text and the only unprotected copy of it, and the dry run has
+   just proved the payload is what protects them now
    ([why this is the trap it is](README.md#7-known-traps-each-has-bitten-real-people)).
    This goes further than the exit in step 2: stopping after generating
-   keeps the value cards, because they are all you have; finishing the
-   backup does not, because the payload is what survives now.
+   keeps the value cards for the time being, because the backup does not
+   exist yet; finishing the backup does not, because the payload is what
+   survives from here on.
 3. **Retire the spare computer from the network.** It has had your seed in
    memory, and that is the end of its online life. Shut it down, put it away,
    and do not connect it to anything again
