@@ -131,10 +131,10 @@ scope and therefore cannot be left alone.
 | README preamble | Audience is someone postponing custody who is told that a password manager and two-factor authentication equip them for everything below. Two makers and a recovery-critical descriptor is a different reader |
 | README one-sentence version | Written for a single root of trust |
 | Section 2 | Single-seed framing throughout; vendor diversity's rationale per section 4 above; the second-implementation check becomes a requirement rather than advice once there is more than one seed |
-| Section 3 | Rule 0's example is a single seed |
+| Section 3 | Rule 0 audits how the seed was generated, singular, and assumes real entropy at one root. Two cosigner seeds means two audits and two roots |
 | Section 6 | The worked example is one seed and one key. Needs the second cosigner seed, the clear-the-rolls step, and a labelled exit for the generation-only journey |
 | Section 7 | The one-seed-many-passphrases trap stays and gains a sibling: two cosigner seeds from one sheet |
-| Section 10 | Two rows describe a single defective generator; with two makers the row splits |
+| Section 10 | Three rows assume one seed and one key: the defective-generator row, where vendor diversity is now the premise rather than a mitigation; the surviving-roll-log row, which names log one as the seed and log two as the key; and the reused-log row, which needs a sibling for two cosigner seeds sharing one sheet |
 | Section 11 | Loses its centrepiece, since multisig is now the premise. Keeps involving people, gains the third disjoint list |
 | Section 12 | The complexity-budget and no-theater argument now has to say which side of that line a two-maker quorum sits on, and who this document is not for |
 | START-HERE | Opens with the fork; step 2 becomes conditional and rolls twice for seeds; stays one ordered list rather than splitting in two |
