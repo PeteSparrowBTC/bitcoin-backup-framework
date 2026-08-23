@@ -2,8 +2,8 @@
 
 This is the short version: what to do, in order. Every step links to the
 reasoning in [the framework](README.md), so you can follow the plan straight
-through, or dig into any topic as far as you want to go. Read this page through
-once before you begin anything.
+through, or read the reasoning behind any step. Read this page through once
+before you begin anything.
 
 **What you end up with.** A backup where no single place holds enough to steal
 your coins and no single loss destroys them, plus written instructions a
