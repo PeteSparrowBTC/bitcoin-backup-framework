@@ -6,12 +6,13 @@ through, or read the reasoning behind any step. Read this page through once
 before you begin anything.
 
 **Seeds, a backup, or both.** Generating seeds and backing seeds up are separate
-actions here, and either is useful alone. Generating leaves you with seeds rolled
-from your own dice. Backing up leaves those seeds in a form where no single place
-holds enough to steal your coins and no single loss destroys them, plus written
-instructions a non-technical person could follow. [Which parts you
-need](ACTIONS.md) names the four journeys, the sheets each prints, and the steps
-each uses.
+actions here. You can roll a seed from dice without backing it up, which leaves
+you with seeds no random number generator chose. You can back up the wallet setup
+you already have, which leaves those seeds in a form where no single place holds
+enough to steal your coins and no single loss destroys them, plus written
+instructions a non-technical person could follow. Or you can do both. [Which
+parts you need](ACTIONS.md) names the four journeys, the sheets each prints, and
+the steps each uses.
 
 **What it costs.** Two evenings, a week of errands in between, and about an hour
 a year afterwards.
