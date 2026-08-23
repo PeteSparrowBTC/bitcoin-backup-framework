@@ -4,12 +4,6 @@ This framework is one answer among many, and the others are worth knowing about
 before you commit to this one. This page is a map: what each project is, where
 to find it, and how it relates to the choices made here.
 
-<!-- revision:start -->
-**Revised 2026-08-22.** This is the page that rots fastest here. Projects
-release, change licence and get abandoned, so treat every entry as true on that
-date and confirm at the source before relying on it.
-<!-- revision:end -->
-
 **What this page is not.** It is not a review. Except where noted, each entry is
 described from the project's own documentation rather than from having run it,
 and none of the endorsements or criticisms of any project here are based on an
@@ -43,6 +37,10 @@ disagree with a specific choice rather than the whole thing. If what you want
 is to derive your own answer from your own threat model, SmartCustody is the
 better starting point and this document is one of the things you might arrive
 at.
+
+This is the page that rots fastest here. Projects release, change licence and
+get abandoned, so treat every entry as true on the date at the foot of this page
+and confirm at the source before relying on it.
 
 ---
 
@@ -298,3 +296,7 @@ backup can hold a passphrase and a descriptor as well
 designed to work with zero trusted parties, with other people as a later
 upgrade rather than a prerequisite
 ([§11](README.md#11-involving-others-later-the-upgrade-path)).
+
+<!-- revision:start -->
+**Revised 2026-08-22.**
+<!-- revision:end -->

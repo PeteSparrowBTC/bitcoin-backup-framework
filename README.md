@@ -103,18 +103,6 @@ specific claim. Quote the sentence you disagree with, and if you can, write the
 one that should replace it. Never put a seed word, a share or a passphrase in an
 issue; the repository is public and nothing about a page needs them.
 
-<!-- revision:start -->
-**Revised 2026-08-22.** Rule 7 says an undated artifact cannot be told apart
-from a current one, and that applies to this document as much as to a share
-card. The date says when a person last checked the claims, and most of what is
-written here is a claim about something else: what the backup tool emits and
-calls it, what it defaults to, what other projects offer. The tool is
-maintained with this document, so its filenames are changed here in the same
-release. The claims about other projects are the ones that go out of date on
-their own, which is what the dates in
-[what else is out there](LANDSCAPE.md) are for.
-<!-- revision:end -->
-
 ---
 
 ## 1. What you are protecting, and the two ways you lose
@@ -1596,3 +1584,7 @@ before trusting it with real value.
 *Written together by Pete Sparrow (human) and Claude Fable (AI, Anthropic).
 The collaboration is stated openly because provenance matters in security
 documents: you should know how the thing you are trusting was made.*
+
+<!-- revision:start -->
+**Revised 2026-08-22.**
+<!-- revision:end -->

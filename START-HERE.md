@@ -9,28 +9,16 @@ before you begin anything.
 your coins and no single loss destroys them, plus written instructions a
 non-technical person could follow.
 
-**Which journey is yours.** This framework covers two actions, generating
-seeds and backing seeds up, and either is useful without the other. You might
-be doing both in one sitting, backing up two cosigner seeds you already hold,
-generating one seed and bringing the other, or generating yours and stopping
-before the backup. [Which parts you need](ACTIONS.md) names the four journeys,
-how many sheets each one prints, and which steps below belong to each.
+**Which journey is yours.** Generating seeds and backing seeds up are two
+actions here, and either is useful alone. [Which parts you need](ACTIONS.md)
+names the four journeys, the sheets each prints, and the steps each uses.
 
 **What it costs.** Two evenings, a week of errands in between, and about an hour
 a year afterwards.
 
-<!-- revision:start -->
-**Revised 2026-08-22.** These steps name files and screens in tools that change.
-The tools and this page are maintained together, so when one of them renames a
-file, the step that names it is changed in the same release. If you ever find
-the two disagreeing, the tool is the one in front of you: follow it, and treat
-the page as the thing that needs fixing.
-<!-- revision:end -->
-
-**What it does not do.** It is not an inheritance plan, and by default your coins
-are lost when you die. Step 7 leaves your estate a thread to pull, and
-[§11](README.md#11-involving-others-later-the-upgrade-path) is the real fix, for
-when you are ready to involve people.
+**If a tool and this page disagree, follow the tool.** They are maintained
+together, so a renamed file is renamed here in the same release, and a
+disagreement means this page is the thing that needs fixing.
 
 ---
 
@@ -357,3 +345,7 @@ Fifteen minutes ([the drill in full](README.md#9-the-annual-drill)):
 | What saves you in each disaster | [§10](README.md#10-failure-mode-matrix-what-saves-you) |
 | What this does not cover | [§12](README.md#12-what-this-framework-deliberately-does-not-do) |
 | Bringing other people in later | [§11](README.md#11-involving-others-later-the-upgrade-path) |
+
+<!-- revision:start -->
+**Revised 2026-08-22.**
+<!-- revision:end -->

@@ -19,12 +19,6 @@ You do not need this page to follow the framework's instructions. It exists
 so the framework's own sections can use "SHA-256" or "threshold" and move
 straight on, rather than pausing to define them each time.
 
-<!-- revision:start -->
-**Revised 2026-08-22.** The primitives described here are fixed by published
-standards and do not move. What can move is which of them the tools use, so
-the date says when a person last checked this page against those tools.
-<!-- revision:end -->
-
 ---
 
 ## One-way functions, and SHA-256
@@ -271,3 +265,7 @@ protect the following.
 ---
 
 *Collaboration by Claude*
+
+<!-- revision:start -->
+**Revised 2026-08-22.**
+<!-- revision:end -->

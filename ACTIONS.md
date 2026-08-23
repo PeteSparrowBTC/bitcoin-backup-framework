@@ -8,12 +8,6 @@ recoverable, encrypted payload and a set of cards. This page says what each
 action produces, which one you need, and how much of [the framework](README.md)
 each combination reads.
 
-<!-- revision:start -->
-**Revised 2026-08-22.** What this page says about which steps each journey
-needs is a claim about the framework beside it, and the two are maintained
-together, so a step that moves there is moved here in the same change.
-<!-- revision:end -->
-
 ---
 
 ## Generating seeds
@@ -89,3 +83,7 @@ else, work in the tools and are a different document to write.
 ---
 
 *Collaboration by Claude*
+
+<!-- revision:start -->
+**Revised 2026-08-22.**
+<!-- revision:end -->
