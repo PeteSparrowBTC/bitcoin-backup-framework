@@ -7,8 +7,7 @@ before you begin anything.
 
 **Seeds, a backup, or both.** Pick the one that describes you:
 
-- **Seeds only.** Roll your seeds from dice and stop there. The dice decide what
-  each seed is, and nothing else does.
+- **Seeds only.** Roll your seeds from dice.
 - **Backup only.** You already have your seeds. They end up split across places,
   so no single place holds enough to steal your coins and no single loss destroys
   them, and you leave written instructions a non-technical person could follow.
