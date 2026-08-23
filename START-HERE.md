@@ -5,14 +5,17 @@ reasoning in [the framework](README.md), so you can follow the plan straight
 through, or read the reasoning behind any step. Read this page through once
 before you begin anything.
 
-**Seeds, a backup, or both.** Generating seeds and backing seeds up are separate
-actions here. You can roll a seed from dice without backing it up, which leaves
-you with seeds no random number generator chose. You can back up the wallet setup
-you already have, which leaves those seeds in a form where no single place holds
-enough to steal your coins and no single loss destroys them, plus written
-instructions a non-technical person could follow. Or you can do both. [Which
-parts you need](ACTIONS.md) names the four journeys, the sheets each prints, and
-the steps each uses.
+**Seeds, a backup, or both.** Pick the one that describes you:
+
+- **Seeds only.** Roll your seeds from dice and stop there. The dice decide what
+  each seed is, and nothing else does.
+- **Backup only.** You already have your seeds. They end up split across places,
+  so no single place holds enough to steal your coins and no single loss destroys
+  them, and you leave written instructions a non-technical person could follow.
+- **Both.** Roll the seeds, then back them up.
+
+[Which parts you need](ACTIONS.md) names the four journeys, the sheets each
+prints, and the steps each uses.
 
 **What it costs.** Two evenings, a week of errands in between, and about an hour
 a year afterwards.
