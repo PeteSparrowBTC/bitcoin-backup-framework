@@ -5,9 +5,9 @@ reasoning in [the framework](README.md), so you can follow the plan straight
 through, or read the reasoning behind any step. Read this page through once
 before you begin anything.
 
-**What you end up with.** A backup where no single place holds enough to steal
-your coins and no single loss destroys them, plus written instructions a
-non-technical person could follow.
+**What you end up with.** Seeds rolled from your own dice, and a backup of them
+where no single place holds enough to steal your coins and no single loss
+destroys them, plus written instructions a non-technical person could follow.
 
 **Which journey is yours.** Generating seeds and backing seeds up are two
 actions here, and either is useful alone. [Which parts you need](ACTIONS.md)
