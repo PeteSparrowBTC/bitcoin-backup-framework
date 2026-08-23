@@ -6,11 +6,12 @@ through, or read the reasoning behind any step. Read this page through once
 before you begin anything.
 
 **Seeds, a backup, or both.** Generating seeds and backing seeds up are separate
-actions here, and either is useful alone. Both together leave you with seeds
-rolled from your own dice, a backup where no single place holds enough to steal
-your coins and no single loss destroys them, and written instructions a
-non-technical person could follow. [Which parts you need](ACTIONS.md) names the
-four journeys, the sheets each prints, and the steps each uses.
+actions here, and either is useful alone. Generating leaves you with seeds rolled
+from your own dice. Backing up leaves those seeds in a form where no single place
+holds enough to steal your coins and no single loss destroys them, plus written
+instructions a non-technical person could follow. [Which parts you
+need](ACTIONS.md) names the four journeys, the sheets each prints, and the steps
+each uses.
 
 **What it costs.** Two evenings, a week of errands in between, and about an hour
 a year afterwards.
