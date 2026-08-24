@@ -44,16 +44,30 @@ menu:
     - name: The framework
       pageRef: /framework
       weight: 2
-    - name: Tools
+    # The repository this site is generated from. Every page here is built from
+    # markdown in it, so this is where a reader goes to read the source of the
+    # page they are on, file an issue, or check what changed.
+    #
+    # `type: link` rather than an icon-only entry: an icon with no text is
+    # dropped from the sidebar the theme shows on a phone, and this link is
+    # worth as much there as on a desktop. It sits above the Tools separator
+    # because it is this document, not one of the two tools.
+    - name: GitHub
+      url: https://github.com/PeteSparrowBTC/bitcoin-backup-framework
       weight: 3
+      params:
+        type: link
+        icon: github
+    - name: Tools
+      weight: 4
       params:
         type: separator
     - name: dice-to-seed
       url: https://github.com/PeteSparrowBTC/dice-to-seed
-      weight: 4
+      weight: 5
     - name: slip39-backup
       url: https://github.com/PeteSparrowBTC/slip39-backup
-      weight: 5
+      weight: 6
     # One-on-one work, pointed at the booking section of petesparrow.com rather
     # than at Cal.com directly, so the offer can be rewritten there without
     # touching this repository.
