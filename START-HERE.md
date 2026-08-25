@@ -5,7 +5,9 @@ reasoning in [the framework](README.md), so you can follow the plan straight
 through, or read the reasoning behind any step. Read this page through once
 before you begin anything.
 
-**Seeds, a backup, or both.** Pick the one that describes you:
+**Seeds, a backup, or both.** Making seeds and backing them up are two
+separate actions. You can do either one on its own, or both in one go. Pick
+the line that describes you:
 
 - **Seeds only.** Roll your seeds from dice.
 - **Backup only.** You already have your seeds. They end up split across places,
