@@ -53,10 +53,12 @@ disagreement means this page is the thing that needs fixing.
 
 ## 1. Download Tails and the tools, and check what you got
 
-**This is the only step that happens online.**
+**Everything the offline session needs is gathered here.** After this the spare
+computer has no network and no printer, so a download you skipped, a checksum
+you did not compare or a sheet you did not print cannot be fetched from the
+table later.
 
-**Tails first.** Everything after this happens on it, and it is the one download
-here that can be verified properly rather than approximately. Follow
+**Tails first.** The offline session runs on it. Follow
 [tails.net/install](https://tails.net/install/), which walks you through writing
 the image to a USB stick and then verifies it in the browser, or with an OpenPGP
 signature if you would rather. Do the verification. A tampered Tails is a
