@@ -10,9 +10,9 @@
 >
 > - **[Start here](https://petesparrowbtc.github.io/bitcoin-backup-framework/)**
 >   is the six-step version, for doing rather than deciding.
-> - **[Generate, back up, or both](https://petesparrowbtc.github.io/bitcoin-backup-framework/actions/)**
->   says which of the two actions you need, and how much of the framework each
->   journey reads.
+> - **[Which parts you need](https://petesparrowbtc.github.io/bitcoin-backup-framework/actions/)**
+>   says where to join the procedure, and how much of the framework each route
+>   reads.
 > - **[The framework](https://petesparrowbtc.github.io/bitcoin-backup-framework/framework/)**
 >   is this document, split into its sections.
 > - **[How the numbers work](https://petesparrowbtc.github.io/bitcoin-backup-framework/numbers/)**
@@ -834,20 +834,29 @@ destroys logs inside the session rather than saving work for later.
 
 #### The pause between generating and backing up
 
-**Most readers stop here, and a two-vendor build usually has to.** Step 8
-wants the wallet descriptor, a descriptor wants both cosigner xpubs, and an
-xpub wants its seed loaded onto its device. None of that happens at this
-table, and the machine in front of you never goes online again, so the
-descriptor is built elsewhere and you come back
-([what the framework does not do for you here](#12-what-this-framework-deliberately-does-not-do)).
-Treat what follows as the end of sitting one rather than as giving up.
+**This is a seam in one procedure, not a place to stop.** Step 8 wants the
+wallet descriptor, a descriptor wants both cosigner extended public keys, and
+those come from the wallet built out of the seeds you have just rolled. That
+does not happen at this table: the machine in front of you never goes online
+again, and this framework does not build wallets
+([§12](#12-what-this-framework-deliberately-does-not-do)). So the procedure
+runs across two sittings, and this is where they join.
+
+**Build the wallet as a 2-of-2 at `m/48'/0'/0'/2'`**, native segwit, keys
+sorted. Every field of that is a choice and every one is argued
+([which path, and why](CRYPTOGRAPHY.md#the-derivation-path-this-framework-picks-and-why));
+what matters here is that you pick the same one the backup will record, because
+two correct seeds down two different paths are two different wallets and
+neither will say so.
+
+What follows is what to do with the paper while that happens.
 
 You hold both cosigner seeds and no backup of either:
 each seed you generated in this sitting is on its card, and a seed you
 brought is wherever you already kept it. Destroy every sheet you rolled,
 in this same sitting, regardless: a sheet is a seed in plain text,
 whether or not a backup gets built from it today. If you rolled for the
-backup key before deciding to stop, destroy that sheet too, along with
+backup key before the sitting broke here, destroy that sheet too, along with
 wherever you wrote `k` down: a key protects nothing without a payload to
 lock. Keep the cosigner cards for now: they are all you hold until you
 come back to build the backup, and step 11 destroys them once that
@@ -1505,16 +1514,20 @@ any order, years apart, as trust arrives.
   Complexity is itself a risk axis; this framework spends its complexity
   budget only where a named failure mode demands it, and the second vendor is
   spent on exactly one: a vendor's defect satisfying the quorum alone.
-- **No wallet construction.** This framework backs a wallet up; it does not
-  build one. Step 8 asks for the descriptor and assumes you arrive holding it,
-  and for a 2-of-2 across two vendors that means each seed loaded onto its
-  device, each device's xpub exported, and the two assembled into a descriptor
-  by wallet software. That is a separate sitting on a different machine, which
-  is why generating and backing up are usually weeks apart rather than one
-  evening ([the pause](#the-pause-between-generating-and-backing-up)). Wallet
-  software changes faster than this document can track, which is the same
-  reason [§2](#2-before-you-back-it-up-is-the-secret-worth-protecting) declines
-  to name a hardware wallet.
+- **No wallet construction, but the shape is chosen for you.** This framework
+  backs a wallet up; it does not build one. Step 8 asks for the descriptor, and
+  you either arrive holding it or you make the wallet at the seam between the
+  two sittings ([the pause](#the-pause-between-generating-and-backing-up)).
+  What the framework does do is settle the parameters rather than leave them to
+  whichever wallet you open first: **2-of-2, native segwit, keys sorted,
+  `m/48'/0'/0'/2'`**, with every field argued
+  ([why each one](CRYPTOGRAPHY.md#the-derivation-path-this-framework-picks-and-why)).
+  Those are exactly the choices that silently produce a different wallet when
+  two tools disagree, so leaving them open would be leaving the trap open.
+  Which software you build it in is yours to pick, because wallet software
+  changes faster than this document can track, the same reason
+  [§2](#2-before-you-back-it-up-is-the-secret-worth-protecting) declines to
+  name a hardware wallet.
   [Multisig.Guide](https://bitcoiner.guide/multisig/) covers building and
   recovering one, and [Bitcoin Core's multisig
   tutorial](https://github.com/bitcoin/bitcoin/blob/master/doc/multisig-tutorial.md)

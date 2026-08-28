@@ -375,7 +375,7 @@ for section in sections:
 # that any of them can be linked from the quickstart or from the framework's
 # sections without living inside either one's folder.
 STANDALONE = [
-    ("ACTIONS.md", "actions", "Generate, back up, or both", 2),
+    ("ACTIONS.md", "actions", "Which parts you need", 2),
     ("NUMBERS.md", "numbers", "How the numbers work", 4),
     ("CRYPTOGRAPHY.md", "cryptography", "How the cryptography works", 5),
     ("LANDSCAPE.md", "landscape", "What else is out there", 6),

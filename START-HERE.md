@@ -5,18 +5,21 @@ reasoning in [the framework](README.md), so you can follow the plan straight
 through, or read the reasoning behind any step. Read this page through once
 before you begin anything.
 
-**Seeds, a backup, or both.** Making seeds and backing them up are two
-separate actions. You can do either one on its own, or both in one go. Pick
-the line that describes you:
+**With seeds you hold, or with seeds you roll here.** Either way this page
+ends in the same place: your seeds split across separate locations, so no
+single place holds enough to steal your coins and no single loss destroys
+them, plus written instructions a non-technical person could follow.
 
-- **Seeds only.** Roll your seeds from dice.
-- **Backup only.** You already have your seeds. They end up split across places,
-  so no single place holds enough to steal your coins and no single loss destroys
-  them, and you leave written instructions a non-technical person could follow.
-- **Both.** Roll the seeds, then back them up.
+- **You already hold your seeds.** Start at step 1 and skip the seed rolls.
+- **You need seeds too.** Roll them here, then carry straight on into the
+  backup.
 
-[Which parts you need](ACTIONS.md) names the four journeys, the sheets each
-prints, and the steps each uses.
+Rolling dice is not a destination on this page. If making a seed is all you
+came for, [dice-to-seed](https://github.com/PeteSparrowBTC/dice-to-seed) is the
+tool and its own instructions are the guide.
+
+[Which parts you need](ACTIONS.md) names the sheets each route prints and the
+steps each one uses.
 
 **What it costs.** Two evenings, a week of errands in between, and about an hour
 a year afterwards.

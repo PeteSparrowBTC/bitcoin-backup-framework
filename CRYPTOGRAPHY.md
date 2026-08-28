@@ -111,6 +111,72 @@ holds it compute every address the wallet will ever use, which is a privacy
 leak, but it carries no private key material, so it is not by itself a
 spending risk.
 
+## The derivation path this framework picks, and why
+
+The determinism above is only worth something once the path is fixed. Leave it
+to whichever wallet you open first and two correct seeds can still produce two
+different wallets, with no error to tell you which one holds your coins. So
+this framework picks one and states it:
+
+```
+m/48'/0'/0'/2'
+```
+
+Read as purpose, coin, account, script type, hardened at every level. Each
+field is a choice, and each is made the same way: take the option that the most
+independent implementations will still reconstruct correctly, years from now,
+with nobody available to ask.
+
+**`48'`, because multisig has its own purpose field.** BIP-48 defines this
+layout for multisig wallets, and it is what the wallets you would actually
+recover in have settled on, Sparrow, Specter, Coldcard and Nunchuk among them.
+The older alternative, BIP-45, fixes each cosigner at an index and has no field
+for the script type at all. That suits a committee of mutually suspicious
+parties, which is not this.
+
+**`0'`, because this is Bitcoin.** The coin field is SLIP-44's, where 0 is
+mainnet and 1 is every testnet.
+
+**`0'`, because there is one account.** Nothing here needs a second, and a
+recoverer who holds the seeds but never saw this page will try account 0 first.
+
+**`2'`, because native segwit is cheaper to spend and better supported.** In
+BIP-48 this field is 1 for segwit wrapped in P2SH and 2 for native P2WSH.
+Wrapped segwit exists for senders that could not construct a bech32 output,
+which stopped being a real constraint years ago. Native also spends for less:
+witness data is discounted, a 2-of-2 carries a large script into every spend,
+and so the discount is worth more to multisig than it is to a single key.
+
+Taproot is deliberately not chosen. BIP-48 has no script type for it, and
+multi-party taproot spending is not yet something several independent wallets
+will rebuild from a backup the same way. Being cheapest is not the property
+this framework is buying.
+
+**Hardened at every level**, as BIP-48 specifies. A hardened child cannot be
+walked back to its parent's private key by someone holding a leaked extended
+public key and chain code, and a multisig hands extended public keys around by
+design.
+
+**Standard rather than private.** A path nobody else uses is the derivation
+version of a clever hiding place, which
+[§12](README.md#12-what-this-framework-deliberately-does-not-do) rules out for
+storage and which fails here for the same reason. It defends nothing, because
+spending needs the seeds and the path was never the secret, and it costs the
+thing this framework exists to protect: whoever holds your seeds in twenty
+years can find a standard wallet and cannot find an invented one.
+
+**What the choice costs, stated once.** It is permanent for this wallet. `1'`
+and `2'` are different paths, so they derive different keys and different
+addresses; they are not two spellings of one wallet, and moving between them
+means a new wallet and an on-chain transaction.
+
+**And what losing it costs, which is less than you might fear.** If the path is
+lost while both seeds survive, the wallet is not gone. Script type, account
+number and whether the keys are sorted come to a handful of combinations, each
+of which derives a wallet that can be checked against the chain for history.
+That is an afternoon of work for someone competent, not a loss, which is worth
+knowing before it happens and is not a reason to skip recording the descriptor.
+
 ## SLIP-39: splitting the backup key
 
 Input: one short secret, 16 or 32 bytes in every interoperable
