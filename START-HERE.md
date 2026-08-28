@@ -139,8 +139,29 @@ Every sheet follows the same cycle:
    what makes the next one safe to roll.
 
 Keep one sheet in front of the machine at a time, and turn any other face
-down and out of the way. The value card carries which cosigner is which; the
-sheet never does.
+down and out of the way.
+
+**What goes on each card, and what does not.** Three cards, one per roll
+session:
+
+| Card | What you write |
+| --- | --- |
+| **Cosigner one** | The label, and the twelve seed words in order |
+| **Cosigner two** | The label, and its own twelve seed words in order |
+| **Backup key** | The 64 hex characters of `k`, in the groups of four the app shows, and the four-character check code beneath them |
+
+The label is the whole reason the cards carry writing the sheets do not: you
+have to know which seed is which to build the wallet and to restore it, and
+the sheet is deliberately anonymous because it is the one artifact that must
+never be identifiable if it goes astray.
+
+Nothing else goes on a card. Not the rolls, which stay on the sheet that is
+about to be destroyed. Not the passphrase, if a cosigner has one, because a
+passphrase written beside the seed it protects is not a second factor
+([where it does go](README.md#the-passphrase-strength-you-can-actually-assess)).
+Not a wallet name, a date, or an amount: a found card holding one cosigner
+seed cannot spend by itself, and a found card that also says whose wallet it
+belongs to is a different problem.
 
 **Why separate sheets, and why they must not be shared.** Each cosigner seed
 is its own secret, and the key that encrypts the backup payload is a third.
