@@ -16,7 +16,8 @@
 > - **[The framework](https://petesparrowbtc.github.io/bitcoin-backup-framework/framework/)**
 >   is this document, split into its sections.
 > - **[How the numbers work](https://petesparrowbtc.github.io/bitcoin-backup-framework/numbers/)**
->   derives 2.585 bits a roll, 24 words, and 64 hex characters.
+>   derives 2.585 bits a roll, twelve words a cosigner seed, and 64 hex
+>   characters.
 > - **[How the cryptography works](https://petesparrowbtc.github.io/bitcoin-backup-framework/cryptography/)**
 >   says what SHA-256, BIP-39, SLIP-39, age and OpenPGP each guarantee.
 > - **[What else is out there](https://petesparrowbtc.github.io/bitcoin-backup-framework/landscape/)**
@@ -30,7 +31,7 @@ If you have been meaning to take real custody of a large bitcoin holding for
 a year or two and keep postponing it, this document is for you. It is a
 complete framework for large holdings, securing a Bitcoin seed phrase per
 cosigner key, its passphrase, and the digital accounts around them. The
-recommended wallet is 2-of-2 keys, both held by one owner, on hardware from
+wallet is 2-of-2 keys, both held by one owner, on hardware from
 two vendors. Whether you are starting from nothing or already have a
 strategy you have never pressure-tested, the rules in [§3](#3-the-rules) and
 the failure matrix in [§10](#10-failure-mode-matrix-what-saves-you) work just
@@ -41,6 +42,15 @@ from dice for a reader with no wallet yet, and a reader who already holds
 both cosigner seeds starts from them. It is written for someone who wants to
 **trust no one** and does not want to become a security expert to get this
 right.
+
+**Two cosigner seeds, twelve words each.** Two seeds is a requirement here
+rather than a preference. One seed is one object to steal and one vendor's
+firmware to trust, and no backup repairs either. The word count is the part
+this framework chooses on your behalf: twelve words is 128 bits, and 128 bits
+is also what the curve behind a bitcoin key leaves an attacker whatever the
+seed length, so twenty-four words doubles what you write onto a card and
+leaves the attacker's work where it was
+([the arithmetic](NUMBERS.md#twelve-words-per-cosigner-seed-and-why-that-is-enough)).
 
 **Why not 2-of-3 keys?** Redundancy against a lost or dead device comes from
 the backup, which holds both cosigner seeds, so a third key adds no
@@ -176,6 +186,8 @@ Since the output tells you nothing, only the process is auditable:
   **60** for a twelve-word seed and **111** for twenty-four, which clears the
   vendor minimums of 50 and 99 with margin for a die that is not quite fair
   ([why those counts, and why 99 is not 256 bits](NUMBERS.md#why-99-rolls-is-not-256-bits)).
+  A cosigner seed here is twelve words, so sixty is the count you will roll
+  ([why twelve](NUMBERS.md#twelve-words-per-cosigner-seed-and-why-that-is-enough)).
   This is the only path that does not require trusting a black box you cannot
   inspect.
 - **Check the conversion in a second implementation, and know what it cannot
@@ -215,21 +227,25 @@ Since the output tells you nothing, only the process is auditable:
 
 ### Every roll log is a plaintext secret
 
-Dice produce three secrets in the recommended shape, not two: one log per
-cosigner seed, and one log for `k`, the key that encrypts the backup payload
+Dice produce three secrets here, not two: one log per cosigner seed, and one
+log for `k`, the key that encrypts the backup payload
 ([§4](#4-inventory-the-secrets-you-actually-hold)), which otherwise comes from
 the backup machine's generator and would be the one number in the design with
 no origin you can account for. One log each, and no two logs are ever the
-same log. Roll the same count for every log.
+same log. A cosigner seed's log is sixty rolls and the key's is 111, which is
+why the two sheets are different sheets before anyone has written on them
+([why those counts](NUMBERS.md#twelve-words-per-cosigner-seed-and-why-that-is-enough)).
 
-**They must be separate logs.** On a twenty-four-word seed the BIP-39 entropy
-is SHA-256 of your rolls ([what SHA-256 does, and what it cannot](CRYPTOGRAPHY.md#one-way-functions-and-sha-256)),
-and `k` is SHA-256 of your rolls: same function, same input, same output.
+**They must be separate logs.** A twelve-word seed's BIP-39 entropy is the
+first half of the SHA-256 of your rolls ([what SHA-256 does, and what it
+cannot](CRYPTOGRAPHY.md#one-way-functions-and-sha-256)), and `k` is the whole
+of the SHA-256 of your rolls: same function, same input, overlapping output.
 Reuse a seed's log for the key and the key protecting the backup *is* the
 wallet it protects, so the shares stop protecting anything and
 the two-layer design collapses to one layer
 ([the arithmetic](NUMBERS.md#what-the-hash-does-and-the-one-thing-it-cannot-do)).
-A twelve-word seed takes the first half of the same hash, which is no better.
+A twenty-four-word seed is that hash entire, which is worse rather than
+better.
 Both tools enforce this rather than warning about it: `dice-to-seed` clears
 your rolls when you change mode, and `slip39-backup` recovers the entropy of
 every seed in the form and refuses a key that matches one.
@@ -734,30 +750,30 @@ destroys logs inside the session rather than saving work for later.
    one that was published. A tampered build needs no network to hurt you, only
    words its author can also compute, and an offline session runs it faithfully.
 
-   **Print the roll sheet now, too.** `dice-to-seed` publishes the sheet in
-   two forms as its own release assets:
-   [`roll-sheet.pdf`](https://github.com/PeteSparrowBTC/dice-to-seed/releases/latest/download/roll-sheet.pdf) to print, and
-   [`roll-sheet.html`](https://github.com/PeteSparrowBTC/dice-to-seed/releases/latest/download/roll-sheet.html) as the same sheet in
-   readable markup for anyone who would rather see what they are printing.
+   **Print the roll sheets now, too.** `dice-to-seed` publishes two of them
+   as its own release assets, differing only in how many boxes they carry:
+   [`roll-sheet-12-words.pdf`](https://github.com/PeteSparrowBTC/dice-to-seed/releases/latest/download/roll-sheet-12-words.pdf) has sixty, one cosigner
+   seed's worth, and
+   [`roll-sheet-24-words.pdf`](https://github.com/PeteSparrowBTC/dice-to-seed/releases/latest/download/roll-sheet-24-words.pdf) has 111, one backup key's
+   worth.
    Both are covered by the same
    [`SHA256SUMS`](https://github.com/PeteSparrowBTC/dice-to-seed/releases/latest/download/SHA256SUMS) as the AppImage and the
-   `-tails.zip`, so verify whichever
-   one you print against that checksum here, on this networked machine,
+   `-tails.zip`, so verify each sheet
+   against that checksum here, on this networked machine,
    before printing it: paper cannot go through the check that runs on Tails
    for the tools themselves, so this is the one place the sheet's own
    checksum gets used. The sheet is blank, so printing it now carries nothing;
    nothing filled in ever goes near a printer, because a spooler, an
    internal disk and a network queue are all memory this framework cannot
-   audit. Print one sheet for every roll you will make: one for each
-   cosigner seed you are generating here, plus one for the backup key if
-   you are building the backup in this sitting. Set aside a blank card for
-   every value you will derive, which is the same count. Step 7 writes
-   each value onto its card before it clears the roll log, and there is
-   nothing to write on if you arrive without them. Step 9 makes a
-   separate set of cards for the shares. Print one spare sheet and hold
-   back one spare card as well: printing happens here and the session
-   that follows is offline, so that spare pair is what you roll the key
-   on if you meant to stop after generating and then change your mind.
+   audit. Print one sheet for every roll session you will run: a sixty-box
+   sheet for each cosigner seed you are generating here, and the 111-box
+   sheet for the backup key. Set aside a blank card for every value you
+   will derive, which is the same count. Step 7 writes each value onto its
+   card before it clears the roll log, and there is nothing to write on if
+   you arrive without them. Step 9 makes a separate set of cards for the
+   shares. Print a spare of each sheet and hold back a spare card as well:
+   printing happens here and the session that follows is offline, so a
+   sheet spoiled at the table cannot be replaced once you have booted.
 7. Boot Tails **offline**. **If you already hold both cosigner seeds,
    skip the seed rolls**: roll one sheet only, for the backup key, using
    the same cycle described below. **If you hold one cosigner seed and are
@@ -806,14 +822,12 @@ destroys logs inside the session rather than saving work for later.
      when you roll both here. The tool clears the log when you change
      mode, and deliberately keeps it when the mode you ask for is the one
      you are already in. That is so pressing the button you are on cannot
-     destroy the **60** (or **111**, for a twenty-four-word seed) rolls
-     you just made. Rolling a second cosigner seed is not a mode change.
+     destroy the **60** rolls you just made. Rolling a second cosigner seed is not a mode change.
      Without clearing, the second seed would come from a hash of both
      sheets and could not be recomputed from the sheet that appears to
      have produced it.
-   - **The backup key, `k`.** Needed only if you are going on to build the
-     backup in this sitting; skip it if you plan to stop after generating.
-     Otherwise, put the app into its backup-key mode and roll one sheet
+   - **The backup key, `k`.** Put the app into its backup-key mode and roll
+     the 111-box sheet
      for `k`, following the same cycle: derive 64 hex characters and a
      four-character check code
      ([what those counts mean](NUMBERS.md#bytes-and-why-a-hex-character-is-half-a-byte)),
@@ -892,10 +906,8 @@ a cosigner seed in memory still never connects to a network again.
    [§7](#7-known-traps-each-has-bitten-real-people) names. **Paste `k` and its
    check code** into the backup-key fields rather than letting the tool
    generate one; leave them empty and the key protecting every copy of your
-   backup comes from a generator you cannot check. If you skipped the key
-   sheet in step 7 because you meant to stop there, roll it now, the same
-   way, on the spare sheet and card step 6 told you to hold back,
-   before continuing. Set the group shape to **2-of-3 cards** (the tool
+   backup comes from a generator you cannot check. Set the group shape to
+   **2-of-3 cards** (the tool
    defaults to 3-of-5 cards, which assumes five homes; three locations you
    alone control is realistic, five rarely is).
 9. **Write the three share cards, before anything is tested or destroyed.**
@@ -1062,9 +1074,9 @@ a cosigner seed in memory still never connects to a network again.
   Your words, your shares and your payload are the other thing entirely, and no
   question about this document requires them.
 - **Keeping the dice logs.** This is the previous trap wearing a disguise the
-  guide handed you. A roll sheet is not working paper: the recommended shape
-  produces three, one per cosigner seed and one for the backup key if you are
-  going on to build it, and each is a bearer secret until it is destroyed. A
+  guide handed you. A roll sheet is not working paper: this framework
+  produces three, one per cosigner seed and one for the backup key, and each
+  is a bearer secret until it is destroyed. A
   cosigner's sheet alone hands over that seed; the key's sheet alone hands
   over `k`, which opens the payload without needing a single share. They are
   the only unprotected copies you will ever make of those secrets, they look
@@ -1632,5 +1644,5 @@ The collaboration is stated openly because provenance matters in security
 documents: you should know how the thing you are trusting was made.*
 
 <!-- revision:start -->
-**Revised 2026-08-22.**
+**Revised 2026-08-28.**
 <!-- revision:end -->

@@ -63,10 +63,10 @@ The fix is also small: roll past the minimum. Sixty rolls instead of fifty, and
 111 instead of 99, put you clear of the target with room for a die that is not
 quite fair.
 
-Each of those counts is per sheet. A cosigner seed takes its own 111 rolls,
-and so does the backup key, so the recommended shape of two cosigner seeds
-and one backup key takes up to three sheets, each rolled and hashed on its
-own.
+Each of those counts is per sheet. This framework rolls sixty for each of its
+two cosigner seeds and 111 for the backup key, so three sheets, each rolled
+and hashed on its own
+([why twelve words per seed](#twelve-words-per-cosigner-seed-and-why-that-is-enough)).
 
 ## Two kinds of entropy, and why the tables have three columns
 
@@ -147,9 +147,9 @@ k = SHA-256(the roll digits, joined by nothing)
 ```
 
 SHA-256 always produces exactly 256 bits, whatever you feed it. That is what
-makes it useful here: 111 rolls carry 286.9 bits, which is more than a seed
-needs, and the hash compresses them to exactly the 256 bits required, in a way
-anyone can reproduce and check.
+makes it useful here: 111 rolls carry 286.9 bits, which is more than the 256
+bits the backup key is, and the hash compresses them to exactly that width, in
+a way anyone can reproduce and check.
 
 **What it cannot do is create randomness.** If you feed it 255.9 bits of
 unpredictability, the output is 256 bits long and still only 255.9 bits
@@ -208,6 +208,39 @@ many are needed, and a 30-bit checksum. A 128-bit secret gives 20-word shares.
 The two lists are different, so a SLIP-39 share is not a seed phrase and cannot
 be typed into a wallet as one.
 
+## Twelve words per cosigner seed, and why that is enough
+
+This framework builds its wallet from two cosigner seeds and rolls twelve
+words for each: 128 bits per seed, off sixty rolls, instead of 256 bits off
+111.
+
+The reason is that 128 bits is where the ceiling already sits. A bitcoin
+private key is a point on the secp256k1 curve, and the fastest known attack on
+a curve that size is Pollard's rho, which costs about the square root of the
+number of points:
+
+```
+sqrt(2^256)  =  2^128  operations
+```
+
+So a twenty-four-word seed does not make an attacker do 2²⁵⁶ work. It makes
+them do 2¹²⁸, the same as a twelve-word seed, because the cheapest way in is
+the key itself and not the phrase that produced it. The extra 128 bits sit
+above a ceiling the curve has already set.
+
+What the longer phrase costs is not theoretical. Twice as many words to write
+onto a card by hand, and twice as many for someone to read back and type
+correctly years from now, in conditions nobody gets to choose. Every
+transcription check in this guide scales with that count, and transcription is
+what most of those checks exist for.
+
+**The backup key is the exception, at 111 rolls.** `k` is a symmetric key
+with no curve underneath it, so its own entropy is the whole of its strength
+and nothing caps what more of it buys. The seed's 128-bit ceiling is a fact about
+secp256k1 and does not carry over. One extra sheet is the entire cost of
+staying at 256 bits there, so this framework pays it
+([what `k` is](CRYPTOGRAPHY.md#slip-39-splitting-the-backup-key)).
+
 ## Bytes, and why a hex character is half a byte
 
 A **byte** is 8 bits, so it has 2⁸ = 256 possible values. Keys are quoted in
@@ -256,11 +289,11 @@ purpose, and the code is not treated as though it were security.
 | --- | --- |
 | 2.585 bits per roll | log₂(6); six is not a power of two |
 | 50 rolls | 128 ÷ 2.585 = 49.5, rounded up. The vendor minimum |
-| **60 rolls** | Clears 128 bits on the pessimistic measure as well as the average |
+| **60 rolls** | One cosigner seed. Clears 128 bits on the pessimistic measure as well as the average |
 | 99 rolls | 256 ÷ 2.585 = 99.03, rounded down. Reaches 255.9, not 256 |
-| **111 rolls** | Clears 256 bits with margin for a real die |
+| **111 rolls** | The backup key. Clears 256 bits with margin for a real die |
 | 2,048-word list | 2¹¹, so one BIP-39 word is 11 bits |
-| 12 words | (128 + 4) ÷ 11 |
+| 12 words | (128 + 4) ÷ 11. One cosigner seed |
 | 24 words | (256 + 8) ÷ 11 |
 | 1,024-word list | 2¹⁰, so one SLIP-39 word is 10 bits |
 | 33-word share | 256-bit share value plus metadata and a 30-bit checksum |
@@ -274,5 +307,5 @@ purpose, and the code is not treated as though it were security.
 *Collaboration by Claude*
 
 <!-- revision:start -->
-**Revised 2026-08-22.**
+**Revised 2026-08-28.**
 <!-- revision:end -->

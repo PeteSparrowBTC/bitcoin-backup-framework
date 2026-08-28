@@ -14,6 +14,11 @@ them, plus written instructions a non-technical person could follow.
 - **You need seeds too.** Roll them here, then carry straight on into the
   backup.
 
+**Two seeds, twelve words each.** The wallet this page builds is 2-of-2 keys,
+so it needs two cosigner seeds, and that count is fixed. Twelve words per seed
+is enough, and it is the size the roll sheets here are cut to
+([why](NUMBERS.md#twelve-words-per-cosigner-seed-and-why-that-is-enough)).
+
 Rolling dice is not a destination on this page. If making a seed is all you
 came for, [dice-to-seed](https://github.com/PeteSparrowBTC/dice-to-seed) is the
 tool and its own instructions are the guide.
@@ -35,8 +40,8 @@ disagreement means this page is the thing that needs fixing.
 | | |
 | --- | --- |
 | **Dice** | One ordinary six-sided die, used for every roll session. Casino dice are not needed, and one is enough ([why one](NUMBERS.md#why-this-guide-says-one-die)) |
-| **Printed roll sheets** | [`roll-sheet.pdf`](https://github.com/PeteSparrowBTC/dice-to-seed/releases/latest/download/roll-sheet.pdf), verified and printed blank before you start: one per roll session, three for the recommended shape, plus a spare for rolling the key later if you stop after generating ([step 1](#1-download-tails-and-the-tools-and-check-what-you-got) covers it) |
-| **Value cards** | Blank card stock, one for each value you expect to derive, plus a spare for that same later key roll: three for the recommended shape, set aside in [step 1](#1-download-tails-and-the-tools-and-check-what-you-got). Not the share cards step 4 makes later |
+| **Printed roll sheets** | Two of [`roll-sheet-12-words.pdf`](https://github.com/PeteSparrowBTC/dice-to-seed/releases/latest/download/roll-sheet-12-words.pdf), which has sixty boxes, one sheet per cosigner seed; and one of [`roll-sheet-24-words.pdf`](https://github.com/PeteSparrowBTC/dice-to-seed/releases/latest/download/roll-sheet-24-words.pdf), which has 111, for the backup key. Verified and printed blank before you start, plus a spare of each ([step 1](#1-download-tails-and-the-tools-and-check-what-you-got) covers both) |
+| **Value cards** | Blank card stock, one for each value you derive: two cosigner seeds and the backup key, so three, plus a spare, set aside in [step 1](#1-download-tails-and-the-tools-and-check-what-you-got). Not the share cards step 4 makes later |
 | **Paper and a pen** | Pencil or a pigment pen. Not a thermal printer receipt |
 | **A spare computer** | Anything that boots from USB. It is offline for all of this, and once it has met the seed it never connects to a network again, ever |
 | **Three USB sticks** | One for Tails, and two for payload copies, because one goes in the bank box and one stays home |
@@ -68,20 +73,21 @@ will not open the app if the check fails, so take that one and there is nothing
 left for you to do by hand.
 
 **Verify, then print the roll sheets, while a network and a printer are both
-easy to reach.** `dice-to-seed` publishes the sheet twice, straight from its
-latest release: [`roll-sheet.pdf`](https://github.com/PeteSparrowBTC/dice-to-seed/releases/latest/download/roll-sheet.pdf) to print, and
-[`roll-sheet.html`](https://github.com/PeteSparrowBTC/dice-to-seed/releases/latest/download/roll-sheet.html) as the same sheet in readable
-markup if you would rather see what you are printing.
-[`SHA256SUMS`](https://github.com/PeteSparrowBTC/dice-to-seed/releases/latest/download/SHA256SUMS) covers both, alongside the tools
-themselves, so check whichever one you print against that checksum before you
-print anything from it. Print one blank sheet for each roll
-session ahead of you, plus a spare, on this ordinary networked machine,
-before you boot Tails. It prints blank, so nothing filled in here ever goes
-near a printer. The spare computer is offline from step 2
-onward and has no printer of its own, so this spare sheet is what you roll
-the key on later if you stop after generating today and come back to build
-the backup another time. Set aside a blank value card for every value you
-expect to derive, plus a spare, for the same reason.
+easy to reach.** `dice-to-seed` publishes two sheets, straight from its latest
+release, and they differ only in how many boxes they carry.
+[`roll-sheet-12-words.pdf`](https://github.com/PeteSparrowBTC/dice-to-seed/releases/latest/download/roll-sheet-12-words.pdf) has sixty, which is one cosigner
+seed, and you need two of it, because this framework builds its wallet from
+two cosigner seeds.
+[`roll-sheet-24-words.pdf`](https://github.com/PeteSparrowBTC/dice-to-seed/releases/latest/download/roll-sheet-24-words.pdf) has 111, which is the backup key,
+and you need one.
+[`SHA256SUMS`](https://github.com/PeteSparrowBTC/dice-to-seed/releases/latest/download/SHA256SUMS) covers both sheets alongside the tools
+themselves, so check each one against that checksum before you print anything
+from it. Print three sheets in all, plus a spare of each, on this ordinary
+networked machine, before you boot Tails. They print blank, so nothing filled
+in here ever goes near a printer. The spare computer is offline from step 2
+onward and has no printer of its own, so a sheet spoiled at the table cannot
+be replaced from there, which is what the spares are for. Set aside a blank
+value card for each of the three values, plus a spare, for the same reason.
 
 **The one part that has to happen while you have a network.** Open each release's
 build log and confirm that the fingerprint recorded there is the one you are
@@ -105,19 +111,17 @@ You are producing randomness you can account for, because you cannot look at a
 seed phrase and tell whether it was random
 ([why this matters](README.md#2-before-you-back-it-up-is-the-secret-worth-protecting)).
 
-**Which sheets you roll depends on your journey.** Roll a fresh sheet for each
-cosigner seed you are generating, and for the backup key too if you are
-building the backup in this sitting. If you already hold both cosigner seeds,
-bring them written down into this session and nowhere else, and roll the key
-sheet alone. If you are generating seeds and stopping there, skip the key
-sheet.
+**Which sheets you roll depends on where you joined.** Roll a fresh sixty-box
+sheet for each cosigner seed you are generating, and the 111-box sheet for the
+backup key. If you already hold both cosigner seeds, bring them written down
+into this session and nowhere else, and roll the key sheet alone.
 
 Every sheet follows the same cycle:
 
-1. Roll **111** times for a 24-word seed, or **60** for 12 words ([where those
-   counts come from](NUMBERS.md#why-99-rolls-is-not-256-bits)); the backup
-   key's sheet takes the same count as your seeds and derives 64 hex
-   characters and a four-character check code ([what those are
+1. Roll the number of times the sheet in front of you asks for: **60** for a
+   cosigner seed, **111** for the backup key, which derives 64 hex characters
+   and a four-character check code instead of words ([where those counts come
+   from](NUMBERS.md#why-99-rolls-is-not-256-bits), and [what the hex is
    worth](NUMBERS.md#bytes-and-why-a-hex-character-is-half-a-byte)). Write
    each throw onto the sheet **as it lands**: not copied off the screen
    afterward, because a sheet is only an independent record of what the dice
@@ -141,7 +145,7 @@ sheet never does.
 
 **Why separate sheets, and why they must not be shared.** Each cosigner seed
 is its own secret, and the key that encrypts the backup payload is a third.
-On a 24-word seed the seed's entropy *is* the SHA-256 of your rolls, so
+A seed's entropy comes straight out of the SHA-256 of your rolls, so
 reusing a seed's sheet for the key would make the key derivable from the
 wallet it is protecting; both tools defend this, `dice-to-seed` clears your
 rolls when you switch modes and `slip39-backup` refuses a key that matches a
@@ -170,24 +174,19 @@ narrows the set your value is drawn from. Discard a roll only when the die is
 cocked or leaves the table, which is a question about the throw and not about
 the number.
 
-**If you are stopping after generating, which most readers do.** The backup
-needs a wallet descriptor and that gets built elsewhere, so sitting one
-usually ends here. Do step 3 first: checking what you
-rolled against a second implementation matters whether or not you build the
-backup today. Then you hold a value card for each cosigner seed you
-generated here, and no backup of it yet. Destroy every sheet you rolled in
-this sitting regardless: a sheet is a seed in plain text whether or not a
-backup gets built from it today. If you rolled the key sheet before changing
-your mind about stopping, destroy it too, and whatever you wrote the key
-onto; a key protects nothing without a payload to lock. Keep the value
-cards for now: they are all you have until you come back to build the
-backup, and step 5 destroys them once that backup is proved. Keep the two
-apart while they wait, each sealed in its own envelope in a different
-place: one card is one cosigner seed and cannot spend by itself, and the
-two in one drawer are the wallet in plain text. Do not fund the wallet
-beyond pocket change until that backup exists, and the machine that has
-held a cosigner seed in memory still never connects to a network again
-([the full version of this exit](README.md#the-pause-between-generating-and-backing-up)).
+**If the wallet is not built yet, this is where you wait.** The backup needs
+the wallet descriptor and the descriptor needs both cosigner keys, so a reader
+who rolled seeds today may have to build the wallet before step 4 can run. Do
+step 3 first: checking what you rolled against a second implementation matters
+either way. Destroy every sheet you rolled in this sitting regardless, the key
+sheet included: a sheet is a secret in plain text whether or not the backup is
+finished today. Keep the value cards until the backup is proved, and keep them
+apart while they wait, each sealed in its own envelope in a different place.
+One card is one cosigner seed and cannot spend by itself; two in one drawer
+are the wallet in plain text. Do not fund the wallet beyond pocket change
+until the backup exists, and the machine that has held a cosigner seed in
+memory still never connects to a network again
+([the full version of this pause](README.md#the-pause-between-generating-and-backing-up)).
 
 ---
 
@@ -211,10 +210,6 @@ If two tools disagree, stop and find out why before going further.
 
 **30 minutes, same offline session. You end with three share cards and the
 payload file.**
-
-**If you skipped the key sheet because you meant to stop after
-generating**, roll it now, the same cycle as step 2, on the spare sheet and
-value card you held back for exactly this, before continuing.
 
 Run [slip39-backup](https://github.com/PeteSparrowBTC/slip39-backup) in Owner
 mode ([full instructions](https://github.com/PeteSparrowBTC/slip39-backup/blob/main/TAILS_INSTRUCTIONS.md)).
@@ -269,10 +264,9 @@ mode ([full instructions](https://github.com/PeteSparrowBTC/slip39-backup/blob/m
    in plain text and the only unprotected copy of it, and the dry run has
    just proved the payload is what protects them now
    ([why this is the trap it is](README.md#7-known-traps-each-has-bitten-real-people)).
-   This goes further than the exit in step 2: stopping after generating
-   keeps the value cards for the time being, because the backup does not
-   exist yet; finishing the backup does not, because the payload is what
-   survives from here on.
+   This goes further than the pause in step 2, which keeps the value cards
+   because the backup does not exist yet. Finishing the backup ends that:
+   the payload is what survives from here on.
 3. **Retire the spare computer from the network.** It has had your seeds in
    memory, and that is the end of its online life. Shut it down, put it away,
    and do not connect it to anything again
@@ -359,5 +353,5 @@ Fifteen minutes ([the drill in full](README.md#9-the-annual-drill)):
 | Bringing other people in later | [§11](README.md#11-involving-others-later-the-upgrade-path) |
 
 <!-- revision:start -->
-**Revised 2026-08-22.**
+**Revised 2026-08-28.**
 <!-- revision:end -->
