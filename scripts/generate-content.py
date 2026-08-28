@@ -27,12 +27,15 @@ Output tree:
 
 import os
 import re
-import shutil
 import subprocess
 import sys
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 CONTENT = os.path.join(ROOT, "content")
+
+# Every file this run writes, so the prune at the end can remove what is left
+# over without deleting the directories themselves. See prune_stale().
+WRITTEN: set[str] = set()
 
 
 def slugify(heading: str) -> str:
@@ -165,6 +168,7 @@ def write(relpath: str, front: dict, body: str) -> None:
         sys.exit(f"generate-content: an unsubstituted marker survived into {relpath}")
 
     path = os.path.join(CONTENT, relpath)
+    WRITTEN.add(os.path.normpath(path))
     os.makedirs(os.path.dirname(path), exist_ok=True)
     lines = ["---", "type: docs"]
     for key, value in front.items():
@@ -334,7 +338,19 @@ def retarget(
 # Write it out.
 # ---------------------------------------------------------------------------
 
-shutil.rmtree(CONTENT, ignore_errors=True)
+# The content tree is NOT deleted here, and that is deliberate.
+#
+# It used to be `shutil.rmtree(CONTENT)` followed by a rebuild, which is tidy
+# and quietly breaks `hugo server`. Hugo watches directories by inode; removing
+# the whole tree and recreating it leaves the watcher holding handles on
+# directories that no longer exist, so every regeneration after the server
+# started is invisible to it. The server then serves the first build forever,
+# with no error and no warning, and the pages look merely wrong rather than
+# stale.
+#
+# Instead every written file is recorded and prune_stale() removes only what
+# this run did not write. Same end state, and the directories keep their
+# identity, so a running server sees the change.
 
 # The quickstart is the front page. Its links point at README.md so that they
 # work when the file is read on GitHub; here they become site paths.
@@ -389,7 +405,31 @@ for source, page, title, weight in STANDALONE:
         retarget(body, from_depth=1, to_framework="../framework/"),
     )
 
+def prune_stale() -> int:
+    """Delete files under content/ that this run did not write.
+
+    Renaming a section leaves its old page behind, and a stale page is worse
+    than a missing one: it is reachable, it looks current, and search indexes
+    it. Empty directories are then removed bottom-up, but content/ itself and
+    any directory still holding a file are left alone.
+    """
+    removed = 0
+    for dirpath, _, filenames in os.walk(CONTENT):
+        for name in filenames:
+            full = os.path.normpath(os.path.join(dirpath, name))
+            if full not in WRITTEN:
+                os.remove(full)
+                removed += 1
+    for dirpath, dirnames, filenames in os.walk(CONTENT, topdown=False):
+        if dirpath != CONTENT and not dirnames and not filenames:
+            os.rmdir(dirpath)
+    return removed
+
+
+stale = prune_stale()
+
 print(
     f"generate-content: 1 front page, 1 section index, {len(sections)} framework pages, "
-    f"{len(SIBLING_PAGES)} sibling pages, {len(anchor_to_page)} anchors mapped"
+    f"{len(SIBLING_PAGES)} sibling pages, {len(anchor_to_page)} anchors mapped, "
+    f"{stale} stale file(s) pruned"
 )
