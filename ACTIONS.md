@@ -28,7 +28,7 @@ you hold one and want the second from dice, roll that one and bring the other.
 
 The wallet itself gets built between the rolling and the backup, because the
 backup wants its descriptor and the descriptor wants both keys
-([the pause](README.md#the-pause-between-generating-and-backing-up), and
+([why the wallet comes first](README.md#why-the-wallet-comes-before-the-backup), and
 [which path and why](CRYPTOGRAPHY.md#the-derivation-path-this-framework-picks-and-why)).
 
 ## Backing seeds up

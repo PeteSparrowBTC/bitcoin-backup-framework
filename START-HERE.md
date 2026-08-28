@@ -41,7 +41,6 @@ disagreement means this page is the thing that needs fixing.
 | --- | --- |
 | **Dice** | One ordinary six-sided die, used for every roll session. Casino dice are not needed, and one is enough ([why one](NUMBERS.md#why-this-guide-says-one-die)) |
 | **Printed roll sheets** | Three copies of [`roll-sheet-12-words.pdf`](https://github.com/PeteSparrowBTC/dice-to-seed/releases/latest/download/roll-sheet-12-words.pdf), verified and printed blank before you start, plus a spare. One sheet per secret: two cosigner seeds and the backup key, sixty rolls each ([step 1](#1-download-tails-and-the-tools-and-check-what-you-got) covers the checking) |
-| **Value cards** | Blank card stock, one for each value you derive: two cosigner seeds and the backup key, so three, plus a spare, set aside in [step 1](#1-download-tails-and-the-tools-and-check-what-you-got). They are separate from the roll sheets because the two have opposite lifetimes: a sheet is destroyed in the sitting that made it, and the value it produced has to survive until the backup is proved. The sheet says so itself. Not the share cards step 4 makes later |
 | **Paper and a pen** | Pencil or a pigment pen |
 | **A spare computer** | Anything that boots from USB. Every Tails session on it runs with networking off, and that never changes once the stick has met a seed. Whatever else the machine boots is its own business ([the limit of that](README.md#the-clean-room-tails)) |
 | **Three USB sticks** | One for Tails, and two for payload copies, because one goes in the bank box and one stays home |
@@ -84,8 +83,7 @@ copies, plus a spare, on this ordinary networked machine, before you boot
 Tails. They print blank, so nothing filled in here ever goes near a printer.
 The spare computer is offline from step 2 onward and has no printer of its
 own, so a sheet spoiled at the table cannot be replaced from there, which is
-what the spare is for. Set aside a blank value card for each of the three
-values, plus a spare, for the same reason.
+what the spare is for.
 
 **The one part that has to happen while you have a network.** Open each release's
 build log and confirm that the fingerprint recorded there is the one you are
@@ -95,15 +93,22 @@ needs somewhere else to compare against, so it does not
 
 ---
 
-## 2. Roll the dice, and derive each value
+## 2. Roll the dice, and hand each value straight to the backup tool
 
-**20 to 90 minutes, depending on how many sheets you need. You end with each
-value written on its value card.**
+**20 to 90 minutes, depending on how many sheets you need. You end with all
+three values in `slip39-backup`'s form and nothing written down.**
 
 Boot Tails on the spare computer, **with networking off**. Everything from
 here through step 5 happens in this one offline sitting, other than the test
 spend at the end of step 5, which waits for a funded wallet and a different
 machine.
+
+**Open both tools before you roll anything.** `dice-to-seed` derives each
+value and `slip39-backup` is where it goes, so the receiving field is ready
+when the value appears and no value has to survive on paper in between. Each
+derived value is shown twice: a single line meant for selecting and pasting,
+and the same value grouped for anyone copying it by hand. Use the single
+line.
 
 You are producing randomness you can account for, because you cannot look at a
 seed phrase and tell whether it was random
@@ -133,35 +138,27 @@ Every sheet follows the same cycle:
    catch a mis-press: every other check compares the typed log against
    another conversion of that same typed log
    ([why this matters](README.md#2-before-you-back-it-up-is-the-secret-worth-protecting)).
-3. Derive the value, write it onto its value card, and verify what you wrote
-   against the screen too.
+3. Derive the value and paste it into the field it belongs in: the first seed
+   into `slip39-backup`'s cosigner-one field, the second into cosigner two,
+   the key and its check code into the backup-key fields.
 4. Clear the log. Do this whether or not another sheet follows; it is also
-   what makes the next one safe to roll.
+   what makes the next one safe to roll, and it takes the derived value off
+   the screen, so paste before you clear.
 
 Keep one sheet in front of the machine at a time, and turn any other face
 down and out of the way.
 
-**What goes on each card, and what does not.** Three cards, one per roll
-session:
+**Why nothing gets written down here.** A hand-copied seed is a transcription
+error waiting to be found at recovery, and it is a second plain-text copy of
+the words on top of the roll sheet that already holds them. Pasting removes
+both. It also settles which cosigner is which, because the label lives in the
+field you pasted into rather than on a piece of paper that has to stay with
+the right words.
 
-| Card | What you write |
-| --- | --- |
-| **Cosigner one** | The label, and the twelve seed words in order |
-| **Cosigner two** | The label, and its own twelve seed words in order |
-| **Backup key** | The 64 hex characters of `k`, in the groups of four the app shows, and the four-character check code beneath them |
-
-The label is the whole reason the cards carry writing the sheets do not: you
-have to know which seed is which to build the wallet and to restore it, and
-the sheet is deliberately anonymous because it is the one artifact that must
-never be identifiable if it goes astray.
-
-Nothing else goes on a card. Not the rolls, which stay on the sheet that is
-about to be destroyed. Not the passphrase, if a cosigner has one, because a
-passphrase written beside the seed it protects is not a second factor
-([where it does go](README.md#the-passphrase-strength-you-can-actually-assess)).
-Not a wallet name, a date, or an amount: a found card holding one cosigner
-seed cannot spend by itself, and a found card that also says whose wallet it
-belongs to is a different problem.
+The passphrase is the one value that is typed rather than pasted, and it does
+not come from these rolls. It has to be generated, and it belongs in its own
+per-cosigner field, never on the same paper as a seed
+([what makes one good, and where it lives](README.md#the-passphrase-strength-you-can-actually-assess)).
 
 **Why separate sheets, and why they must not be shared.** Each cosigner seed
 is its own secret, and the key that encrypts the backup payload is a third.
@@ -194,19 +191,14 @@ narrows the set your value is drawn from. Discard a roll only when the die is
 cocked or leaves the table, which is a question about the throw and not about
 the number.
 
-**If the wallet is not built yet, this is where you wait.** The backup needs
-the wallet descriptor and the descriptor needs both cosigner keys, so a reader
-who rolled seeds today may have to build the wallet before step 4 can run. Do
-step 3 first: checking what you rolled against a second implementation matters
-either way. Destroy every sheet you rolled in this sitting regardless, the key
-sheet included: a sheet is a secret in plain text whether or not the backup is
-finished today. Keep the value cards until the backup is proved, and keep them
-apart while they wait, each sealed in its own envelope in a different place.
-One card is one cosigner seed and cannot spend by itself; two in one drawer
-are the wallet in plain text. Do not fund the wallet beyond pocket change
-until the backup exists, and this Tails stick still never gets networking, in
-this session or any later one
-([the full version of this pause](README.md#the-pause-between-generating-and-backing-up)).
+**Do not start this step unless you can finish the sitting.** Step 4 wants the
+wallet descriptor, the descriptor wants both cosigner keys, and the wallet has
+to exist by then. Build it in this session with both devices on the table, or
+arrive holding the descriptor already. Rolling seeds today and building the
+backup next week means the words have to survive the gap on something, and a
+piece of paper holding a seed in plain text is the artifact this whole design
+exists to remove. Nothing here is urgent enough to be worth that
+([why the order is this way](README.md#why-the-wallet-comes-before-the-backup)).
 
 ---
 
@@ -273,20 +265,15 @@ mode ([full instructions](https://github.com/PeteSparrowBTC/slip39-backup/blob/m
    the payload file, run Recoverer mode, and check the result against
    `verification-record.txt`. This is what proves your handwriting as much as it
    proves the tool.
-2. **Destroy every roll sheet and every value card this procedure told you
-   to write, whichever sitting you wrote it in.** That reaches the cosigner
-   cards from a generating sitting days or weeks before this one, not only
-   what this sitting itself produced: the payload is the copy that survives
-   now, which is exactly why the cards can go. A record of a seed you
+2. **Destroy every roll sheet, all three of them.** A record of a seed you
    brought from outside this procedure is never touched by any instruction
    on this page; that is the backup-only reader's own paper, and it stays
-   theirs. Until burned, everything else here is a seed or the backup key
-   in plain text and the only unprotected copy of it, and the dry run has
-   just proved the payload is what protects them now
+   theirs. The sheets are different: each one is a secret in plain text and
+   the only unprotected copy of it, and the dry run has just proved the
+   payload is what protects them now
    ([why this is the trap it is](README.md#7-known-traps-each-has-bitten-real-people)).
-   This goes further than the pause in step 2, which keeps the value cards
-   because the backup does not exist yet. Finishing the backup ends that:
-   the payload is what survives from here on.
+   Burn them, or shred them and separate the pieces, which is what the
+   largest type on each sheet already says.
 3. **Shut the session down, and keep the stick offline for good.** Tails
    forgets the seeds when it powers off, so what carries forward is the rule
    rather than the contents: no Tails session on this stick ever gets

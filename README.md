@@ -774,14 +774,11 @@ destroys logs inside the session rather than saving work for later.
    nothing filled in ever goes near a printer, because a spooler, an
    internal disk and a network queue are all memory this framework cannot
    audit. Print one sheet for every roll session you will run: one for each
-   cosigner seed you are generating here, and one for the backup key. Set
-   aside a blank card for every value you
-   will derive, which is the same count. Step 7 writes each value onto its
-   card before it clears the roll log, and there is nothing to write on if
-   you arrive without them. Step 9 makes a separate set of cards for the
-   shares. Print a spare of each sheet and hold back a spare card as well:
-   printing happens here and the session that follows is offline, so a
-   sheet spoiled at the table cannot be replaced once you have booted.
+   cosigner seed you are generating here, and one for the backup key. Step 9
+   makes cards for the shares, and those are the only cards this procedure
+   writes by hand. Print a spare sheet as well: printing happens here and the
+   session that follows is offline, so a sheet spoiled at the table cannot be
+   replaced once you have booted.
 7. Boot Tails **offline**. **If you already hold both cosigner seeds,
    skip the seed rolls**: roll one sheet only, for the backup key, using
    the same cycle described below. **If you hold one cosigner seed and are
@@ -818,15 +815,15 @@ destroys logs inside the session rather than saving work for later.
      undifferentiated digits. It is the only check in the system that can
      catch a mis-press
      ([§2](#2-before-you-back-it-up-is-the-secret-worth-protecting)). Run
-     `dice-to-seed` to derive its seed words, and write them onto a card
-     labelled "cosigner one"; verify what you wrote against the screen.
-     Only then clear the roll log, or restart the app: clearing is what
-     makes the next sheet safe to roll, and there is no way back to words
-     you did not write down.
+     `dice-to-seed` to derive its seed words, and paste them into
+     `slip39-backup`'s cosigner-one field from the single-line rendering
+     the app offers for exactly this. Only then clear the roll log, or
+     restart the app: clearing is what makes the next sheet safe to roll,
+     and there is no way back to a value you did not hand on first.
    - **Cosigner seed two.** Skip this too if you brought the seed for this
      label. Otherwise, the same cycle, on its own fresh sheet: roll and
-     write, compare, derive, record onto a card labelled "cosigner two",
-     verify, then clear. That clearing is what separates the two seeds
+     write, compare, derive, paste into the cosigner-two field, then
+     clear. That clearing is what separates the two seeds
      when you roll both here. The tool clears the log when you change
      mode, and deliberately keeps it when the mode you ask for is the one
      you are already in. That is so pressing the button you are on cannot
@@ -839,8 +836,7 @@ destroys logs inside the session rather than saving work for later.
      for `k`, following the same cycle: derive 64 hex characters and a
      four-character check code
      ([what those counts mean](NUMBERS.md#bytes-and-why-a-hex-character-is-half-a-byte)),
-     write them onto the card you set aside for the key, verify what you
-     wrote against the screen, then clear. `k` is a new secret, so dice
+     paste both into the backup-key fields, then clear. `k` is a new secret, so dice
      are available to it even when they are not available to a seed you
      brought with you.
 
@@ -849,23 +845,18 @@ destroys logs inside the session rather than saving work for later.
 
    **Work from one sheet at a time.** If you rolled both cosigner seeds
    here, two filled seed sheets are in the room together, and by design
-   neither carries a name, a date or a label. If you go on to build the
-   backup, both stay in the room until the dry run proves it; if you stop
-   at the exit below instead, both are destroyed there. Keep the one you
-   are using in front of you and turn the other face down and out of the
-   way. Which cosigner is which is not something to record on the sheet;
-   each cosigner card carries that label instead, written when you make
-   it above.
+   neither carries a name, a date or a label. All three stay in the room
+   until the dry run in step 11 proves the payload, and they are destroyed
+   there. Keep the one you are using in front of you and turn the other
+   face down and out of the way. Which cosigner is which is not something to record on the sheet;
+   the field you pasted each seed into carries that label instead.
 
-#### The pause between generating and backing up
+#### Why the wallet comes before the backup
 
-**This is a seam in one procedure, not a place to stop.** Step 8 wants the
-wallet descriptor, a descriptor wants both cosigner extended public keys, and
-those come from the wallet built out of the seeds you have just rolled. That
-does not happen at this table: the machine in front of you never goes online
-again, and this framework does not build wallets
-([§12](#12-what-this-framework-deliberately-does-not-do)). So the procedure
-runs across two sittings, and this is where they join.
+**Step 8 wants the wallet descriptor, and a descriptor wants both cosigner
+extended public keys.** Those come from the wallet built out of the seeds, so
+the wallet has to exist before the backup can be written. That is why this sits
+between the rolling and step 8 rather than after both.
 
 **Build the wallet as a 2-of-2 at `m/48'/0'/0'/2'`**, native segwit, keys
 sorted. Every field of that is a choice and every one is argued
@@ -874,35 +865,37 @@ what matters here is that you pick the same one the backup will record, because
 two correct seeds down two different paths are two different wallets and
 neither will say so.
 
-What follows is what to do with the paper while that happens.
+**Do it in this sitting, with both devices on the table, or arrive holding the
+descriptor.** Loading each seed onto its own device and reading an extended
+public key back off it needs the devices and nothing else, and the seeds are
+already in the room. The alternative is a gap of days between rolling and
+backing up, and across a gap the words have to live on something. Whatever that
+something is, it is a bearer secret in a drawer with no payload protecting it
+yet, which is the failure [§7](#7-known-traps-each-has-bitten-real-people)
+gives its longest entry to. Rolling seeds you cannot back up the same day buys
+nothing that starting a week later would not also buy.
 
-You hold both cosigner seeds and no backup of either:
-each seed you generated in this sitting is on its card, and a seed you
-brought is wherever you already kept it. Destroy every sheet you rolled,
-in this same sitting, regardless: a sheet is a seed in plain text,
-whether or not a backup gets built from it today. If you rolled for the
-backup key before the sitting broke here, destroy that sheet too, along with
-wherever you wrote `k` down: a key protects nothing without a payload to
-lock. Keep the cosigner cards for now: they are all you hold until you
-come back to build the backup, and step 11 destroys them once that
-backup is proved. Keep the two of them apart while they wait, each
-sealed in its own envelope in a different one of the places
-[§8](#8-storing-the-shares-the-object-and-where-it-goes) lists. One
-card is one cosigner seed and cannot spend by itself; the two in one
-drawer are the wallet in plain text, which is the artifact
-[§7](#7-known-traps-each-has-bitten-real-people) forbids in every
-other form. Do not fund the wallet beyond pocket change until the
-backup in the rest of this phase exists. And this Tails stick still
-never gets networking, in this session or any later one.
+**The tool could remove the question entirely.** `slip39-backup` already
+derives each seed's BIP-32 master key, to check the backup key against it, so
+it holds everything a descriptor needs and could compose one instead of asking
+([slip39-backup#29](https://github.com/PeteSparrowBTC/slip39-backup/issues/29)).
+Until it does, the descriptor comes from wallet software, because this
+framework does not build wallets
+([§12](#12-what-this-framework-deliberately-does-not-do)).
 
-8. Run `slip39-backup` in Owner mode: enter both cosigner seeds' words, each
+Whichever way the descriptor arrives, the sheets stay in the room until step 11
+destroys them, the Tails stick never gets networking in this session or any
+later one, and the wallet holds nothing beyond pocket change until the backup
+in the rest of this phase exists.
+
+8. Finish the `slip39-backup` form in Owner mode. Both cosigner seeds are
+   already in it, pasted as they were derived in step 7. What is left is each
    seed's own optional BIP-39 passphrase (generated, never invented,
    [§2](#2-before-you-back-it-up-is-the-secret-worth-protecting)), and
    (**do not skip this**) the wallet descriptor. For multisig, the descriptor
-   is as recovery-critical as the seeds. You arrive holding it, from the
-   wallet software you built the 2-of-2 in; this framework does not build the
-   wallet ([§12](#12-what-this-framework-deliberately-does-not-do)), which is
-   why the sitting that generated the seeds is usually not this one. The tool
+   is as recovery-critical as the seeds. It comes from the wallet software you
+   built the 2-of-2 in, because this framework does not build the wallet
+   ([§12](#12-what-this-framework-deliberately-does-not-do)). The tool
    takes one passphrase field per cosigner rather than one for the pair, so a
    passphrase set on a device
    and not entered in that cosigner's field is absent from the backup, and no
@@ -944,13 +937,11 @@ never gets networking, in this session or any later one.
     backup forever, so a fault found later costs you a trip to every one of
     them, and the trap at the end of
     [§7](#7-known-traps-each-has-bitten-real-people) is exactly this mistake.
-11. **Destroy every roll sheet, and every card this procedure told you
-    to write a value onto, whichever sitting you wrote it in**, once the
-    dry run has passed. That reaches the cosigner cards from a generating
-    sitting days or weeks before this one, not only what this sitting
-    itself produced: each of them is a seed or `k` in plain text, and the
-    payload you have just proved is the copy that survives, which is
-    exactly why the cards can go. A record of a seed you brought from
+11. **Destroy every roll sheet**, once the dry run has passed. Each one is a
+    seed or `k` in plain text, and the payload you have just proved is the
+    copy that survives, which is why they can go. Nothing else made in this
+    sitting holds a secret in the clear, because no value was ever copied
+    onto paper by hand. A record of a seed you brought from
     outside this procedure is never touched by any instruction here: that
     paper is the backup-only reader's own, and it stays theirs
     ([§2](#2-before-you-back-it-up-is-the-secret-worth-protecting)).
@@ -1540,7 +1531,7 @@ any order, years apart, as trust arrives.
 - **No wallet construction, but the shape is chosen for you.** This framework
   backs a wallet up; it does not build one. Step 8 asks for the descriptor, and
   you either arrive holding it or you make the wallet at the seam between the
-  two sittings ([the pause](#the-pause-between-generating-and-backing-up)).
+  two sittings ([why the wallet comes first](#why-the-wallet-comes-before-the-backup)).
   What the framework does do is settle the parameters rather than leave them to
   whichever wallet you open first: **2-of-2, native segwit, keys sorted,
   `m/48'/0'/0'/2'`**, with every field argued
