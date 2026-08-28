@@ -38,6 +38,7 @@ disagreement means this page is the thing that needs fixing.
 | | |
 | --- | --- |
 | **Dice** | One ordinary six-sided die, used for every roll session. Casino dice are not needed, and one is enough ([why one](NUMBERS.md#why-this-guide-says-one-die)) |
+| **A box to throw it into** | A shoe box on a table. The walls bounce the die so a throw cannot carry the face it started on, and they keep it off the floor. Any box you already have, and it never leaves the table ([how to throw it](https://github.com/PeteSparrowBTC/dice-to-seed#how-to-throw-it)) |
 | **Printed roll sheets** | Three copies of [`roll-sheet-12-words.pdf`](https://github.com/PeteSparrowBTC/dice-to-seed/releases/latest/download/roll-sheet-12-words.pdf), verified and printed blank before you start, plus a spare. One sheet per secret: two cosigner seeds and the backup key, sixty rolls each ([step 1](#1-download-tails-and-the-tools-and-check-what-you-got) covers the checking) |
 | **Paper and a pen** | Pencil or a pigment pen |
 | **A spare computer** | Anything that boots from USB. Every Tails session on it runs with networking off, and that never changes once the stick has met a seed. Whatever else the machine boots is its own business ([the limit of that](README.md#the-clean-room-tails)) |
@@ -125,10 +126,11 @@ Every sheet follows the same cycle:
    from](NUMBERS.md#why-99-rolls-is-not-256-bits)). A seed sheet derives twelve
    words; a key sheet derives 64 hex characters and a four-character check code
    ([what the hex is
-   worth](NUMBERS.md#bytes-and-why-a-hex-character-is-half-a-byte)). Write
-   each throw onto the sheet **as it lands**: not copied off the screen
-   afterward, because a sheet is only an independent record of what the dice
-   showed if it came from the dice rather than the app.
+   worth](NUMBERS.md#bytes-and-why-a-hex-character-is-half-a-byte)). Throw the
+   die into the shoe box rather than across the table, so it bounces and stays
+   in front of you. Write each throw onto the sheet **as it lands**: not copied
+   off the screen afterward, because a sheet is only an independent record of
+   what the dice showed if it came from the dice rather than the app.
 2. **Compare the sheet against the screen, row by row, before deriving
    anything.** The app shows the rolls in rows of ten, numbered by the
    position of the first roll, and the printed sheet numbers its own rows the

@@ -786,6 +786,20 @@ destroys logs inside the session rather than saving work for later.
    writes by hand. Print a spare sheet as well: printing happens here and the
    session that follows is offline, so a sheet spoiled at the table cannot be
    replaced once you have booted.
+
+   **Find a box to throw the die into, while you are still thinking about
+   equipment.** A shoe box standing on a table is enough. The walls give the
+   die something to bounce off, which is what stops a throw carrying through
+   the face it started on, and they keep it from rolling onto the floor, where
+   the throw has to be discarded and made again. It is the casino craps back
+   wall in miniature. What the box needs is a hard surface under it rather than
+   carpet or a lap, and enough room for the die to travel, so a shoe box rather
+   than a tin. With the lid on, shaken and tipped out, it also means you cannot
+   see the die before it lands. None of this is secret and the box does not
+   travel with the sticks: any box already at the table will do. `dice-to-seed`
+   carries the rest, including the rule for a die that lands leaning against a
+   wall rather than flat, which is the one case a box makes more common
+   ([how to throw it](https://github.com/PeteSparrowBTC/dice-to-seed#how-to-throw-it)).
 7. Boot Tails **offline**. **If you already hold both cosigner seeds,
    skip the seed rolls**: roll one sheet only, for the backup key, using
    the same cycle described below. **If you hold one cosigner seed and are
@@ -811,12 +825,12 @@ destroys logs inside the session rather than saving work for later.
 
    - **Cosigner seed one.** Skip the rolling here if you brought the seed
      for this label, but read the bullet either way: the cycle it spells
-     out is the one the other two refer back to. Roll the die and write
-     each throw onto the sheet as it lands. Do not copy it from the screen
-     afterward: a sheet is only an independent record of what the dice
-     showed if it was written from the dice, not from the app. Before
-     deriving, compare the filled sheet against the on-screen log, row by
-     row. The app shows the log in rows of ten, numbered by the position
+     out is the one the other two refer back to. Roll the die in the box
+     from step 6 and write each throw onto the sheet as it lands. Do not
+     copy it from the screen afterward: a sheet is only an independent
+     record of what the dice showed if it was written from the dice, not
+     from the app. Before deriving, compare the filled sheet against the
+     on-screen log, row by row. The app shows the log in rows of ten, numbered by the position
      of the first roll. The printed sheet numbers its own rows the same
      way, so this is a row-by-row read rather than a hunt through
      undifferentiated digits. It is the only check in the system that can
