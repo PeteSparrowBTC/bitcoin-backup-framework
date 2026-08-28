@@ -888,8 +888,20 @@ segwit, keys sorted, which is the shape this framework argues for field by field
 ([which path, and why](CRYPTOGRAPHY.md#the-derivation-path-this-framework-picks-and-why)).
 
 **Paste one only for a wallet that already exists** on a path the tool does not
-compute. Nothing parses or checks what you paste, so a descriptor typed in by
-hand is the one part of the payload with no second opinion behind it.
+compute, and know what pasting costs. A pasted descriptor is stored as given and
+checked by nothing, and it arrives with **no first receive address**, because
+the address is derived alongside a computed descriptor and there is nothing to
+derive it from when you supply the string yourself. So pasting trades away the
+check described below, which is the reason any of this is here.
+`verification-record.txt` records which of the two it holds, because a recoverer
+reading it years later has no other way to tell.
+
+That also answers the tempting version of this: build the wallet in Electrum
+first and paste its descriptor in here. It sounds like it hands the job to the
+independent tool, and it does the opposite, because the payload then carries a
+string nothing checked and no address to check it against later. Let the tool
+compute, and give Electrum the job of disagreeing with it. The order is still
+yours: build in Electrum first if you would rather, and compare afterwards.
 
 **It also derives the wallet's first receive address, and that is the check
 worth understanding.** The address goes into `verification-record.txt`. Open the
