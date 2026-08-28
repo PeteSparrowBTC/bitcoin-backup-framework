@@ -60,18 +60,25 @@ table later.
 
 **Tails first.** The offline session runs on it. Follow
 [tails.net/install](https://tails.net/install/), which walks you through writing
-the image to a USB stick and then verifies it in the browser, or with an OpenPGP
-signature if you would rather. Do the verification. A tampered Tails is a
+the image to a USB stick and then verifies it in your browser. Do the
+verification. A tampered Tails is a
 tampered everything ([what Tails is for, and why nothing else will
 do](README.md#the-clean-room-tails)).
 
-**Then the two tools.** From the releases pages of
-[dice-to-seed](https://github.com/PeteSparrowBTC/dice-to-seed/releases) and
-[slip39-backup](https://github.com/PeteSparrowBTC/slip39-backup/releases), take
-everything each release publishes rather than only the app, and copy it onto a
-second USB stick. `dice-to-seed` offers a `-tails.zip` that checks itself and
-will not open the app if the check fails, so take that one and there is nothing
-left for you to do by hand.
+**Then the two tools**, onto a second USB stick. Two files, and the rest of each
+releases page is not for you, including the source archives GitHub attaches to
+every release.
+
+From [dice-to-seed](https://github.com/PeteSparrowBTC/dice-to-seed/releases),
+the `-tails.zip`. It carries the app and checks itself, and it refuses to open
+the app if the check fails, so there is nothing left for you to do by hand. The
+bare `.AppImage` beside it is the same program without that guard.
+
+From [slip39-backup](https://github.com/PeteSparrowBTC/slip39-backup/releases),
+the `.AppImage` and the `.sha256` file beside it. This one has no
+self-checking bundle, so you compare the hash yourself once you are on Tails
+([its own Tails instructions](https://github.com/PeteSparrowBTC/slip39-backup/blob/main/TAILS_INSTRUCTIONS.md)
+carry the command).
 
 **Verify, then print the roll sheets, while a network and a printer are both
 easy to reach.** The sheet is

@@ -720,8 +720,7 @@ tools this guide uses publish a checksum that travels beside the file it
 describes, which catches corruption and not much else
 ([what a checksum proves, and what a signature proves](CRYPTOGRAPHY.md#checksums-and-signatures-what-each-one-proves)).
 Tails publishes a real signature, and its installation pages verify the image
-in your browser or with
-OpenPGP if you prefer. A tampered Tails is a tampered everything downstream of
+in your browser. A tampered Tails is a tampered everything downstream of
 it, so it is worth the extra five minutes exactly once.
 
 **What it does not do.** Tails cannot help
@@ -739,10 +738,12 @@ destroys logs inside the session rather than saving work for later.
    following [tails.net/install](https://tails.net/install/) and doing the
    verification it offers. That is the one download in this procedure with a
    real signature behind it, and a tampered Tails is a tampered everything.
-   Then take both AppImages, `dice-to-seed` and `slip39-backup`, **each with its
-   checksum file**, onto a second stick. `dice-to-seed` also publishes a
-   `-tails.zip` that carries the AppImage, its checksum and a `start-here.sh`
-   which verifies before it will open the app.
+   Then the two tools, onto a second stick, and nothing else from either
+   releases page. From `dice-to-seed`, the `-tails.zip`: it carries the
+   AppImage, its checksum and a `start-here.sh` that verifies before it will
+   open the app, so that check is the tool's job rather than yours. From
+   `slip39-backup`, the AppImage **and the checksum file beside it**, because
+   there is no such bundle for this one and the check is yours to run.
 
    **The tools' own check runs on Tails, not here.** A checksum file travels
    with the file it describes, so carrying both across proves exactly as much
