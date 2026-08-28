@@ -165,7 +165,9 @@ narrows the set your value is drawn from. Discard a roll only when the die is
 cocked or leaves the table, which is a question about the throw and not about
 the number.
 
-**If you are stopping after generating.** Do step 3 first: checking what you
+**If you are stopping after generating, which most readers do.** The backup
+needs a wallet descriptor and that gets built elsewhere, so sitting one
+usually ends here. Do step 3 first: checking what you
 rolled against a second implementation matters whether or not you build the
 backup today. Then you hold a value card for each cosigner seed you
 generated here, and no backup of it yet. Destroy every sheet you rolled in
@@ -180,7 +182,7 @@ place: one card is one cosigner seed and cannot spend by itself, and the
 two in one drawer are the wallet in plain text. Do not fund the wallet
 beyond pocket change until that backup exists, and the machine that has
 held a cosigner seed in memory still never connects to a network again
-([the full version of this exit](README.md#if-you-are-stopping-after-generating)).
+([the full version of this exit](README.md#the-pause-between-generating-and-backing-up)).
 
 ---
 

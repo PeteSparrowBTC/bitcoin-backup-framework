@@ -699,7 +699,7 @@ in your browser or with
 OpenPGP if you prefer. A tampered Tails is a tampered everything downstream of
 it, so it is worth the extra five minutes exactly once.
 
-**What it does not do**, stated so the reliance is honest. Tails cannot help
+**What it does not do.** Tails cannot help
 against a compromised machine below the operating system, meaning firmware or
 hardware, which is one reason the spare computer should be an ordinary boring
 one and not a gift. And Tails forgets; a USB stick plugged into Tails does not.
@@ -832,9 +832,17 @@ destroys logs inside the session rather than saving work for later.
    each cosigner card carries that label instead, written when you make
    it above.
 
-#### If you are stopping after generating
+#### The pause between generating and backing up
 
-If you stop here, you hold both cosigner seeds and no backup of either:
+**Most readers stop here, and a two-vendor build usually has to.** Step 8
+wants the wallet descriptor, a descriptor wants both cosigner xpubs, and an
+xpub wants its seed loaded onto its device. None of that happens at this
+table, and the machine in front of you never goes online again, so the
+descriptor is built elsewhere and you come back
+([what the framework does not do for you here](#12-what-this-framework-deliberately-does-not-do)).
+Treat what follows as the end of sitting one rather than as giving up.
+
+You hold both cosigner seeds and no backup of either:
 each seed you generated in this sitting is on its card, and a seed you
 brought is wherever you already kept it. Destroy every sheet you rolled,
 in this same sitting, regardless: a sheet is a seed in plain text,
@@ -857,8 +865,12 @@ a cosigner seed in memory still never connects to a network again.
    seed's own optional BIP-39 passphrase (generated, never invented,
    [§2](#2-before-you-back-it-up-is-the-secret-worth-protecting)), and
    (**do not skip this**) the wallet descriptor. For multisig, the descriptor
-   is as recovery-critical as the seeds. The tool takes one passphrase field
-   per cosigner rather than one for the pair, so a passphrase set on a device
+   is as recovery-critical as the seeds. You arrive holding it, from the
+   wallet software you built the 2-of-2 in; this framework does not build the
+   wallet ([§12](#12-what-this-framework-deliberately-does-not-do)), which is
+   why the sitting that generated the seeds is usually not this one. The tool
+   takes one passphrase field per cosigner rather than one for the pair, so a
+   passphrase set on a device
    and not entered in that cosigner's field is absent from the backup, and no
    wrong-passphrase error exists later to tell you so. **Leave the top-level
    seed-words field empty.** It is there for a single-sig or shared-seed
@@ -1493,6 +1505,24 @@ any order, years apart, as trust arrives.
   Complexity is itself a risk axis; this framework spends its complexity
   budget only where a named failure mode demands it, and the second vendor is
   spent on exactly one: a vendor's defect satisfying the quorum alone.
+- **No wallet construction.** This framework backs a wallet up; it does not
+  build one. Step 8 asks for the descriptor and assumes you arrive holding it,
+  and for a 2-of-2 across two vendors that means each seed loaded onto its
+  device, each device's xpub exported, and the two assembled into a descriptor
+  by wallet software. That is a separate sitting on a different machine, which
+  is why generating and backing up are usually weeks apart rather than one
+  evening ([the pause](#the-pause-between-generating-and-backing-up)). Wallet
+  software changes faster than this document can track, which is the same
+  reason [§2](#2-before-you-back-it-up-is-the-secret-worth-protecting) declines
+  to name a hardware wallet.
+  [Multisig.Guide](https://bitcoiner.guide/multisig/) covers building and
+  recovering one, and [Bitcoin Core's multisig
+  tutorial](https://github.com/bitcoin/bitcoin/blob/master/doc/multisig-tutorial.md)
+  does it with no product attached
+  ([more](LANDSCAPE.md#reference-libraries-and-topic-guides)). What this framework does insist
+  on is that the descriptor you arrive with goes into the payload, because a
+  multisig backup without it can be unrecoverable with every seed in hand
+  ([§7](#7-known-traps-each-has-bitten-real-people)).
 - **No requirement that the seed was made here.** The framework backs a seed up,
   and where yours came from is your business.
   [§6](#6-setup-from-zero-the-ordered-checklist) rolls one from dice for readers

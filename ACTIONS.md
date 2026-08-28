@@ -23,12 +23,10 @@ and are satisfied, there is nothing to generate. Go straight to backing up.
 If you hold one seed you trust and want the second from dice, generate that
 one and bring the other.
 
-Stopping after generating is supported. You end the sitting holding two
-seeds on paper and no backup of either. Do not fund the wallet beyond pocket
-change until the backup exists, and the machine that has held the seeds
-never goes back online.
-[The exit for this journey](README.md#if-you-are-stopping-after-generating)
-is in the framework's setup checklist.
+Most readers stop after generating, because a two-vendor build usually has to:
+the backup needs a wallet descriptor, and that gets built on another machine
+between the two sittings
+([what to do before you leave the table](README.md#the-pause-between-generating-and-backing-up)).
 
 This page does not survey the other ways to generate a seed. That survey
 lives at [seed-generation](https://github.com/PeteSparrowBTC/seed-generation),
@@ -65,7 +63,7 @@ later.
 | Both actions, one sitting | No wallet yet | [§1](README.md#1-what-you-are-protecting-and-the-two-ways-you-lose) through [§11](README.md#11-involving-others-later-the-upgrade-path), in order; [§6](README.md#6-setup-from-zero-the-ordered-checklist) is the checklist itself | Three, plus the spare |
 | Both actions, arriving with one cosigner seed | Holds one seed already trusted and wants the second from dice | [§1](README.md#1-what-you-are-protecting-and-the-two-ways-you-lose) through [§11](README.md#11-involving-others-later-the-upgrade-path), in order, as the row above; inside [§6](README.md#6-setup-from-zero-the-ordered-checklist) roll for the seed you are generating and skip the bullet for the seed you brought | Two, the seed you generate and the key, plus the spare |
 | Backing up only | Arrives holding two cosigner seeds already trusted | [§1](README.md#1-what-you-are-protecting-and-the-two-ways-you-lose), [§2](README.md#2-before-you-back-it-up-is-the-secret-worth-protecting) to decide whether the seeds you hold are worth backing up, [§3](README.md#3-the-rules), [§4](README.md#4-inventory-the-secrets-you-actually-hold), [§5](README.md#5-the-architecture-three-layers), all of [§6](README.md#6-setup-from-zero-the-ordered-checklist) starting at Phase A, which builds both the password manager the payload lives in and the Recovery Sheet its storage depends on, [§7](README.md#7-known-traps-each-has-bitten-real-people) through [§11](README.md#11-involving-others-later-the-upgrade-path) | One, for the key, plus the spare |
-| Generating only | Wants keys rolled from dice, not ready to build the backup | [§1](README.md#1-what-you-are-protecting-and-the-two-ways-you-lose), [§2](README.md#2-before-you-back-it-up-is-the-secret-worth-protecting), [§3](README.md#3-the-rules) for rule 0, [§6](README.md#6-setup-from-zero-the-ordered-checklist) as far as [the generation exit](README.md#if-you-are-stopping-after-generating) | Two, one per cosigner seed, plus the spare the key is rolled on when you come back |
+| Generating only | Wants keys rolled from dice, not ready to build the backup | [§1](README.md#1-what-you-are-protecting-and-the-two-ways-you-lose), [§2](README.md#2-before-you-back-it-up-is-the-secret-worth-protecting), [§3](README.md#3-the-rules) for rule 0, [§6](README.md#6-setup-from-zero-the-ordered-checklist) as far as [the generation exit](README.md#the-pause-between-generating-and-backing-up) | Two, one per cosigner seed, plus the spare the key is rolled on when you come back |
 
 **One owner, two vendors.** The recommended wallet is 2-of-2 keys, both
 cosigner keys held by one owner, each on hardware from a different vendor.
