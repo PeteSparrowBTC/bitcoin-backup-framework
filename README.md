@@ -735,10 +735,13 @@ destroys logs inside the session rather than saving work for later.
    words its author can also compute, and an offline session runs it faithfully.
 
    **Print the roll sheet now, too.** `dice-to-seed` publishes the sheet in
-   two forms as its own release assets, `roll-sheet.pdf` to print and
-   `roll-sheet.html` as the same sheet in readable markup for anyone who
-   would rather see what they are printing. Both are covered by the same
-   `SHA256SUMS` as the AppImage and the `-tails.zip`, so verify whichever
+   two forms as its own release assets:
+   [`roll-sheet.pdf`](https://github.com/PeteSparrowBTC/dice-to-seed/releases/latest/download/roll-sheet.pdf) to print, and
+   [`roll-sheet.html`](https://github.com/PeteSparrowBTC/dice-to-seed/releases/latest/download/roll-sheet.html) as the same sheet in
+   readable markup for anyone who would rather see what they are printing.
+   Both are covered by the same
+   [`SHA256SUMS`](https://github.com/PeteSparrowBTC/dice-to-seed/releases/latest/download/SHA256SUMS) as the AppImage and the
+   `-tails.zip`, so verify whichever
    one you print against that checksum here, on this networked machine,
    before printing it: paper cannot go through the check that runs on Tails
    for the tools themselves, so this is the one place the sheet's own

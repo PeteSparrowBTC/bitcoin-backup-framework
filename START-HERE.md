@@ -35,7 +35,7 @@ disagreement means this page is the thing that needs fixing.
 | | |
 | --- | --- |
 | **Dice** | One ordinary six-sided die, used for every roll session. Casino dice are not needed, and one is enough ([why one](NUMBERS.md#why-this-guide-says-one-die)) |
-| **Printed roll sheets** | `roll-sheet.pdf`, verified and printed blank before you start: one per roll session, three for the recommended shape, plus a spare for rolling the key later if you stop after generating ([step 1](#1-download-tails-and-the-tools-and-check-what-you-got) covers it) |
+| **Printed roll sheets** | [`roll-sheet.pdf`](https://github.com/PeteSparrowBTC/dice-to-seed/releases/latest/download/roll-sheet.pdf), verified and printed blank before you start: one per roll session, three for the recommended shape, plus a spare for rolling the key later if you stop after generating ([step 1](#1-download-tails-and-the-tools-and-check-what-you-got) covers it) |
 | **Value cards** | Blank card stock, one for each value you expect to derive, plus a spare for that same later key roll: three for the recommended shape, set aside in [step 1](#1-download-tails-and-the-tools-and-check-what-you-got). Not the share cards step 4 makes later |
 | **Paper and a pen** | Pencil or a pigment pen. Not a thermal printer receipt |
 | **A spare computer** | Anything that boots from USB. It is offline for all of this, and once it has met the seed it never connects to a network again, ever |
@@ -68,11 +68,13 @@ will not open the app if the check fails, so take that one and there is nothing
 left for you to do by hand.
 
 **Verify, then print the roll sheets, while a network and a printer are both
-easy to reach.** `dice-to-seed` publishes the sheet twice, `roll-sheet.pdf`
-to print and `roll-sheet.html` as the same sheet in readable markup if you
-would rather see what you are printing. `SHA256SUMS` covers both, alongside
-the tools themselves, so check whichever one you print against that checksum
-before you print anything from it. Print one blank sheet for each roll
+easy to reach.** `dice-to-seed` publishes the sheet twice, straight from its
+latest release: [`roll-sheet.pdf`](https://github.com/PeteSparrowBTC/dice-to-seed/releases/latest/download/roll-sheet.pdf) to print, and
+[`roll-sheet.html`](https://github.com/PeteSparrowBTC/dice-to-seed/releases/latest/download/roll-sheet.html) as the same sheet in readable
+markup if you would rather see what you are printing.
+[`SHA256SUMS`](https://github.com/PeteSparrowBTC/dice-to-seed/releases/latest/download/SHA256SUMS) covers both, alongside the tools
+themselves, so check whichever one you print against that checksum before you
+print anything from it. Print one blank sheet for each roll
 session ahead of you, plus a spare, on this ordinary networked machine,
 before you boot Tails. It prints blank, so nothing filled in here ever goes
 near a printer. The spare computer is offline from step 2
