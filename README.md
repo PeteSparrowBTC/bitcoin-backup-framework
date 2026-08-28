@@ -48,8 +48,9 @@ rather than a preference. One seed is one object to steal and one vendor's
 firmware to trust, and no backup repairs either. The word count is the part
 this framework chooses on your behalf: twelve words is 128 bits, and 128 bits
 is also what the curve behind a bitcoin key leaves an attacker whatever the
-seed length, so twenty-four words doubles what you write onto a card and
-leaves the attacker's work where it was
+seed length, so twenty-four words doubles what a person has to key into a
+device, and into another device, and into a wallet at recovery, while leaving
+the attacker's work where it was
 ([the arithmetic](NUMBERS.md#one-sheet-for-every-secret-and-why-sixty-rolls-is-enough)).
 
 **Why not 2-of-3 keys?** Redundancy against a lost or dead device comes from

@@ -15,13 +15,11 @@ them, plus written instructions a non-technical person could follow.
   backup.
 
 **Two seeds, twelve words each.** The wallet this page builds is 2-of-2 keys,
-so it needs two cosigner seeds, and that count is fixed. Twelve words per seed
-is enough, and it is the size the roll sheets here are cut to
+so it takes two cosigner seeds. Other quorum shapes work in the tools and are a
+different page to write, so two is what everything here is counted for: the
+sheets, the steps, the storage. Twelve words per seed is enough, and it is the
+size the roll sheets are cut to
 ([why](NUMBERS.md#one-sheet-for-every-secret-and-why-sixty-rolls-is-enough)).
-
-Rolling dice is not a destination on this page. If making a seed is all you
-came for, [dice-to-seed](https://github.com/PeteSparrowBTC/dice-to-seed) is the
-tool and its own instructions are the guide.
 
 [Which parts you need](ACTIONS.md) names the sheets each route prints and the
 steps each one uses.
