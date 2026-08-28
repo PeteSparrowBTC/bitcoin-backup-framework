@@ -94,12 +94,6 @@ The spare computer is offline from step 2 onward and has no printer of its
 own, so a sheet spoiled at the table cannot be replaced from there, which is
 what the spare is for.
 
-**The one part that has to happen while you have a network.** Open each release's
-build log and confirm that the fingerprint recorded there is the one you are
-holding. Every other check works as well later on the offline machine. This one
-needs somewhere else to compare against, so it does not
-([what each check proves, and what it does not](README.md#phase-b-back-up-the-seed-one-offline-session)).
-
 ---
 
 ## 2. Roll the dice, and hand each value straight to the backup tool

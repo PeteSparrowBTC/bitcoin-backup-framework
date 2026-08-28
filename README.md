@@ -750,10 +750,15 @@ destroys logs inside the session rather than saving work for later.
    there as it would prove now: `sha256sum -c SHA256SUMS`, or the zip's script
    if you would rather not use a terminal (the tools'
    [TAILS_INSTRUCTIONS.md](https://github.com/PeteSparrowBTC/slip39-backup/blob/main/TAILS_INSTRUCTIONS.md)
-   has the detail). What you cannot do offline is compare that hash with
-   anywhere else, so if you want the stronger check, open the release's build
-   log now and confirm the hash it recorded is the hash you hold. Intact and
-   genuine are different claims, and only the second one needs a network.
+   has the detail). What that proves is that the file arrived intact. It does
+   not prove the published file is the one the maintainer built, because the
+   checksum sits on the same page as the file it describes, and whoever could
+   replace one could replace the other. Intact and genuine are different
+   claims, and this framework asks you for the first and not the second. The
+   second wants signed build provenance on the release itself, so the check is
+   one command rather than an afternoon reading a build log
+   ([dice-to-seed#41](https://github.com/PeteSparrowBTC/dice-to-seed/issues/41),
+   [slip39-backup#33](https://github.com/PeteSparrowBTC/slip39-backup/issues/33)).
 
    Do all of this even though the tools run offline. Tails decides whether your
    seed can get out; the checksum decides whether the program deriving it is the
