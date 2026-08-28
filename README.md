@@ -787,18 +787,15 @@ destroys logs inside the session rather than saving work for later.
    session that follows is offline, so a sheet spoiled at the table cannot be
    replaced once you have booted.
 
-   **Find a box to throw the die into, while you are still thinking about
-   equipment.** A shoe box standing on a table is enough. The walls give the
-   die something to bounce off, which is what stops a throw carrying through
-   the face it started on, and they keep it from rolling onto the floor, where
-   the throw has to be discarded and made again. It is the casino craps back
-   wall in miniature. What the box needs is a hard surface under it rather than
-   carpet or a lap, and enough room for the die to travel, so a shoe box rather
-   than a tin. With the lid on, shaken and tipped out, it also means you cannot
-   see the die before it lands. None of this is secret and the box does not
-   travel with the sticks: any box already at the table will do. `dice-to-seed`
+   **Find a box to throw the die into, while you are still on equipment.** A
+   shoe box on a table is enough. The walls bounce the die, which is what stops
+   a throw carrying through the face it started on, and they keep it off the
+   floor. It needs a hard surface under it rather than carpet or a lap, and room
+   for the die to travel, so a shoe box and not a tin. With the lid on, shaken
+   and tipped out, you also cannot see the die before it lands. Any box at the
+   table will do, and it is not part of what you carry in. `dice-to-seed`
    carries the rest, including the rule for a die that lands leaning against a
-   wall rather than flat, which is the one case a box makes more common
+   wall rather than flat, which a box makes the common case
    ([how to throw it](https://github.com/PeteSparrowBTC/dice-to-seed#how-to-throw-it)).
 7. Boot Tails **offline**. **If you already hold both cosigner seeds,
    skip the seed rolls**: roll one sheet only, for the backup key, using
