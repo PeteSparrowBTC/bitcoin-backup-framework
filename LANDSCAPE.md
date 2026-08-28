@@ -284,10 +284,11 @@ Blockplate and similar plate and capsule products are the category.
 ## Where this framework sits
 
 Most of the guides above answer "how do I hold keys safely". This one answers a
-narrower question: **given that you already have a secret worth keeping, how do
-you back it up so that neither theft nor loss can take it.** That is why it
-composes with rather than competes against multisig, and why it says so little
-about wallet choice.
+narrower question: **how do you back a seed up so that neither theft nor loss
+can take it.** It will roll the seeds with you first if you do not have them
+([the two places to join](ACTIONS.md)), but backing them up is the job, and that
+is why it composes with rather than competes against multisig, and why it says
+so little about wallet choice.
 
 The two ideas it does not share with most of this list: the thing that gets
 split is a key to an encrypted payload rather than the seed itself, so the
@@ -298,5 +299,5 @@ upgrade rather than a prerequisite
 ([§11](README.md#11-involving-others-later-the-upgrade-path)).
 
 <!-- revision:start -->
-**Revised 2026-08-22.**
+**Revised 2026-08-28.**
 <!-- revision:end -->

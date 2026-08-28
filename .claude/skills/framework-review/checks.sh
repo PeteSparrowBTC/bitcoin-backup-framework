@@ -182,7 +182,11 @@ fi
 # --------------------------------------------------------------------------
 say "published site"
 if command -v gh >/dev/null 2>&1; then
-    gh run list --workflow=pages.yml --limit 1 \
+    # --branch main --event push, because the deploy job is gated on
+    # github.ref == refs/heads/main. A pull-request run builds and skips
+    # deploying, so taking the newest run of any kind names a commit that was
+    # never published, and raises a false alarm for as long as a PR is open.
+    gh run list --workflow=pages.yml --branch main --event push --limit 1 \
         --json headSha,conclusion,createdAt \
         --jq '.[] | "  last deploy \(.headSha[0:8]) \(.conclusion) \(.createdAt)"' 2>/dev/null
     printf '  origin/main is %s\n' "$(git rev-parse --short origin/main)"
