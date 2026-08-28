@@ -95,6 +95,41 @@ git config core.hooksPath .githooks
 Tested behaviour: a push targeting `main` exits 1 with instructions, a feature branch exits
 0 silently.
 
+## A change here that reaches a tool gets an issue in both places
+
+This document is one of three things maintained together. The other two are
+[dice-to-seed](https://github.com/PeteSparrowBTC/dice-to-seed), which derives the
+values, and [slip39-backup](https://github.com/PeteSparrowBTC/slip39-backup), which
+splits and encrypts them. A reader follows all three in one sitting, so a claim here
+about what a tool emits, defaults to, requires, refuses, or publishes as a release
+asset is a claim about that tool, and the two can part company without either
+repository noticing.
+
+**When an edit here changes what a tool has to do, or reveals that a tool should do
+something different, open an issue in this repository and one in each tool repository
+affected, and link them to each other.** Both directions, so whichever one a person
+opens first leads to the rest.
+
+- The issue here says what the document now asks of the reader and which tool
+  behaviour it depends on.
+- The issue there says what the tool would have to change, and why the document is
+  asking.
+- Each names the other by URL. `gh issue comment` after both exist is fine; a
+  one-directional link is not.
+
+This also runs the other way. If reading a tool's source contradicts something written
+here, the document is what needs fixing, and the issue belongs here even when nothing
+in the tool changes.
+
+What does not need an issue: an edit that only rewords, reorders, or re-argues
+something, with no tool behaviour on either side of it.
+
+Two open examples of the shape:
+[slip39-backup#29](https://github.com/PeteSparrowBTC/slip39-backup/issues/29) asks the
+backup tool to derive the wallet descriptor it currently demands the reader paste in,
+and [dice-to-seed#38](https://github.com/PeteSparrowBTC/dice-to-seed/issues/38) covers
+the sheet its roll sheet tells owners to write words on.
+
 ## Writing style
 
 Rules every page here follows, and any edit must keep:
