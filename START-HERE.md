@@ -65,33 +65,29 @@ verification. A tampered Tails is a
 tampered everything ([what Tails is for, and why nothing else will
 do](README.md#the-clean-room-tails)).
 
-**Then the two tools**, onto a second USB stick. Two files, and the rest of each
-releases page is not for you, including the source archives GitHub attaches to
-every release.
+**Then the two tools**, onto a second USB stick. One file from each, the
+`-tails.zip`, from the releases pages of
+[dice-to-seed](https://github.com/PeteSparrowBTC/dice-to-seed/releases) and
+[slip39-backup](https://github.com/PeteSparrowBTC/slip39-backup/releases).
+Nothing else on either page is for you, including the bare `.AppImage` and the
+source archives GitHub attaches to every release.
 
-From [dice-to-seed](https://github.com/PeteSparrowBTC/dice-to-seed/releases),
-the `-tails.zip`. It carries the app and checks itself, and it refuses to open
-the app if the check fails, so there is nothing left for you to do by hand. The
-bare `.AppImage` beside it is the same program without that guard.
+Each zip carries its app, a fingerprint of that app, and a `start-here.sh` that
+checks one against the other and opens the app only on a match. Both tools
+package it the same way and fail the same way, so there is one thing to learn
+rather than two, and the check runs on Tails where it matters rather than here
+where you would have to remember it.
 
-From [slip39-backup](https://github.com/PeteSparrowBTC/slip39-backup/releases),
-the `.AppImage` and the `.sha256` file beside it. This one has no
-self-checking bundle, so you compare the hash yourself once you are on Tails
-([its own Tails instructions](https://github.com/PeteSparrowBTC/slip39-backup/blob/main/TAILS_INSTRUCTIONS.md)
-carry the command).
-
-**Verify, then print the roll sheets, while a network and a printer are both
-easy to reach.** The sheet is
+**Verify and print the roll sheets from the online machine.** The sheet is
 [`roll-sheet-12-words.pdf`](https://github.com/PeteSparrowBTC/dice-to-seed/releases/latest/download/roll-sheet-12-words.pdf), straight from
 `dice-to-seed`'s latest release. It has sixty boxes and two purpose ticks at
 the top, one for a seed and one for a backup key, which is every secret this
 framework rolls ([why sixty covers all three](NUMBERS.md#one-sheet-for-every-secret-and-why-sixty-rolls-is-enough)).
 [`SHA256SUMS`](https://github.com/PeteSparrowBTC/dice-to-seed/releases/latest/download/SHA256SUMS) covers it alongside the tools themselves, so
 check it against that checksum before you print anything from it. Print three
-copies, plus a spare, on this ordinary networked machine, before you boot
-Tails. They print blank, so nothing filled in here ever goes near a printer.
-The spare computer is offline from step 2 onward and has no printer of its
-own, so a sheet spoiled at the table cannot be replaced from there, which is
+copies, plus a spare, before you boot Tails. They print blank, so nothing
+filled in here ever goes near a printer. The spare computer is offline from
+step 2 onward and has no printer of its own, so a sheet spoiled at the table cannot be replaced from there, which is
 what the spare is for.
 
 ---

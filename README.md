@@ -738,12 +738,12 @@ destroys logs inside the session rather than saving work for later.
    following [tails.net/install](https://tails.net/install/) and doing the
    verification it offers. That is the one download in this procedure with a
    real signature behind it, and a tampered Tails is a tampered everything.
-   Then the two tools, onto a second stick, and nothing else from either
-   releases page. From `dice-to-seed`, the `-tails.zip`: it carries the
-   AppImage, its checksum and a `start-here.sh` that verifies before it will
-   open the app, so that check is the tool's job rather than yours. From
-   `slip39-backup`, the AppImage **and the checksum file beside it**, because
-   there is no such bundle for this one and the check is yours to run.
+   Then the two tools, onto a second stick: the `-tails.zip` from each, and
+   nothing else from either releases page. Each carries its AppImage, a
+   checksum naming it, and a `start-here.sh` that verifies before it will open
+   the app, so the check is the tool's job rather than yours. Both are packaged
+   the same way and fail the same way, which is one launcher to learn instead
+   of two.
 
    **The tools' own check runs on Tails, not here.** A checksum file travels
    with the file it describes, so carrying both across proves exactly as much
