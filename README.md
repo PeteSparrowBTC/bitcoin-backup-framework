@@ -746,6 +746,12 @@ destroys logs inside the session rather than saving work for later.
    `slip39-backup`, the AppImage **and the checksum file beside it**, because
    there is no such bundle for this one and the check is yours to run.
 
+   [Electrum](https://electrum.org/) goes on the same stick, the
+   `x86_64.AppImage` and the `.asc` beside it. It is not one of this
+   framework's tools and that is the point: it is the second implementation the
+   wallet gets checked against
+   ([what that check is worth](#the-descriptor-and-the-address-that-proves-it)).
+
    **The tools' own check runs on Tails, not here.** A checksum file travels
    with the file it describes, so carrying both across proves exactly as much
    there as it would prove now: `sha256sum -c SHA256SUMS`, or the zip's script
@@ -897,6 +903,26 @@ path is applied, so it is identical whether you derived `m/48'/0'/0'/2'` or
 something else entirely. Two correct seeds down two different paths are two
 different wallets, and a fingerprint comparison says they match. The address is
 what catches it.
+
+**Check it in Electrum, because we computed it.** Every other derived value in
+this procedure is checked against a second implementation, and a descriptor is
+no different for having been produced by a tool rather than typed by you.
+Electrum runs on Tails from an AppImage, with no install and no network. Build
+the same 2-of-2 in it, set the same derivation path, and compare the first
+receive address it shows against the one in `verification-record.txt`.
+
+**Enter the seeds into Electrum, not the descriptor.** Pasting our descriptor in
+and reading an address back proves only that two programs agree about turning
+that descriptor into an address. It cannot tell you the descriptor matches your
+seeds, which is the part worth knowing, and it is the same mistake as comparing
+a typed roll log against a second conversion of that same typed log
+([§2](#2-before-you-back-it-up-is-the-secret-worth-protecting)). Starting from
+the seeds re-derives the whole chain independently, which is the only version of
+this check worth the minutes it takes.
+
+If the two addresses disagree, stop there. Do not fund the wallet and do not
+distribute anything: one of the two programs is describing a wallet you cannot
+spend from, and finding out which is cheaper now than after the errands.
 
 **So the wallet does not have to exist before the backup does.** Build it after,
 from the descriptor the payload now carries, and check the address. What has not

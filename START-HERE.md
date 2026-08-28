@@ -43,6 +43,7 @@ disagreement means this page is the thing that needs fixing.
 | **Paper and a pen** | Pencil or a pigment pen |
 | **A spare computer** | Anything that boots from USB. Every Tails session on it runs with networking off, and that never changes once the stick has met a seed. Whatever else the machine boots is its own business ([the limit of that](README.md#the-clean-room-tails)) |
 | **Three USB sticks** | One for Tails, and two for payload copies, because one goes in the bank box and one stays home |
+| **[Electrum](https://electrum.org/)** | The second implementation. Everything else here is checked against another tool, and the wallet is no different for having been computed by ours. An AppImage that runs on Tails with no network and no install ([what you check with it](README.md#the-descriptor-and-the-address-that-proves-it)) |
 | **[Tails](https://tails.net)** | An operating system that runs from the USB stick and forgets everything when you shut down. Free, and the one piece of software here that is not optional ([why](README.md#the-clean-room-tails)) |
 | **A password manager** | Bitwarden or equivalent, with two-factor authentication |
 | **Three storage places** | Home, a bank deposit box, and one more that is yours rather than borrowed. Pick them now, because step 6 is errands ([which places](README.md#8-storing-the-shares-the-object-and-where-it-goes)) |
@@ -64,9 +65,8 @@ verification. A tampered Tails is a
 tampered everything ([what Tails is for, and why nothing else will
 do](README.md#the-clean-room-tails)).
 
-**Then the two tools**, onto a second USB stick. Two files, and the rest of each
-releases page is not for you, including the source archives GitHub attaches to
-every release.
+**Then the tools**, onto a second USB stick, and nothing else from either
+releases page, including the source archives GitHub attaches to every release.
 
 From [dice-to-seed](https://github.com/PeteSparrowBTC/dice-to-seed/releases),
 the `-tails.zip`. It carries the app and checks itself, and it refuses to open
@@ -78,6 +78,13 @@ the `.AppImage` and the `.sha256` file beside it. This one has no
 self-checking bundle, so you compare the hash yourself once you are on Tails
 ([its own Tails instructions](https://github.com/PeteSparrowBTC/slip39-backup/blob/main/TAILS_INSTRUCTIONS.md)
 carry the command).
+
+From [Electrum](https://electrum.org/), the `x86_64.AppImage` and the `.asc`
+signature beside it. Electrum is not one of this framework's tools and that is
+exactly why it is here: it is the second implementation the finished wallet gets
+checked against in step 5. It runs on Tails from the AppImage with no install,
+and it needs no network for the one job it has here
+([what the check is worth](README.md#the-descriptor-and-the-address-that-proves-it)).
 
 **Verify and print the roll sheets from the online machine.** The sheet is
 [`roll-sheet-12-words.pdf`](https://github.com/PeteSparrowBTC/dice-to-seed/releases/latest/download/roll-sheet-12-words.pdf), straight from
@@ -214,6 +221,14 @@ is deterministic, so any correct tool produces the same answer from the same
 rolls, and two tools agreeing is the proof; which one you ran first does not
 matter. The key is reproducible with one command:
 `printf '%s' "$ROLLS" | sha256sum`.
+
+**The wallet gets the same treatment, once step 4 has derived it.** Build the
+same 2-of-2 in Electrum from the same two seeds, at the same derivation path,
+and compare the first receive address it shows against the one
+`verification-record.txt` records. Enter the seeds rather than pasting the
+descriptor: pasting proves only that two programs turn one descriptor into the
+same address, and what you want to know is whether the descriptor matches your
+seeds ([the whole argument](README.md#the-descriptor-and-the-address-that-proves-it)).
 
 If two tools disagree, stop and find out why before going further.
 
