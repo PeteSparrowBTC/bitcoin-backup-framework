@@ -226,11 +226,13 @@ sqrt(2^256)  =  2^128  operations
 So a twenty-four-word seed does not make an attacker do 2²⁵⁶ work. It makes
 them do 2¹²⁸, the same as a twelve-word seed, because the cheapest way in is
 the key itself and not the phrase that produced it. The extra 128 bits sit
-above a ceiling the curve has already set, and they charge for the privilege:
-twice as many words to write onto a card by hand, and twice as many for
-someone to read back and type correctly years from now, in conditions nobody
-gets to choose. Every transcription check in this guide scales with that
-count, and transcription is what most of those checks exist for.
+above a ceiling the curve has already set, and they charge for the privilege.
+Nothing in this procedure is copied onto paper by hand, but the words are still
+keyed in three times before they are done: once into each cosigner's device to
+build the wallet, and once more into whatever wallet a recovery happens in,
+years later, in conditions nobody gets to choose. Twenty-four words doubles
+every one of those, and keying mistakes are what most of the checks in this
+guide exist to catch.
 
 **`k` is 128 bits for the same reason, one step further along.** The key is
 32 bytes whatever you roll, because it is a SHA-256 output and `slip39-backup`
