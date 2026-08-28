@@ -78,19 +78,17 @@ self-checking bundle, so you compare the hash yourself once you are on Tails
 ([its own Tails instructions](https://github.com/PeteSparrowBTC/slip39-backup/blob/main/TAILS_INSTRUCTIONS.md)
 carry the command).
 
-**Verify, then print the roll sheets, while a network and a printer are both
-easy to reach.** The sheet is
+**Verify and print the roll sheets from the online machine.** The sheet is
 [`roll-sheet-12-words.pdf`](https://github.com/PeteSparrowBTC/dice-to-seed/releases/latest/download/roll-sheet-12-words.pdf), straight from
 `dice-to-seed`'s latest release. It has sixty boxes and two purpose ticks at
 the top, one for a seed and one for a backup key, which is every secret this
 framework rolls ([why sixty covers all three](NUMBERS.md#one-sheet-for-every-secret-and-why-sixty-rolls-is-enough)).
 [`SHA256SUMS`](https://github.com/PeteSparrowBTC/dice-to-seed/releases/latest/download/SHA256SUMS) covers it alongside the tools themselves, so
 check it against that checksum before you print anything from it. Print three
-copies, plus a spare, on this ordinary networked machine, before you boot
-Tails. They print blank, so nothing filled in here ever goes near a printer.
-The spare computer is offline from step 2 onward and has no printer of its
-own, so a sheet spoiled at the table cannot be replaced from there, which is
-what the spare is for.
+copies, plus a spare, before you boot Tails. They print blank, so nothing
+filled in here ever goes near a printer. The spare computer is offline from
+step 2 onward and has no printer of its own, so a sheet spoiled at the table
+cannot be replaced from there, which is what the spare is for.
 
 ---
 
