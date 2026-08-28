@@ -48,25 +48,24 @@ Three routes arrive at this document, and each needs a different slice of
 the framework and a different number of dice sheets. A sheet is one printed
 roll log; this framework takes three, one per cosigner seed and one
 for the backup key, and no two are ever the same sheet
-([why](NUMBERS.md#why-99-rolls-is-not-256-bits)). The two sheets are not
-interchangeable: a cosigner seed takes the sixty-box sheet and the backup key
-takes the 111-box one
-([why twelve words a seed](NUMBERS.md#twelve-words-per-cosigner-seed-and-why-that-is-enough)).
-Print a spare of each sheet and hold back a spare card on top of whatever your
+([why](NUMBERS.md#why-99-rolls-is-not-256-bits)). One sheet covers all three:
+sixty rolls, with a tick at the top saying whether this one is a seed or the
+key ([why sixty](NUMBERS.md#one-sheet-for-every-secret-and-why-sixty-rolls-is-enough)).
+Print a spare sheet and hold back a spare card on top of whatever your
 row says. Printing happens on a networked machine before the offline session,
 so a sheet spoiled at the table cannot be replaced from there.
 
 | Route | What it is | Framework sections | Sheets |
 | --- | --- | --- | --- |
-| Rolling both seeds here | No wallet yet | [§1](README.md#1-what-you-are-protecting-and-the-two-ways-you-lose) through [§11](README.md#11-involving-others-later-the-upgrade-path), in order; [§6](README.md#6-setup-from-zero-the-ordered-checklist) is the checklist itself | Three: two sixty-box, one 111-box |
-| Rolling one, bringing one | Holds one seed already trusted and wants the second from dice | [§1](README.md#1-what-you-are-protecting-and-the-two-ways-you-lose) through [§11](README.md#11-involving-others-later-the-upgrade-path), in order, as the row above; inside [§6](README.md#6-setup-from-zero-the-ordered-checklist) roll for the seed you are generating and skip the bullet for the seed you brought | Two: one sixty-box for the seed you generate, one 111-box for the key |
-| Bringing both seeds | Arrives holding two cosigner seeds already trusted | [§1](README.md#1-what-you-are-protecting-and-the-two-ways-you-lose), [§2](README.md#2-before-you-back-it-up-is-the-secret-worth-protecting) to decide whether the seeds you hold are worth backing up, [§3](README.md#3-the-rules), [§4](README.md#4-inventory-the-secrets-you-actually-hold), [§5](README.md#5-the-architecture-three-layers), all of [§6](README.md#6-setup-from-zero-the-ordered-checklist) starting at Phase A, which builds both the password manager the payload lives in and the Recovery Sheet its storage depends on, [§7](README.md#7-known-traps-each-has-bitten-real-people) through [§11](README.md#11-involving-others-later-the-upgrade-path) | One: the 111-box sheet, for the key |
+| Rolling both seeds here | No wallet yet | [§1](README.md#1-what-you-are-protecting-and-the-two-ways-you-lose) through [§11](README.md#11-involving-others-later-the-upgrade-path), in order; [§6](README.md#6-setup-from-zero-the-ordered-checklist) is the checklist itself | Three, plus the spare |
+| Rolling one, bringing one | Holds one seed already trusted and wants the second from dice | [§1](README.md#1-what-you-are-protecting-and-the-two-ways-you-lose) through [§11](README.md#11-involving-others-later-the-upgrade-path), in order, as the row above; inside [§6](README.md#6-setup-from-zero-the-ordered-checklist) roll for the seed you are generating and skip the bullet for the seed you brought | Two, the seed you generate and the key, plus the spare |
+| Bringing both seeds | Arrives holding two cosigner seeds already trusted | [§1](README.md#1-what-you-are-protecting-and-the-two-ways-you-lose), [§2](README.md#2-before-you-back-it-up-is-the-secret-worth-protecting) to decide whether the seeds you hold are worth backing up, [§3](README.md#3-the-rules), [§4](README.md#4-inventory-the-secrets-you-actually-hold), [§5](README.md#5-the-architecture-three-layers), all of [§6](README.md#6-setup-from-zero-the-ordered-checklist) starting at Phase A, which builds both the password manager the payload lives in and the Recovery Sheet its storage depends on, [§7](README.md#7-known-traps-each-has-bitten-real-people) through [§11](README.md#11-involving-others-later-the-upgrade-path) | One, for the key, plus the spare |
 
 **One owner, two vendors.** The wallet is 2-of-2 keys, both cosigner keys
 held by one owner, each on hardware from a different vendor. Two seeds is the
 requirement. Twelve words each is what this framework rolls, because that is
 128 bits and the curve behind a bitcoin key leaves an attacker 128 bits
-whatever the seed length ([the arithmetic](NUMBERS.md#twelve-words-per-cosigner-seed-and-why-that-is-enough)).
+whatever the seed length ([the arithmetic](NUMBERS.md#one-sheet-for-every-secret-and-why-sixty-rolls-is-enough)).
 
 **A cosigner key held by someone else is that person's own document.** If
 another person holds a cosigner key, they run this framework themselves, for

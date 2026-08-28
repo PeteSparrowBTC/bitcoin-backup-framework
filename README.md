@@ -50,7 +50,7 @@ this framework chooses on your behalf: twelve words is 128 bits, and 128 bits
 is also what the curve behind a bitcoin key leaves an attacker whatever the
 seed length, so twenty-four words doubles what you write onto a card and
 leaves the attacker's work where it was
-([the arithmetic](NUMBERS.md#twelve-words-per-cosigner-seed-and-why-that-is-enough)).
+([the arithmetic](NUMBERS.md#one-sheet-for-every-secret-and-why-sixty-rolls-is-enough)).
 
 **Why not 2-of-3 keys?** Redundancy against a lost or dead device comes from
 the backup, which holds both cosigner seeds, so a third key adds no
@@ -58,11 +58,11 @@ protection and costs a third secret and a wider spending surface, since any
 two of three can spend. 2-of-2 keys is the tightest spending rule and the
 fewest secrets, and it pairs one to one with two vendors.
 
-**What a dead device costs.** One offline session, not the coins. Take the
-payload and enough cards to the retired machine, restore that cosigner seed,
-and load it onto a new device. The machine this framework retires from the
-network is exactly the machine a restore needs, so retiring it keeps the
-spare part rather than spending one. A dead device is not a loss.
+**What a dead device costs.** One offline session, not the coins. Boot the
+same Tails stick offline, take the payload and enough cards to it, restore
+that cosigner seed, and load it onto a new device. The stick that did the
+backup is exactly what a restore needs, so keeping it offline keeps a spare
+part rather than spending one. A dead device is not a loss.
 
 **Why multisig, on top of the backup.** The security literature's strongest
 criticism of share-based backups ([§13](#13-what-we-read-and-what-each-source-changed))
@@ -186,8 +186,8 @@ Since the output tells you nothing, only the process is auditable:
   **60** for a twelve-word seed and **111** for twenty-four, which clears the
   vendor minimums of 50 and 99 with margin for a die that is not quite fair
   ([why those counts, and why 99 is not 256 bits](NUMBERS.md#why-99-rolls-is-not-256-bits)).
-  A cosigner seed here is twelve words, so sixty is the count you will roll
-  ([why twelve](NUMBERS.md#twelve-words-per-cosigner-seed-and-why-that-is-enough)).
+  Every secret this framework rolls is sixty
+  ([why](NUMBERS.md#one-sheet-for-every-secret-and-why-sixty-rolls-is-enough)).
   This is the only path that does not require trusting a black box you cannot
   inspect.
 - **Check the conversion in a second implementation, and know what it cannot
@@ -232,9 +232,9 @@ log for `k`, the key that encrypts the backup payload
 ([§4](#4-inventory-the-secrets-you-actually-hold)), which otherwise comes from
 the backup machine's generator and would be the one number in the design with
 no origin you can account for. One log each, and no two logs are ever the
-same log. A cosigner seed's log is sixty rolls and the key's is 111, which is
-why the two sheets are different sheets before anyone has written on them
-([why those counts](NUMBERS.md#twelve-words-per-cosigner-seed-and-why-that-is-enough)).
+same log. Each is sixty rolls, so the three sheets are identical until you
+tick what the one in front of you is for
+([why sixty](NUMBERS.md#one-sheet-for-every-secret-and-why-sixty-rolls-is-enough)).
 
 **They must be separate logs.** A twelve-word seed's BIP-39 entropy is the
 first half of the SHA-256 of your rolls ([what SHA-256 does, and what it
@@ -683,14 +683,23 @@ It also means the spare computer never has to be trusted with anything. It lends
 a processor and a screen for an evening. The property you depend on lives on the
 stick, and the same stick behaves the same way on any machine you boot it from.
 
-**The machine is still retired from the network afterwards.** Amnesia is a
-property of Tails, not of the hardware underneath it. Firmware, an internal disk
-you never took out, and any peripheral that can read memory directly all sit
-outside what the stick controls, and none of them can be inspected on the kind of
-old laptop this is likely to be. So the rule is the blunt one rather than the
-clever one: once a machine has had your seed in memory, it never connects to a
-network again. The cost is one old laptop, and it removes a class of question you
-would otherwise have to keep answering.
+**The rule that outlives the session is about Tails, not about the hardware.**
+Once this stick has held a seed, no Tails session on it ever gets networking
+again: not the restore in three years, not a quick look at something. Amnesia
+means the seed did not survive the shutdown, so the machine underneath is not
+carrying it around, and the laptop can go back to whatever else it does under
+whatever else it boots.
+
+That is a smaller rule than "retire the laptop", and it is smaller for a
+reason worth knowing. Amnesia is a property of Tails, not of the hardware:
+firmware, an internal disk you never took out, and any peripheral that can
+read memory directly all sit outside what the stick controls, and none of them
+can be inspected on the kind of old machine this is likely to be. Using the
+machine for ordinary things between sessions means its firmware has been
+online in the meantime, and the next Tails session inherits that. A machine
+kept for this and nothing else costs one old laptop and answers the question
+permanently; a machine that goes back to general use is the ordinary trade of
+convenience against a threat nobody here can measure. Pick knowingly.
 
 **Three things to get right at the Welcome Screen**, which is the setup dialog
 before the desktop appears:
@@ -750,24 +759,23 @@ destroys logs inside the session rather than saving work for later.
    one that was published. A tampered build needs no network to hurt you, only
    words its author can also compute, and an offline session runs it faithfully.
 
-   **Print the roll sheets now, too.** `dice-to-seed` publishes two of them
-   as its own release assets, differing only in how many boxes they carry:
-   [`roll-sheet-12-words.pdf`](https://github.com/PeteSparrowBTC/dice-to-seed/releases/latest/download/roll-sheet-12-words.pdf) has sixty, one cosigner
-   seed's worth, and
-   [`roll-sheet-24-words.pdf`](https://github.com/PeteSparrowBTC/dice-to-seed/releases/latest/download/roll-sheet-24-words.pdf) has 111, one backup key's
-   worth.
-   Both are covered by the same
+   **Print the roll sheets now, too.** `dice-to-seed` publishes the sheet as
+   its own release asset:
+   [`roll-sheet-12-words.pdf`](https://github.com/PeteSparrowBTC/dice-to-seed/releases/latest/download/roll-sheet-12-words.pdf) has sixty boxes and two
+   purpose ticks, one for a seed and one for a backup key, which covers every
+   secret rolled here ([why sixty covers all three](NUMBERS.md#one-sheet-for-every-secret-and-why-sixty-rolls-is-enough)).
+   It is covered by the same
    [`SHA256SUMS`](https://github.com/PeteSparrowBTC/dice-to-seed/releases/latest/download/SHA256SUMS) as the AppImage and the
-   `-tails.zip`, so verify each sheet
+   `-tails.zip`, so verify the sheet
    against that checksum here, on this networked machine,
    before printing it: paper cannot go through the check that runs on Tails
    for the tools themselves, so this is the one place the sheet's own
    checksum gets used. The sheet is blank, so printing it now carries nothing;
    nothing filled in ever goes near a printer, because a spooler, an
    internal disk and a network queue are all memory this framework cannot
-   audit. Print one sheet for every roll session you will run: a sixty-box
-   sheet for each cosigner seed you are generating here, and the 111-box
-   sheet for the backup key. Set aside a blank card for every value you
+   audit. Print one sheet for every roll session you will run: one for each
+   cosigner seed you are generating here, and one for the backup key. Set
+   aside a blank card for every value you
    will derive, which is the same count. Step 7 writes each value onto its
    card before it clears the roll log, and there is nothing to write on if
    you arrive without them. Step 9 makes a separate set of cards for the
@@ -826,8 +834,8 @@ destroys logs inside the session rather than saving work for later.
      Without clearing, the second seed would come from a hash of both
      sheets and could not be recomputed from the sheet that appears to
      have produced it.
-   - **The backup key, `k`.** Put the app into its backup-key mode and roll
-     the 111-box sheet
+   - **The backup key, `k`.** Put the app into its backup-key mode, choose
+     the 128-bit strength, and roll a third sheet
      for `k`, following the same cycle: derive 64 hex characters and a
      four-character check code
      ([what those counts mean](NUMBERS.md#bytes-and-why-a-hex-character-is-half-a-byte)),
@@ -884,8 +892,8 @@ card is one cosigner seed and cannot spend by itself; the two in one
 drawer are the wallet in plain text, which is the artifact
 [§7](#7-known-traps-each-has-bitten-real-people) forbids in every
 other form. Do not fund the wallet beyond pocket change until the
-backup in the rest of this phase exists. And the machine that has held
-a cosigner seed in memory still never connects to a network again.
+backup in the rest of this phase exists. And this Tails stick still
+never gets networking, in this session or any later one.
 
 8. Run `slip39-backup` in Owner mode: enter both cosigner seeds' words, each
    seed's own optional BIP-39 passphrase (generated, never invented,

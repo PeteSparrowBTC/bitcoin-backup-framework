@@ -17,7 +17,7 @@ them, plus written instructions a non-technical person could follow.
 **Two seeds, twelve words each.** The wallet this page builds is 2-of-2 keys,
 so it needs two cosigner seeds, and that count is fixed. Twelve words per seed
 is enough, and it is the size the roll sheets here are cut to
-([why](NUMBERS.md#twelve-words-per-cosigner-seed-and-why-that-is-enough)).
+([why](NUMBERS.md#one-sheet-for-every-secret-and-why-sixty-rolls-is-enough)).
 
 Rolling dice is not a destination on this page. If making a seed is all you
 came for, [dice-to-seed](https://github.com/PeteSparrowBTC/dice-to-seed) is the
@@ -40,10 +40,10 @@ disagreement means this page is the thing that needs fixing.
 | | |
 | --- | --- |
 | **Dice** | One ordinary six-sided die, used for every roll session. Casino dice are not needed, and one is enough ([why one](NUMBERS.md#why-this-guide-says-one-die)) |
-| **Printed roll sheets** | Two of [`roll-sheet-12-words.pdf`](https://github.com/PeteSparrowBTC/dice-to-seed/releases/latest/download/roll-sheet-12-words.pdf), which has sixty boxes, one sheet per cosigner seed; and one of [`roll-sheet-24-words.pdf`](https://github.com/PeteSparrowBTC/dice-to-seed/releases/latest/download/roll-sheet-24-words.pdf), which has 111, for the backup key. Verified and printed blank before you start, plus a spare of each ([step 1](#1-download-tails-and-the-tools-and-check-what-you-got) covers both) |
-| **Value cards** | Blank card stock, one for each value you derive: two cosigner seeds and the backup key, so three, plus a spare, set aside in [step 1](#1-download-tails-and-the-tools-and-check-what-you-got). Not the share cards step 4 makes later |
-| **Paper and a pen** | Pencil or a pigment pen. Not a thermal printer receipt |
-| **A spare computer** | Anything that boots from USB. It is offline for all of this, and once it has met the seed it never connects to a network again, ever |
+| **Printed roll sheets** | Three copies of [`roll-sheet-12-words.pdf`](https://github.com/PeteSparrowBTC/dice-to-seed/releases/latest/download/roll-sheet-12-words.pdf), verified and printed blank before you start, plus a spare. One sheet per secret: two cosigner seeds and the backup key, sixty rolls each ([step 1](#1-download-tails-and-the-tools-and-check-what-you-got) covers the checking) |
+| **Value cards** | Blank card stock, one for each value you derive: two cosigner seeds and the backup key, so three, plus a spare, set aside in [step 1](#1-download-tails-and-the-tools-and-check-what-you-got). They are separate from the roll sheets because the two have opposite lifetimes: a sheet is destroyed in the sitting that made it, and the value it produced has to survive until the backup is proved. The sheet says so itself. Not the share cards step 4 makes later |
+| **Paper and a pen** | Pencil or a pigment pen |
+| **A spare computer** | Anything that boots from USB. Every Tails session on it runs with networking off, and that never changes once the stick has met a seed. Whatever else the machine boots is its own business ([the limit of that](README.md#the-clean-room-tails)) |
 | **Three USB sticks** | One for Tails, and two for payload copies, because one goes in the bank box and one stays home |
 | **[Tails](https://tails.net)** | An operating system that runs from the USB stick and forgets everything when you shut down. Free, and the one piece of software here that is not optional ([why](README.md#the-clean-room-tails)) |
 | **A password manager** | Bitwarden or equivalent, with two-factor authentication |
@@ -73,21 +73,19 @@ will not open the app if the check fails, so take that one and there is nothing
 left for you to do by hand.
 
 **Verify, then print the roll sheets, while a network and a printer are both
-easy to reach.** `dice-to-seed` publishes two sheets, straight from its latest
-release, and they differ only in how many boxes they carry.
-[`roll-sheet-12-words.pdf`](https://github.com/PeteSparrowBTC/dice-to-seed/releases/latest/download/roll-sheet-12-words.pdf) has sixty, which is one cosigner
-seed, and you need two of it, because this framework builds its wallet from
-two cosigner seeds.
-[`roll-sheet-24-words.pdf`](https://github.com/PeteSparrowBTC/dice-to-seed/releases/latest/download/roll-sheet-24-words.pdf) has 111, which is the backup key,
-and you need one.
-[`SHA256SUMS`](https://github.com/PeteSparrowBTC/dice-to-seed/releases/latest/download/SHA256SUMS) covers both sheets alongside the tools
-themselves, so check each one against that checksum before you print anything
-from it. Print three sheets in all, plus a spare of each, on this ordinary
-networked machine, before you boot Tails. They print blank, so nothing filled
-in here ever goes near a printer. The spare computer is offline from step 2
-onward and has no printer of its own, so a sheet spoiled at the table cannot
-be replaced from there, which is what the spares are for. Set aside a blank
-value card for each of the three values, plus a spare, for the same reason.
+easy to reach.** The sheet is
+[`roll-sheet-12-words.pdf`](https://github.com/PeteSparrowBTC/dice-to-seed/releases/latest/download/roll-sheet-12-words.pdf), straight from
+`dice-to-seed`'s latest release. It has sixty boxes and two purpose ticks at
+the top, one for a seed and one for a backup key, which is every secret this
+framework rolls ([why sixty covers all three](NUMBERS.md#one-sheet-for-every-secret-and-why-sixty-rolls-is-enough)).
+[`SHA256SUMS`](https://github.com/PeteSparrowBTC/dice-to-seed/releases/latest/download/SHA256SUMS) covers it alongside the tools themselves, so
+check it against that checksum before you print anything from it. Print three
+copies, plus a spare, on this ordinary networked machine, before you boot
+Tails. They print blank, so nothing filled in here ever goes near a printer.
+The spare computer is offline from step 2 onward and has no printer of its
+own, so a sheet spoiled at the table cannot be replaced from there, which is
+what the spare is for. Set aside a blank value card for each of the three
+values, plus a spare, for the same reason.
 
 **The one part that has to happen while you have a network.** Open each release's
 build log and confirm that the fingerprint recorded there is the one you are
@@ -111,17 +109,18 @@ You are producing randomness you can account for, because you cannot look at a
 seed phrase and tell whether it was random
 ([why this matters](README.md#2-before-you-back-it-up-is-the-secret-worth-protecting)).
 
-**Which sheets you roll depends on where you joined.** Roll a fresh sixty-box
-sheet for each cosigner seed you are generating, and the 111-box sheet for the
-backup key. If you already hold both cosigner seeds, bring them written down
-into this session and nowhere else, and roll the key sheet alone.
+**Which sheets you roll depends on where you joined.** Roll a fresh sheet for
+each cosigner seed you are generating, and one more for the backup key. If you
+already hold both cosigner seeds, bring them written down into this session and
+nowhere else, and roll the key sheet alone.
 
 Every sheet follows the same cycle:
 
-1. Roll the number of times the sheet in front of you asks for: **60** for a
-   cosigner seed, **111** for the backup key, which derives 64 hex characters
-   and a four-character check code instead of words ([where those counts come
-   from](NUMBERS.md#why-99-rolls-is-not-256-bits), and [what the hex is
+1. Roll **60** times, filling every box, whether this sheet is a cosigner seed
+   or the backup key ([where the count comes
+   from](NUMBERS.md#why-99-rolls-is-not-256-bits)). A seed sheet derives twelve
+   words; a key sheet derives 64 hex characters and a four-character check code
+   ([what the hex is
    worth](NUMBERS.md#bytes-and-why-a-hex-character-is-half-a-byte)). Write
    each throw onto the sheet **as it lands**: not copied off the screen
    afterward, because a sheet is only an independent record of what the dice
@@ -184,8 +183,8 @@ finished today. Keep the value cards until the backup is proved, and keep them
 apart while they wait, each sealed in its own envelope in a different place.
 One card is one cosigner seed and cannot spend by itself; two in one drawer
 are the wallet in plain text. Do not fund the wallet beyond pocket change
-until the backup exists, and the machine that has held a cosigner seed in
-memory still never connects to a network again
+until the backup exists, and this Tails stick still never gets networking, in
+this session or any later one
 ([the full version of this pause](README.md#the-pause-between-generating-and-backing-up)).
 
 ---
@@ -267,13 +266,15 @@ mode ([full instructions](https://github.com/PeteSparrowBTC/slip39-backup/blob/m
    This goes further than the pause in step 2, which keeps the value cards
    because the backup does not exist yet. Finishing the backup ends that:
    the payload is what survives from here on.
-3. **Retire the spare computer from the network.** It has had your seeds in
-   memory, and that is the end of its online life. Shut it down, put it away,
-   and do not connect it to anything again
-   ([why, given that Tails forgets](README.md#the-clean-room-tails)).
+3. **Shut the session down, and keep the stick offline for good.** Tails
+   forgets the seeds when it powers off, so what carries forward is the rule
+   rather than the contents: no Tails session on this stick ever gets
+   networking, including the restore years from now
+   ([why that is the rule, and what it does not cover](README.md#the-clean-room-tails)).
 4. **Test spend**, once the wallet holds anything. Send a small amount in, then
    send it out again. Receiving proves nothing; spending proves the whole path.
-   This happens on your everyday machine, not the one you just retired.
+   This happens on your everyday machine, not in the Tails session you just
+   shut down.
 
 **Why this comes before the errands rather than after.** Shares you have already
 placed in three locations are a working backup forever. Find a fault after the

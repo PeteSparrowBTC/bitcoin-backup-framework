@@ -64,9 +64,9 @@ The fix is also small: roll past the minimum. Sixty rolls instead of fifty, and
 quite fair.
 
 Each of those counts is per sheet. This framework rolls sixty for each of its
-two cosigner seeds and 111 for the backup key, so three sheets, each rolled
-and hashed on its own
-([why twelve words per seed](#twelve-words-per-cosigner-seed-and-why-that-is-enough)).
+three secrets, the two cosigner seeds and the backup key, so three sheets,
+each rolled and hashed on its own
+([why sixty everywhere](#one-sheet-for-every-secret-and-why-sixty-rolls-is-enough)).
 
 ## Two kinds of entropy, and why the tables have three columns
 
@@ -147,9 +147,9 @@ k = SHA-256(the roll digits, joined by nothing)
 ```
 
 SHA-256 always produces exactly 256 bits, whatever you feed it. That is what
-makes it useful here: 111 rolls carry 286.9 bits, which is more than the 256
-bits the backup key is, and the hash compresses them to exactly that width, in
-a way anyone can reproduce and check.
+makes it useful here: sixty rolls carry 155.1 bits, and the hash turns however
+many bits you rolled into a value of exactly the width the tools take, in a way
+anyone can reproduce and check.
 
 **What it cannot do is create randomness.** If you feed it 255.9 bits of
 unpredictability, the output is 256 bits long and still only 255.9 bits
@@ -208,16 +208,16 @@ many are needed, and a 30-bit checksum. A 128-bit secret gives 20-word shares.
 The two lists are different, so a SLIP-39 share is not a seed phrase and cannot
 be typed into a wallet as one.
 
-## Twelve words per cosigner seed, and why that is enough
+## One sheet for every secret, and why sixty rolls is enough
 
-This framework builds its wallet from two cosigner seeds and rolls twelve
-words for each: 128 bits per seed, off sixty rolls, instead of 256 bits off
-111.
+This framework rolls three secrets: two cosigner seeds of twelve words each,
+and the backup key `k`. All three take sixty rolls, so all three take the same
+printed sheet, ticked at the top for what it is.
 
-The reason is that 128 bits is where the ceiling already sits. A bitcoin
-private key is a point on the secp256k1 curve, and the fastest known attack on
-a curve that size is Pollard's rho, which costs about the square root of the
-number of points:
+**Twelve words is 128 bits, and 128 bits is where the ceiling already sits.** A
+bitcoin private key is a point on the secp256k1 curve, and the fastest known
+attack on a curve that size is Pollard's rho, which costs about the square root
+of the number of points:
 
 ```
 sqrt(2^256)  =  2^128  operations
@@ -226,20 +226,27 @@ sqrt(2^256)  =  2^128  operations
 So a twenty-four-word seed does not make an attacker do 2²⁵⁶ work. It makes
 them do 2¹²⁸, the same as a twelve-word seed, because the cheapest way in is
 the key itself and not the phrase that produced it. The extra 128 bits sit
-above a ceiling the curve has already set.
+above a ceiling the curve has already set, and they charge for the privilege:
+twice as many words to write onto a card by hand, and twice as many for
+someone to read back and type correctly years from now, in conditions nobody
+gets to choose. Every transcription check in this guide scales with that
+count, and transcription is what most of those checks exist for.
 
-What the longer phrase costs is not theoretical. Twice as many words to write
-onto a card by hand, and twice as many for someone to read back and type
-correctly years from now, in conditions nobody gets to choose. Every
-transcription check in this guide scales with that count, and transcription is
-what most of those checks exist for.
+**`k` is 128 bits for the same reason, one step further along.** The key is
+32 bytes whatever you roll, because it is a SHA-256 output and `slip39-backup`
+accepts nothing else. Sixty rolls change the entropy behind those 32 bytes and
+not their width, so the shares stay 33 words and nothing downstream notices.
+And 128 bits is not the weak link: someone who wants the coins without going
+near the payload faces the same 2¹²⁸ at the curve, so raising `k` to 256 bits
+lifts a ceiling that was never the binding one. `dice-to-seed` offers the
+128-bit strength in its backup-key mode, and the sheet carries a backup-key
+tick beside its sixty boxes.
 
-**The backup key is the exception, at 111 rolls.** `k` is a symmetric key
-with no curve underneath it, so its own entropy is the whole of its strength
-and nothing caps what more of it buys. The seed's 128-bit ceiling is a fact about
-secp256k1 and does not carry over. One extra sheet is the entire cost of
-staying at 256 bits there, so this framework pays it
-([what `k` is](CRYPTOGRAPHY.md#slip-39-splitting-the-backup-key)).
+A quantum attacker does not change this either. Grover's algorithm would halve
+a symmetric key's strength, which is the usual argument for 256 bits, but
+Shor's algorithm breaks the curve outright, so the wallet is gone long before
+the payload's key matters
+([what `k` protects](CRYPTOGRAPHY.md#slip-39-splitting-the-backup-key)).
 
 ## Bytes, and why a hex character is half a byte
 
@@ -289,11 +296,12 @@ purpose, and the code is not treated as though it were security.
 | --- | --- |
 | 2.585 bits per roll | log₂(6); six is not a power of two |
 | 50 rolls | 128 ÷ 2.585 = 49.5, rounded up. The vendor minimum |
-| **60 rolls** | One cosigner seed. Clears 128 bits on the pessimistic measure as well as the average |
+| **60 rolls** | Every secret this framework rolls. Clears 128 bits on the pessimistic measure as well as the average |
 | 99 rolls | 256 ÷ 2.585 = 99.03, rounded down. Reaches 255.9, not 256 |
-| **111 rolls** | The backup key. Clears 256 bits with margin for a real die |
+| 111 rolls | Clears 256 bits with margin for a real die. What a twenty-four-word seed takes |
 | 2,048-word list | 2¹¹, so one BIP-39 word is 11 bits |
 | 12 words | (128 + 4) ÷ 11. One cosigner seed |
+| 32-byte `k` from 60 rolls | SHA-256 is 32 bytes whatever it is fed; the rolls set the entropy, not the width |
 | 24 words | (256 + 8) ÷ 11 |
 | 1,024-word list | 2¹⁰, so one SLIP-39 word is 10 bits |
 | 33-word share | 256-bit share value plus metadata and a 30-bit checksum |
