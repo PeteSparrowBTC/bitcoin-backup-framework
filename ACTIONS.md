@@ -26,9 +26,9 @@ Skip it if you already hold two cosigner seeds you trust, because you rolled
 them yourself before or you audited how they were made and are satisfied. If
 you hold one and want the second from dice, roll that one and bring the other.
 
-The wallet itself gets built between the rolling and the backup, because the
-backup wants its descriptor and the descriptor wants both keys
-([why the wallet comes first](README.md#why-the-wallet-comes-before-the-backup), and
+The wallet can be built after the backup rather than before it, because the
+backup tool derives the descriptor from the seeds themselves
+([how, and the address it derives with it](README.md#the-descriptor-and-the-address-that-proves-it), and
 [which path and why](CRYPTOGRAPHY.md#the-derivation-path-this-framework-picks-and-why)).
 
 ## Backing seeds up
@@ -40,7 +40,8 @@ the written recovery instructions that travel with each card
 ([what the cards hold, and what locks the payload](CRYPTOGRAPHY.md#slip-39-splitting-the-backup-key)).
 It does not care whether the seeds came from this sitting's dice rolls, an earlier
 generation, or a wallet you already run. What it needs is the seeds
-themselves, an optional passphrase per cosigner, and the wallet descriptor.
+themselves and an optional passphrase per cosigner. The wallet descriptor it
+derives for itself.
 
 ## The routes, and what each one prints
 

@@ -43,6 +43,7 @@ disagreement means this page is the thing that needs fixing.
 | **Paper and a pen** | Pencil or a pigment pen |
 | **A spare computer** | Anything that boots from USB. Every Tails session on it runs with networking off, and that never changes once the stick has met a seed. Whatever else the machine boots is its own business ([the limit of that](README.md#the-clean-room-tails)) |
 | **Three USB sticks** | One for Tails, and two for payload copies, because one goes in the bank box and one stays home |
+| **[Electrum](https://electrum.org/)** | The second implementation. Everything else here is checked against another tool, and the wallet is no different for having been computed by ours. An AppImage that runs on Tails with no network and no install ([what you check with it](README.md#the-descriptor-and-the-address-that-proves-it)) |
 | **[Tails](https://tails.net)** | An operating system that runs from the USB stick and forgets everything when you shut down. Free, and the one piece of software here that is not optional ([why](README.md#the-clean-room-tails)) |
 | **A password manager** | Bitwarden or equivalent, with two-factor authentication |
 | **Three storage places** | Home, a bank deposit box, and one more that is yours rather than borrowed. Pick them now, because step 6 is errands ([which places](README.md#8-storing-the-shares-the-object-and-where-it-goes)) |
@@ -64,9 +65,8 @@ verification. A tampered Tails is a
 tampered everything ([what Tails is for, and why nothing else will
 do](README.md#the-clean-room-tails)).
 
-**Then the two tools**, onto a second USB stick. Two files, and the rest of each
-releases page is not for you, including the source archives GitHub attaches to
-every release.
+**Then the tools**, onto a second USB stick, and nothing else from either
+releases page, including the source archives GitHub attaches to every release.
 
 From [dice-to-seed](https://github.com/PeteSparrowBTC/dice-to-seed/releases),
 the `-tails.zip`. It carries the app and checks itself, and it refuses to open
@@ -78,6 +78,13 @@ the `.AppImage` and the `.sha256` file beside it. This one has no
 self-checking bundle, so you compare the hash yourself once you are on Tails
 ([its own Tails instructions](https://github.com/PeteSparrowBTC/slip39-backup/blob/main/TAILS_INSTRUCTIONS.md)
 carry the command).
+
+From [Electrum](https://electrum.org/), the `x86_64.AppImage` and the `.asc`
+signature beside it. Electrum is not one of this framework's tools and that is
+exactly why it is here: it is the second implementation the finished wallet gets
+checked against in step 5. It runs on Tails from the AppImage with no install,
+and it needs no network for the one job it has here
+([what the check is worth](README.md#the-descriptor-and-the-address-that-proves-it)).
 
 **Verify and print the roll sheets from the online machine.** The sheet is
 [`roll-sheet-12-words.pdf`](https://github.com/PeteSparrowBTC/dice-to-seed/releases/latest/download/roll-sheet-12-words.pdf), straight from
@@ -192,14 +199,14 @@ narrows the set your value is drawn from. Discard a roll only when the die is
 cocked or leaves the table, which is a question about the throw and not about
 the number.
 
-**Do not start this step unless you can finish the sitting.** Step 4 wants the
-wallet descriptor, the descriptor wants both cosigner keys, and the wallet has
-to exist by then. Build it in this session with both devices on the table, or
-arrive holding the descriptor already. Rolling seeds today and building the
-backup next week means the words have to survive the gap on something, and a
-piece of paper holding a seed in plain text is the artifact this whole design
-exists to remove. Nothing here is urgent enough to be worth that
-([why the order is this way](README.md#why-the-wallet-comes-before-the-backup)).
+**Do not start this step unless you can finish the sitting.** Nothing here
+needs a wallet to exist first, because step 4 derives the descriptor from the
+seeds you are about to roll
+([how, and what it proves](README.md#the-descriptor-and-the-address-that-proves-it)). What you must not do
+is roll today and back up next week, because the words would have to survive
+the gap on something, and a piece of paper holding a seed in plain text is the
+artifact this whole design exists to remove. Nothing here is urgent enough to
+be worth that.
 
 ---
 
@@ -214,6 +221,14 @@ is deterministic, so any correct tool produces the same answer from the same
 rolls, and two tools agreeing is the proof; which one you ran first does not
 matter. The key is reproducible with one command:
 `printf '%s' "$ROLLS" | sha256sum`.
+
+**The wallet gets the same treatment, once step 4 has derived it.** Build the
+same 2-of-2 in Electrum from the same two seeds, at the same derivation path,
+and compare the first receive address it shows against the one
+`verification-record.txt` records. Enter the seeds rather than pasting the
+descriptor: pasting proves only that two programs turn one descriptor into the
+same address, and what you want to know is whether the descriptor matches your
+seeds ([the whole argument](README.md#the-descriptor-and-the-address-that-proves-it)).
 
 If two tools disagree, stop and find out why before going further.
 
@@ -233,10 +248,12 @@ mode ([full instructions](https://github.com/PeteSparrowBTC/slip39-backup/blob/m
    wallet from the one you rolled. Each cosigner has its own passphrase
    field, so enter the BIP-39 passphrase belonging to that seed if it has
    one: a passphrase that does not reach the payload is not backed up, and
-   nothing reports that to you later. Then **the wallet descriptor**, which
-   is the text telling wallet software how your addresses are derived. Do not
-   skip the descriptor
-   ([why](README.md#4-inventory-the-secrets-you-actually-hold)). A passphrase
+   nothing reports that to you later. **Leave the descriptor field empty** and
+   the tool derives it from the seeds you just entered, together with the
+   wallet's first receive address, which goes into `verification-record.txt`
+   and is what you check the finished wallet against
+   ([why that beats the fingerprint](README.md#the-descriptor-and-the-address-that-proves-it)). Paste a
+   descriptor only for a wallet that already exists on another path. A passphrase
    is optional here, and if you are inventing one on the spot, do not: it has
    to be generated and it has to be written down somewhere that is not beside
    the seed
