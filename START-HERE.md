@@ -192,14 +192,14 @@ narrows the set your value is drawn from. Discard a roll only when the die is
 cocked or leaves the table, which is a question about the throw and not about
 the number.
 
-**Do not start this step unless you can finish the sitting.** Step 4 wants the
-wallet descriptor, the descriptor wants both cosigner keys, and the wallet has
-to exist by then. Build it in this session with both devices on the table, or
-arrive holding the descriptor already. Rolling seeds today and building the
-backup next week means the words have to survive the gap on something, and a
-piece of paper holding a seed in plain text is the artifact this whole design
-exists to remove. Nothing here is urgent enough to be worth that
-([why the order is this way](README.md#why-the-wallet-comes-before-the-backup)).
+**Do not start this step unless you can finish the sitting.** Nothing here
+needs a wallet to exist first, because step 4 derives the descriptor from the
+seeds you are about to roll
+([how, and what it proves](README.md#the-descriptor-and-the-address-that-proves-it)). What you must not do
+is roll today and back up next week, because the words would have to survive
+the gap on something, and a piece of paper holding a seed in plain text is the
+artifact this whole design exists to remove. Nothing here is urgent enough to
+be worth that.
 
 ---
 
@@ -233,10 +233,12 @@ mode ([full instructions](https://github.com/PeteSparrowBTC/slip39-backup/blob/m
    wallet from the one you rolled. Each cosigner has its own passphrase
    field, so enter the BIP-39 passphrase belonging to that seed if it has
    one: a passphrase that does not reach the payload is not backed up, and
-   nothing reports that to you later. Then **the wallet descriptor**, which
-   is the text telling wallet software how your addresses are derived. Do not
-   skip the descriptor
-   ([why](README.md#4-inventory-the-secrets-you-actually-hold)). A passphrase
+   nothing reports that to you later. **Leave the descriptor field empty** and
+   the tool derives it from the seeds you just entered, together with the
+   wallet's first receive address, which goes into `verification-record.txt`
+   and is what you check the finished wallet against
+   ([why that beats the fingerprint](README.md#the-descriptor-and-the-address-that-proves-it)). Paste a
+   descriptor only for a wallet that already exists on another path. A passphrase
    is optional here, and if you are inventing one on the spot, do not: it has
    to be generated and it has to be written down somewhere that is not beside
    the seed

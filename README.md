@@ -872,39 +872,35 @@ destroys logs inside the session rather than saving work for later.
    face down and out of the way. Which cosigner is which is not something to record on the sheet;
    the field you pasted each seed into carries that label instead.
 
-#### Why the wallet comes before the backup
+#### The descriptor, and the address that proves it
 
-**Step 8 wants the wallet descriptor, and a descriptor wants both cosigner
-extended public keys.** Those come from the wallet built out of the seeds, so
-the wallet has to exist before the backup can be written. That is why this sits
-between the rolling and step 8 rather than after both.
+**Leave the descriptor field empty and the tool derives it.** `slip39-backup`
+holds every cosigner seed and passphrase at once, which nothing else in an
+offline session does, so it can compose the descriptor without a second program
+and without a hand-typed string. It builds a 2-of-2 at `m/48'/0'/0'/2'`, native
+segwit, keys sorted, which is the shape this framework argues for field by field
+([which path, and why](CRYPTOGRAPHY.md#the-derivation-path-this-framework-picks-and-why)).
 
-**Build the wallet as a 2-of-2 at `m/48'/0'/0'/2'`**, native segwit, keys
-sorted. Every field of that is a choice and every one is argued
-([which path, and why](CRYPTOGRAPHY.md#the-derivation-path-this-framework-picks-and-why));
-what matters here is that you pick the same one the backup will record, because
-two correct seeds down two different paths are two different wallets and
-neither will say so.
+**Paste one only for a wallet that already exists** on a path the tool does not
+compute. Nothing parses or checks what you paste, so a descriptor typed in by
+hand is the one part of the payload with no second opinion behind it.
 
-**Do it in this sitting, with both devices on the table, or arrive holding the
-descriptor.** Loading each seed onto its own device and reading an extended
-public key back off it needs the devices and nothing else, and the seeds are
-already in the room. The alternative is a gap of days between rolling and
-backing up, and across a gap the words have to live on something. Whatever that
-something is, it is a bearer secret in a drawer with no payload protecting it
-yet, which is the failure [§7](#7-known-traps-each-has-bitten-real-people)
-gives its longest entry to. Rolling seeds you cannot back up the same day buys
-nothing that starting a week later would not also buy.
+**It also derives the wallet's first receive address, and that is the check
+worth understanding.** The address goes into `verification-record.txt`. Open the
+wallet you build from these seeds, compare its first receive address against the
+one recorded there, and a match proves the whole chain in one string: both
+seeds, both derivation paths, the script type, the key ordering, and the
+threshold.
 
-**The tool could remove the question entirely.** `slip39-backup` already
-derives each seed's BIP-32 master key, to check the backup key against it, so
-it holds everything a descriptor needs and could compose one instead of asking
-([slip39-backup#29](https://github.com/PeteSparrowBTC/slip39-backup/issues/29)).
-Until it does, the descriptor comes from wallet software, because this
-framework does not build wallets
-([§12](#12-what-this-framework-deliberately-does-not-do)).
+The master fingerprint cannot do that. It is taken at the master key, before any
+path is applied, so it is identical whether you derived `m/48'/0'/0'/2'` or
+something else entirely. Two correct seeds down two different paths are two
+different wallets, and a fingerprint comparison says they match. The address is
+what catches it.
 
-Whichever way the descriptor arrives, the sheets stay in the room until step 11
+**So the wallet does not have to exist before the backup does.** Build it after,
+from the descriptor the payload now carries, and check the address. What has not
+changed is that the sheets stay in the room until step 11
 destroys them, the Tails stick never gets networking in this session or any
 later one, and the wallet holds nothing beyond pocket change until the backup
 in the rest of this phase exists.
@@ -913,10 +909,13 @@ in the rest of this phase exists.
    already in it, pasted as they were derived in step 7. What is left is each
    seed's own optional BIP-39 passphrase (generated, never invented,
    [§2](#2-before-you-back-it-up-is-the-secret-worth-protecting)), and
-   (**do not skip this**) the wallet descriptor. For multisig, the descriptor
-   is as recovery-critical as the seeds. It comes from the wallet software you
-   built the 2-of-2 in, because this framework does not build the wallet
-   ([§12](#12-what-this-framework-deliberately-does-not-do)). The tool
+   the wallet descriptor, which you get by **leaving that field empty** so the
+   tool derives it from the seeds already in the form, along with the wallet's
+   first receive address ([what the address proves that a fingerprint
+   cannot](#the-descriptor-and-the-address-that-proves-it)). For multisig, the descriptor is as
+   recovery-critical as the seeds, and this is the one part of the payload you
+   do not have to type. Paste one only for a wallet that already exists on
+   another path. The tool
    takes one passphrase field per cosigner rather than one for the pair, so a
    passphrase set on a device
    and not entered in that cosigner's field is absent from the backup, and no
@@ -1550,9 +1549,9 @@ any order, years apart, as trust arrives.
   budget only where a named failure mode demands it, and the second vendor is
   spent on exactly one: a vendor's defect satisfying the quorum alone.
 - **No wallet construction, but the shape is chosen for you.** This framework
-  backs a wallet up; it does not build one. Step 8 asks for the descriptor, and
-  you either arrive holding it or you make the wallet at the seam between the
-  two sittings ([why the wallet comes first](#why-the-wallet-comes-before-the-backup)).
+  backs a wallet up; it does not build one. It does not need you to have built
+  one first either: step 8 derives the descriptor from the seeds in the form
+  ([and the address that proves it](#the-descriptor-and-the-address-that-proves-it)).
   What the framework does do is settle the parameters rather than leave them to
   whichever wallet you open first: **2-of-2, native segwit, keys sorted,
   `m/48'/0'/0'/2'`**, with every field argued
@@ -1568,9 +1567,10 @@ any order, years apart, as trust arrives.
   tutorial](https://github.com/bitcoin/bitcoin/blob/master/doc/multisig-tutorial.md)
   does it with no product attached
   ([more](LANDSCAPE.md#reference-libraries-and-topic-guides)). What this framework does insist
-  on is that the descriptor you arrive with goes into the payload, because a
-  multisig backup without it can be unrecoverable with every seed in hand
-  ([§7](#7-known-traps-each-has-bitten-real-people)).
+  on is that a descriptor goes into the payload, because a multisig backup
+  without one can be unrecoverable with every seed in hand
+  ([§7](#7-known-traps-each-has-bitten-real-people)), and that you check the
+  wallet you build against the first receive address the payload records.
 - **No requirement that the seed was made here.** The framework backs a seed up,
   and where yours came from is your business.
   [§6](#6-setup-from-zero-the-ordered-checklist) rolls one from dice for readers
