@@ -159,4 +159,8 @@ Rules every page here follows, and any edit must keep:
   re-check the anchors.
 - Each page carries a hand-written date inside `<!-- revision:start -->` markers, and it
   means the day a person last checked the page's claims. Move it when the claims move, and
-  re-read the note itself while you are there.
+  re-read the note itself while you are there. The version beside the date is not typed
+  into the pages: `scripts/generate-content.py` reads it from `VERSION` at the repository
+  root. It is the version line shared with dice-to-seed and slip39-backup, so `VERSION` is
+  bumped when the three repositories release together, and never ahead of the tools'
+  published releases.

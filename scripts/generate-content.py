@@ -58,6 +58,8 @@ REPO_BLOB = "https://github.com/PeteSparrowBTC/bitcoin-backup-framework/blob/mai
 REPO_COMMIT = "https://github.com/PeteSparrowBTC/bitcoin-backup-framework/commit/"
 REPO_FILE_LINKS = {
     "LICENSE": REPO_BLOB + "LICENSE",
+    # START-HERE.md points at the file that holds the shared version number.
+    "VERSION": REPO_BLOB + "VERSION",
 }
 
 # Sibling documents that become their own top-level page. On GitHub the sources
@@ -95,8 +97,32 @@ def build_commit() -> str:
         return ""
 
 
+def framework_version() -> str:
+    """The shared version line's number, read from VERSION at the repo root.
+
+    The three repositories (this one, dice-to-seed, slip39-backup) are released
+    together under one number, so a reader can take the same version of each
+    tool as the version printed on the page. VERSION is the single place this
+    repository writes that number; dice-to-seed keeps its own in a file of the
+    same name.
+
+    A missing or malformed file stops the build rather than publishing pages
+    with no version, because a page without the number cannot answer the one
+    question the number exists for.
+    """
+    path = os.path.join(ROOT, "VERSION")
+    try:
+        with open(path, encoding="utf-8") as handle:
+            version = handle.read().strip()
+    except OSError:
+        sys.exit("generate-content: VERSION is missing from the repository root")
+    if not re.fullmatch(r"\d+\.\d+\.\d+", version):
+        sys.exit(f"generate-content: VERSION holds {version!r}, expected MAJOR.MINOR.PATCH")
+    return version
+
+
 def stamp_revision(markdown: str) -> str:
-    """Add the build's commit to the revision note, and drop the markers.
+    """Add the version and the build's commit to the revision note, and drop the markers.
 
     The sources carry a hand-written date, because a date says when somebody
     last checked the claims and no tool can know that. They cannot carry the
@@ -108,13 +134,28 @@ def stamp_revision(markdown: str) -> str:
     which matters because this document names files that other repositories
     produce and those names have already changed once.
 
+    The version answers a third: which tool releases the page was written
+    against. It goes inside the bold sentence, ahead of the date, so the note
+    reads "**Version 3.0.0. Revised 2026-08-28.**". It is read from VERSION
+    rather than typed into each page, so the pages cannot disagree about it.
+
     Delimited by HTML comments for the same reason the site banner is: editing
-    the wording must not be able to stop the substitution silently.
+    the wording must not be able to stop the substitution silently. For the
+    same reason, a note that does not open with "**Revised " stops the build
+    instead of going out without its version.
     """
     sha = build_commit()
+    version = framework_version()
 
     def replace(match: re.Match) -> str:
-        body = match.group(1).strip()
+        body, found = re.subn(
+            r"\A\*\*Revised ", f"**Version {version}. Revised ", match.group(1).strip()
+        )
+        if not found:
+            sys.exit(
+                "generate-content: a revision note does not open with '**Revised ', "
+                "so the version has nowhere to go"
+            )
         if not sha:
             return body + "\n"
         return f"{body} Built from commit [`{sha[:8]}`]({REPO_COMMIT}{sha}).\n"

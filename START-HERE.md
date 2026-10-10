@@ -31,6 +31,12 @@ a year afterwards.
 together, so a renamed file is renamed here in the same release, and a
 disagreement means this page is the thing that needs fixing.
 
+**Take the same version of each tool as this page.** The page and both tools
+are released together under one number, which the site prints beside the date
+at the foot of this page and this repository keeps in its [VERSION](VERSION)
+file. Matching numbers are the whole answer to whether the three belong
+together.
+
 ---
 
 ## Before you start

@@ -192,5 +192,35 @@ if command -v gh >/dev/null 2>&1; then
     printf '  origin/main is %s\n' "$(git rev-parse --short origin/main)"
 fi
 
+# --------------------------------------------------------------------------
+# 8. The version in VERSION, against each tool's newest published release.
+# --------------------------------------------------------------------------
+# The three repositories share one version line, and the site prints VERSION
+# beside every page's date so a reader can take the same version of each tool.
+# That promise breaks the moment either tool's newest release is a different
+# number, and nothing else notices: on 2026-10-10 both tools' main branches said
+# 3.0.0 while their newest releases were still v1.4.3 and v2.0.0, because the
+# release pull requests merged and no tag was pushed. Read the release, never
+# the source: a reader downloads what is published.
+say "version line, against the tools' releases"
+if [ ! -f VERSION ]; then
+    hit "no VERSION file at the repository root"
+elif ! command -v gh >/dev/null 2>&1; then
+    printf '  skipped: gh not on PATH\n'
+else
+    OURS=$(tr -d '[:space:]' < VERSION)
+    printf '  VERSION says: %s\n' "$OURS"
+    for repo in dice-to-seed slip39-backup; do
+        tag=$(gh release view --repo "PeteSparrowBTC/$repo" --json tagName --jq .tagName 2>/dev/null)
+        if [ -z "$tag" ]; then
+            hit "$repo: could not read its newest release (gh auth, or no release at all)"
+        elif [ "${tag#v}" != "$OURS" ]; then
+            hit "$repo: newest release is $tag, VERSION says $OURS"
+        else
+            printf '  %s: %s, matches\n' "$repo" "$tag"
+        fi
+    done
+fi
+
 printf '\n%d finding(s). The judgement half of the review is in SKILL.md.\n' "$FINDINGS"
 exit "$FINDINGS"

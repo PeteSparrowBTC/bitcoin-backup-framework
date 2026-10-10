@@ -41,7 +41,8 @@ edited separately and drift apart.
 
 Run `bash .claude/skills/framework-review/checks.sh` for the mechanical part
 (ASCII box widths, unlinked `§` references, banned style constructions,
-filename drift, stranded commits). It reports; it does not fix.
+filename drift, stranded commits, the version line against the tools'
+releases). It reports; it does not fix.
 
 ### 2. Do the tools still do what we say they do
 
@@ -56,6 +57,18 @@ tool's own README goes stale in the same way ours does.
 | the default group shape | `Slip39Demo.UI/Pages/Owner.razor` |
 | roll counts, entropy tables, the check code | `dice-to-seed/README.md` and `DiceToSeed.Core` |
 | what dice do and do not buy | `Slip39Demo.UI/Pages/Owner.razor`, the backup-key panel |
+| which tool releases the pages were written against | `VERSION` here, against `gh release view --repo PeteSparrowBTC/<tool> --json tagName --jq .tagName` for each tool |
+
+**Fail the review if `VERSION` is not both tools' newest release.** The three
+repositories share one version line, and the site prints `VERSION` beside every
+page's date so a reader can take the same version of each tool. If either
+tool's newest published release carries a different number (ignoring the tag's
+leading `v`), a reader who downloads it gets a release the page was not written
+against. Compare against the release, never the tool's source: on 2026-10-10
+both tools' main branches said 3.0.0 while their newest releases were v1.4.3
+and v2.0.0, because the release pull requests had merged and no tag was pushed.
+`checks.sh` runs this comparison. A mismatch is a finding even when every
+sentence in the four sources is right.
 
 **Check out the right branch first.** A sibling repo left on a feature branch
 will show you the tool as it was, and you will confirm a claim that main has
@@ -113,6 +126,7 @@ strengths of claim and the review is worth less if they read alike.
 | --- | --- |
 | Reading a sibling repo's README instead of its source | You confirm a claim the code contradicts |
 | Reviewing a sibling repo on a stale local branch | Same, with more confidence |
+| Reading a tool's version off its main branch | You confirm a release that was never published |
 | Grepping for a name that is a prefix of the corrected name | `payload.age` matches `payload.age.gpg.asc`, so a fix looks unshipped, or a stale mention hides |
 | Treating the quickstart as authoritative | It is the derived document; a gap there is usually a gap in the reference |
 | Fixing findings on a branch stacked on an unmerged branch | Work strands when the parent merges first. This has happened five times |
