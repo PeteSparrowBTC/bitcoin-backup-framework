@@ -74,16 +74,11 @@ do](README.md#the-clean-room-tails)).
 **Then the tools**, onto a second USB stick, and nothing else from either
 releases page, including the source archives GitHub attaches to every release.
 
-From [dice-to-seed](https://github.com/PeteSparrowBTC/dice-to-seed/releases),
+From each of [dice-to-seed](https://github.com/PeteSparrowBTC/dice-to-seed/releases)
+and [slip39-backup](https://github.com/PeteSparrowBTC/slip39-backup/releases),
 the `-tails.zip`. It carries the app and checks itself, and it refuses to open
 the app if the check fails, so there is nothing left for you to do by hand. The
 bare `.AppImage` beside it is the same program without that guard.
-
-From [slip39-backup](https://github.com/PeteSparrowBTC/slip39-backup/releases),
-the `.AppImage` and the `.sha256` file beside it. This one has no
-self-checking bundle, so you compare the hash yourself once you are on Tails
-([its own Tails instructions](https://github.com/PeteSparrowBTC/slip39-backup/blob/main/TAILS_INSTRUCTIONS.md)
-carry the command).
 
 From [Electrum](https://electrum.org/), the `x86_64.AppImage` and the `.asc`
 signature beside it. Electrum is not one of this framework's tools and that is
@@ -386,5 +381,5 @@ Fifteen minutes ([the drill in full](README.md#9-the-annual-drill)):
 | Bringing other people in later | [§11](README.md#11-involving-others-later-the-upgrade-path) |
 
 <!-- revision:start -->
-**Revised 2026-08-28.**
+**Revised 2026-10-10.**
 <!-- revision:end -->
