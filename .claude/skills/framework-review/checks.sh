@@ -28,7 +28,9 @@ hit() { printf '  %s\n' "$1"; FINDINGS=$((FINDINGS + 1)); }
 # The §5 architecture diagram broke silently when payload.age was renamed to
 # payload.age.gpg.asc: three content rows grew past the box and nothing failed.
 # Widths are measured in characters, not bytes, because every border is
-# multi-byte box-drawing.
+# multi-byte box-drawing. A row counts only if it is closed by a right border:
+# the connector lines between two boxes also open with │, and they have no
+# right edge to line up with.
 say "diagram alignment"
 python - "$SOURCES" <<'PY'
 import io, re, sys
@@ -48,7 +50,7 @@ for path in sys.argv[1].split():
                 if len(widths) == 1:
                     want = widths.pop()
                     for ln, l in block:
-                        if re.match(r"^\s*│", l) and len(l) != want:
+                        if re.match(r"^\s*│.*│\s*$", l) and len(l) != want:
                             print("%s:%d row %d wide, box %d" % (path, ln, len(l), want))
                             bad += 1
                 block = []
