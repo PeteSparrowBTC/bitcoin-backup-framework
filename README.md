@@ -740,11 +740,9 @@ destroys logs inside the session rather than saving work for later.
    verification it offers. That is the one download in this procedure with a
    real signature behind it, and a tampered Tails is a tampered everything.
    Then the two tools, onto a second stick, and nothing else from either
-   releases page. From `dice-to-seed`, the `-tails.zip`: it carries the
-   AppImage, its checksum and a `start-here.sh` that verifies before it will
-   open the app, so that check is the tool's job rather than yours. From
-   `slip39-backup`, the AppImage **and the checksum file beside it**, because
-   there is no such bundle for this one and the check is yours to run.
+   releases page: from each, the `-tails.zip`, which carries the AppImage,
+   its checksum and a `start-here.sh` that verifies before it will open the
+   app, so that check is the tool's job rather than yours.
 
    [Electrum](https://electrum.org/) goes on the same stick, the
    `x86_64.AppImage` and the `.asc` beside it. It is not one of this
@@ -1702,5 +1700,5 @@ The collaboration is stated openly because provenance matters in security
 documents: you should know how the thing you are trusting was made.*
 
 <!-- revision:start -->
-**Revised 2026-08-28.**
+**Revised 2026-10-10.**
 <!-- revision:end -->
